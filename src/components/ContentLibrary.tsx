@@ -1,17 +1,27 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Content, ContentSource, Insight } from '@/types/content';
-import { processTranscript } from '@/utils/contentProcessor';
-import { getContent, addContent, updateContent } from '@/lib/content';
+import { Content, Insight } from '@/types/content';
+import { getContent } from '@/lib/content';
+import type { Json } from '@/types/database.types';
 
 // Helper function to convert Json to Insight
-function convertJsonToInsight(json: any): Insight {
+function convertJsonToInsight(json: Json): Insight {
+  if (!json || typeof json !== 'object' || Array.isArray(json)) {
+    return {
+      id: crypto.randomUUID(),
+      content: '',
+      timestamp: new Date().toISOString(),
+      type: 'unknown'
+    };
+  }
+  
+  const obj = json as { [key: string]: Json | undefined };
   return {
-    id: json.id || crypto.randomUUID(),
-    content: json.content || '',
-    timestamp: json.timestamp,
-    type: json.type
+    id: (obj.id as string) || crypto.randomUUID(),
+    content: (obj.content as string) || '',
+    timestamp: (obj.timestamp as string) || new Date().toISOString(),
+    type: (obj.type as string) || 'unknown'
   };
 }
 
