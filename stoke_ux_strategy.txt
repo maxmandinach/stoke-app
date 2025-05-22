@@ -1,0 +1,180 @@
+Stoke UX Strategy
+
+# Stoke: UX Strategy Framework for MVP
+
+## Strategic UX Foundation
+
+### Core UX Challenge
+How do we create a mobile web experience that feels like a **calm knowledge companion** rather than another attention-demanding app, while still driving meaningful engagement with spaced repetition learning?
+
+### UX Positioning Statement
+Stoke is the **mindful knowledge retention tool** that transforms passive content consumption into active understanding through gentle, intelligent review cycles that respect users' cognitive bandwidth.
+
+## UX Strategy Pillars
+
+### 1. Cognitive Load Management
+**Principle**: Every interaction should reduce rather than increase mental effort
+
+**Implementation Approach**:
+- **Progressive Disclosure**: Show only what's needed for the current task
+- **Contextual Intelligence**: AI does the heavy lifting; users make simple decisions
+- **Minimal Interaction Patterns**: Swipe, tap, done—no complex navigation trees
+- **Batched Decisions**: Group related choices to reduce decision fatigue
+
+### 2. Temporal UX Design
+**Principle**: Design for different user states across time and attention contexts
+
+**User State Framework**:
+- **Discovery Mode** (High attention): Browsing, selecting content
+- **Processing Mode** (Medium attention): Reviewing AI insights, light editing
+- **Practice Mode** (Low attention): Quick review sessions, recall exercises
+- **Reflection Mode** (Variable attention): Connecting insights, exploring relationships
+
+### 3. Trust Through Transparency
+**Principle**: Users should understand and feel in control of the AI's role
+
+**Trust-Building Mechanisms**:
+- **Visible AI Reasoning**: Show why content was summarized in specific ways
+- **Edit-in-Place**: One-tap editing of AI-generated insights
+- **Confidence Indicators**: Visual cues for AI certainty levels
+- **Human Override**: Always allow user corrections without friction
+
+## Mobile-First UX Architecture
+
+### Information Hierarchy for Mobile
+```
+Primary: Current action/content
+Secondary: Progress/context
+Tertiary: Navigation/settings
+Hidden: Advanced features (accessible via progressive disclosure)
+```
+
+### Core Interaction Patterns
+
+#### Content Consumption Flow
+- **Thumb-Zone Optimization**: Key actions within natural thumb reach
+- **Vertical Scrolling Primary**: Horizontal swipes for secondary actions
+- **Preview-Then-Commit**: Show AI processing results before adding to library
+- **Quick Exit Points**: Easy escape from any deep state
+
+#### Review Session Design
+- **Session Containers**: Clear beginning, middle, end with progress indicators
+- **Micro-Interactions**: Satisfying feedback for correct answers without gamification
+- **Adaptive Pacing**: System learns user's optimal session length
+- **Graceful Interruption**: Pause/resume anywhere without loss
+
+### Mobile Web PWA Considerations
+
+#### Performance UX
+- **Skeleton Screens**: Show content structure while loading
+- **Optimistic UI**: Immediate feedback, sync in background
+- **Offline Graceful Degradation**: Clear offline/online status
+- **Progressive Loading**: Critical content first, enhancements follow
+
+#### Platform Integration
+- **Add to Home Screen**: Seamless app-like installation
+- **Share Integration**: Easy content import from other apps
+- **Notification Strategy**: Gentle reminders that feel helpful, not pushy
+- **Cross-Device Sync**: Seamless pickup across mobile/desktop
+
+## User Experience Journey Map
+
+### Phase 1: Discovery & Onboarding
+**UX Goals**: Reduce time-to-value, establish trust in AI processing
+
+**Key Moments**:
+- First content selection (curated library browsing)
+- First AI processing result (the "wow" moment)
+- First manual addition (YouTube/transcript upload)
+- Understanding the review system
+
+**UX Interventions**:
+- **Smart Defaults**: Pre-select popular/high-quality content
+- **Processing Transparency**: Show AI working, explain what it's doing
+- **Immediate Value**: Let users see processed insights before committing
+
+### Phase 2: Habit Formation
+**UX Goals**: Establish sustainable review patterns, avoid overwhelming users
+
+**Key Moments**:
+- First review session
+- First failed recall (handling discouragement)
+- First connection between different content pieces
+- Review fatigue/resistance
+
+**UX Interventions**:
+- **Adaptive Scheduling**: Start gentle, increase based on success
+- **Failure Reframing**: Present mistakes as learning data, not failures
+- **Connection Discovery**: Highlight unexpected relationships between content
+- **Session Flexibility**: Allow easy adjustment of review frequency
+
+### Phase 3: Mastery & Connection
+**UX Goals**: Surface insights, encourage deep exploration, maintain long-term engagement
+
+**Key Moments**:
+- Discovering patterns across multiple content sources
+- Feeling genuine retention improvement
+- Wanting to share or apply insights
+- Considering upgrading/expanding usage
+
+**UX Interventions**:
+- **Insight Surfacing**: Gentle notifications about patterns/connections
+- **Progress Visualization**: Meaningful metrics that feel rewarding
+- **Export/Share**: Easy ways to use insights outside the app
+- **Expansion Pathways**: Clear options for deeper engagement
+
+## Design System Foundations
+
+### Visual Design Principles
+- **Generous Whitespace**: Combat mobile cramping with breathing room
+- **Hierarchy Through Scale**: Clear information hierarchy without visual noise
+- **Purposeful Color**: Limited palette focused on status and guidance
+- **Typography for Retention**: Optimized for reading comprehension and recall
+
+### Interaction Design Standards
+- **44px Touch Targets**: Minimum for reliable mobile interaction
+- **Gesture Vocabulary**: Consistent swipe/tap meanings across features
+- **Feedback Timing**: Immediate acknowledgment, then appropriate processing time
+- **Error Prevention**: Guide users away from mistakes rather than catching them
+
+### Component Strategy
+- **Atomic Design**: Reusable components that maintain consistency
+- **Mobile-First Components**: Designed for touch, enhanced for other inputs
+- **Accessibility Integration**: WCAG compliance built into component design
+- **Performance-Conscious**: Lightweight components optimized for mobile web
+
+## Success Metrics & UX Validation
+
+### Primary UX Metrics
+- **Time to First Value**: How quickly users get their first processed content
+- **Session Completion Rate**: Percentage of started review sessions finished
+- **Retention Curve Shape**: Healthy engagement pattern over time
+- **User Effort Score**: Subjective ease of key tasks
+
+### Qualitative Validation Methods
+- **Micro-Usability Tests**: Quick mobile testing sessions for key flows
+- **Experience Sampling**: In-the-moment feedback during real usage
+- **Cognitive Load Assessment**: Post-session mental effort ratings
+- **Trust & Control Surveys**: User feelings about AI involvement
+
+## Implementation Roadmap
+
+### MVP Phase 1: Core Content Flow
+- Content selection and AI processing
+- Basic review session structure
+- Mobile-optimized content display
+- Essential PWA functionality
+
+### MVP Phase 2: Retention System
+- SuperMemo scheduling implementation
+- Question generation and variety
+- Progress tracking and feedback
+- Connection suggestion system
+
+### MVP Phase 3: Polish & Optimization
+- Advanced mobile gestures
+- Offline functionality refinement
+- Performance optimization
+- User customization options
+
+This framework establishes the strategic foundation for creating a mobile web experience that genuinely serves users' learning goals while respecting their attention and building trust in AI assistance. Each element supports the core vision of mindful utility over engagement-driven design.

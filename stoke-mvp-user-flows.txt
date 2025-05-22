@@ -1,0 +1,184 @@
+# Stoke MVP: User Flows
+
+## Flow 1: Content Discovery & Addition (Curated Library → Content Library)
+
+```
+[Curated Library Page] → [Episode Selection] → [Confirm Addition] → [Processing Status] → [Content Library]
+```
+
+**Step 1: Curated Library Browse (Discovery Page)**
+- User views curated podcast library organized by topics
+- Content displays as cards with title, podcast name, duration, and topic tags
+- User can filter by topic or search for specific content
+- Interface loads with skeleton placeholders while content fetches
+
+**Step 2: Episode Selection**
+- User taps episode card to view detailed preview modal
+- Preview shows full description, key topics, and estimated number of insights
+- Processing time estimate displayed (optimized for speed)
+- Clear add/cancel actions available
+
+**Step 3: Confirm Addition** 
+- User confirms adding episode to personal library
+- System immediately shows processing status
+- User redirected to Processing Status page
+- Background AI processing begins automatically
+
+**Step 4: Return to Content Library**
+- After processing completes, user navigates back to Content Library (home)
+- New content appears in personal library ready for review
+- Content Library remains the primary hub for ongoing activity
+
+### Key Considerations
+- Curated Library is discovery-focused, not the primary landing page
+- Handle network failures gracefully with offline queuing
+- Prevent duplicate additions with clear "already added" states
+- Seamless flow back to Content Library after addition
+
+---
+
+## Flow 2: Content Approval & Library Addition
+
+```
+[Processing Complete] → [Quick Review] → [Accept/Defer Decision] → [Add to Library]
+```
+
+**Step 1: Processing Complete Notification**
+- User receives notification that content processing is finished
+- Can view results immediately or return to them later from library
+- Processing continues in background if user navigates away
+
+**Step 2: Quick Content Review (30 seconds)**
+- User scans AI-generated summary and key insights in clean, scannable format
+- Simple validation: "Looks good" or "Not quite right" options
+- If "Not quite right" → optional brief feedback, but content still proceeds to library
+- No detailed editing or extensive validation required
+
+**Step 3: Immediate Action Decision**
+- Two clear options: "Start reviewing this now" or "Save for later"
+- Default selection: "Save for later" to reduce pressure
+- Both options add content to user's library with "Active" status
+- Choosing "Start reviewing this now" immediately begins single-episode review session
+
+**Step 4: Library Integration**
+- Content automatically added to library in "Active" state
+- Available for future review sessions and selection
+- User can access and review at any time from library interface
+
+### Key Considerations
+- Minimize friction between processing completion and library addition
+- Build trust through quick, non-judgmental validation process
+- Default to defer immediate review to reduce cognitive pressure
+- Ensure all processed content reaches the library regardless of validation feedback
+
+---
+
+## Flow 3: Review Session Experience (Primary Content Library Flow)
+
+```
+[Content Library Landing] → [Content Selection] → [Start Review] → [Mixed Session] → [Return to Library]
+```
+
+**Step 1: Content Library Landing Page**
+- User arrives at Content Library as primary app entry point
+- Views personal collection of processed content with status indicators
+- Checkbox selection UX with "Select All/None" functionality
+- Start Review button dynamically updates: "Start Review" vs "Start Review (3 episodes)"
+
+**Step 2: Review Session Initialization**
+- **With Selection**: Review session includes insights only from selected episodes
+- **No Selection**: Auto-curated session from last 30 days of active content (excluding dismissed)
+- **Fallback**: If insufficient content in 30 days, expand timeframe to 6 months
+- Session shows total question count: "Question 5 of 23"
+
+**Step 3: Mixed Content Review Experience**
+- Insights from multiple episodes randomly interweaved throughout session
+- Various question types: recall, recognition, application
+- Clean, distraction-free interface with one question at a time
+- Progress indicator shows overall session progress, not episode breakdown
+- Auto-save progress to prevent data loss
+
+**Step 4: Individual Content Feedback**
+- After each question, user can provide insight-level feedback:
+  - "Got it!" → Normal spaced repetition progression
+  - "Still working on this one" → Extends review frequency, stays prominent
+  - "Don't show me this again" → Dismisses insight from future sessions
+- Episode-level dismissal available: removes all remaining questions from that episode
+- Mid-session dismissal immediately skips to next episode's content
+
+**Step 5: Return to Content Library**
+- Summary of session performance without competitive metrics
+- All feedback automatically applied to future session curation
+- Clear indication of when next review session might be beneficial
+- Return to Content Library (home) with updated content states
+
+### Key Considerations
+- Content Library serves as both landing page and post-session destination
+- Random interweaving prevents predictable patterns and enhances learning
+- Multi-level dismissal gives users granular control over their experience
+- Auto-curation reduces decision fatigue while respecting user preferences
+
+---
+
+## Flow 4: Manual Content Addition (Content Library → Manual Add → Content Library)
+
+```
+[Content Library] → [Add Content Page] → [Input Source] → [Process Upload] → [Content Library]
+```
+
+**Step 1: Manual Addition Access**
+- User initiates manual content addition from Content Library
+- Clear entry point (+ button or "Add Content" action)
+- Navigation to dedicated Manual Add Content page
+
+**Step 2: Content Input Options**
+- User chooses between YouTube link or transcript file upload
+- Clear interface with tabs or buttons for each option type
+- Input validation provides immediate feedback on URL format or file type
+- Helper text explains supported formats and requirements
+
+**Step 3: Content Processing**
+- **YouTube Option**: User pastes URL, system extracts transcript automatically
+- **Transcript Upload**: User selects file from device, validates format and size
+- Processing status shows extraction progress and any potential issues
+- Error handling for invalid URLs, missing transcripts, or unsupported formats
+
+**Step 4: Content Preview & Metadata**
+- User reviews extracted content with auto-detected title and topics
+- Option to edit title, description, and add custom topic tags
+- Preview shows word count and estimated processing time
+- Clear indication of what will happen when processing begins
+
+**Step 5: Return to Content Library**
+- User confirms addition and processing begins
+- Navigation back to Content Library (home) where new content will appear
+- Processing continues in background with status available from Content Library
+- Success confirmation with next steps clearly communicated
+
+### Key Considerations
+- Manual addition flows always return to Content Library as the central hub
+- Handle YouTube API limitations and provide alternative solutions
+- Implement file size limits with clear guidance for large transcripts
+- Provide content quality feedback before processing begins
+
+---
+
+## Design & Experience Considerations
+
+### Mobile-First Interface Design
+- Touch targets minimum 44px for reliable mobile interaction
+- Generous white space to reduce visual clutter and cognitive load
+- Thumb-zone optimization for primary actions
+- Clear visual hierarchy using scale and contrast
+
+### Progressive Loading & Offline Support
+- Skeleton screens maintain perceived performance during loading
+- Offline review sessions with sync when connection restored
+- Cached content library for browsing without network
+- Progressive Web App capabilities for app-like experience
+
+### Error Prevention & Recovery
+- Input validation with immediate, helpful feedback
+- Graceful degradation when network connectivity is poor
+- Auto-save functionality prevents data loss during interruptions
+- Clear error messages with actionable recovery steps
