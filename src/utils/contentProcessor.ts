@@ -3,9 +3,6 @@ import { Content, Insight } from '@/types/content';
 export function processTranscript(rawTranscript: string): Partial<Content> {
   // Extract metadata from the transcript
   const titleMatch = rawTranscript.match(/Episode Name:(.*?)(?:\n|$)/);
-  const dateMatch = rawTranscript.match(/Date: (.*?)(?:\n|$)/);
-  const participantsMatch = rawTranscript.match(/Participants: (.*?)(?:\n|$)/);
-  const podcastTitleMatch = rawTranscript.match(/Podcast Title: (.*?)(?:\n|$)/);
 
   // Extract the main conversation
   const conversationStart = rawTranscript.indexOf('\n\n');
@@ -37,13 +34,13 @@ export function processTranscript(rawTranscript: string): Partial<Content> {
   return {
     title: titleMatch?.[1]?.trim() || 'Untitled',
     source: 'podcast',
-    sourceUrl: '',
+    source_url: '',
     transcript: rawTranscript,
     summary: generateSummary(conversation), // Will be enhanced with AI
     insights,
     topics,
-    createdAt: new Date().toISOString(),
-    processedAt: new Date().toISOString()
+    created_at: new Date().toISOString(),
+    processed_at: new Date().toISOString()
   };
 }
 
