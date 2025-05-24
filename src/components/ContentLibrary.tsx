@@ -4,15 +4,23 @@ import { useState, useEffect } from 'react';
 import { Content, ContentSource, Insight } from '@/types/content';
 import { processTranscript } from '@/utils/contentProcessor';
 import { getContent, addContent, updateContent } from '@/lib/content';
+import type { Database } from '@/types/database.types';
 import LibraryHeader from './LibraryHeader';
 
+type Json = Database['public']['Tables']['content']['Row']['insights'][number];
+
 // Helper function to convert Json to Insight
-function convertJsonToInsight(json: any): Insight {
+function convertJsonToInsight(json: Json): Insight {
+  if (typeof json !== 'object' || json === null) {
+    throw new Error('Invalid insight data');
+  }
+  
+  const insight = json as { id?: string; content?: string; timestamp: string; type: string };
   return {
-    id: json.id || crypto.randomUUID(),
-    content: json.content || '',
-    timestamp: json.timestamp,
-    type: json.type
+    id: insight.id || crypto.randomUUID(),
+    content: insight.content || '',
+    timestamp: insight.timestamp,
+    type: insight.type
   };
 }
 
