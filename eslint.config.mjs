@@ -10,37 +10,11 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...compat.extends("next/core-web-vitals"),
   {
     rules: {
-      // Enforce snake_case for database-related properties
-      "@typescript-eslint/naming-convention": [
-        "error",
-        {
-          "selector": "property",
-          "format": ["snake_case"],
-          "filter": {
-            "regex": "^(source_url|created_at|processed_at|.*_at|.*_by|.*_id)$",
-            "match": true
-          }
-        },
-        {
-          "selector": "property",
-          "format": ["camelCase"],
-          "filter": {
-            "regex": "^(source_url|created_at|processed_at|.*_at|.*_by|.*_id)$",
-            "match": false
-          }
-        }
-      ],
-      // Enforce PascalCase for React components
-      "@typescript-eslint/naming-convention": [
-        "error",
-        {
-          "selector": "typeLike",
-          "format": ["PascalCase"]
-        }
-      ]
+      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/no-explicit-any": "error"
     }
   }
 ];
