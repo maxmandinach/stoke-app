@@ -122,7 +122,7 @@ export default function ContentLibrary() {
 
   if (isLoading) {
     return (
-      <div className="p-4">
+      <div className="px-4 pt-4 pb-[84px] bg-white">
         <div className="animate-pulse">
           <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
           <div className="space-y-4">
@@ -137,7 +137,7 @@ export default function ContentLibrary() {
 
   if (error) {
     return (
-      <div className="p-4">
+      <div className="px-4 pt-4 pb-[84px] bg-white">
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
           {error}
         </div>
@@ -146,7 +146,7 @@ export default function ContentLibrary() {
   }
 
   return (
-    <div className="p-4">
+    <div className="px-4 pt-4 pb-[84px] bg-white">
       <LibraryHeader>
         <>
           <input
