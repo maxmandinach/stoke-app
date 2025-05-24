@@ -12,15 +12,20 @@ type Json = Database['public']['Tables']['content']['Row']['insights'][number];
 // Helper function to convert Json to Insight
 function convertJsonToInsight(json: Json): Insight {
   if (typeof json !== 'object' || json === null) {
-    throw new Error('Invalid insight data');
+    return {
+      id: crypto.randomUUID(),
+      content: '',
+      timestamp: new Date().toISOString(),
+      type: 'unknown'
+    };
   }
   
-  const insight = json as { id?: string; content?: string; timestamp: string; type: string };
+  const insight = json as { id?: string; content?: string; timestamp?: string; type?: string };
   return {
     id: insight.id || crypto.randomUUID(),
     content: insight.content || '',
-    timestamp: insight.timestamp,
-    type: insight.type
+    timestamp: insight.timestamp || new Date().toISOString(),
+    type: insight.type || 'unknown'
   };
 }
 
