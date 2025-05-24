@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Content, ContentSource, Insight } from '@/types/content';
 import { processTranscript } from '@/utils/contentProcessor';
-import { getContent, addContent, updateContent } from '@/lib/content';
+import { getContent, addContent } from '@/lib/content';
 import type { Database } from '@/types/database.types';
 import LibraryHeader from './LibraryHeader';
 
