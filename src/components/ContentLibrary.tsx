@@ -250,9 +250,9 @@ export default function ContentLibrary() {
         </div>
       )}
 
-      <div className="grid gap-4">
+      <div className="grid gap-3">
         {content.map((item) => (
-          <div key={item.id} className="border rounded-lg p-4">
+          <div key={item.id} className="bg-white border border-gray-200 rounded-xl p-4 shadow">
             <div className="flex justify-between items-start">
               <div>
                 <h3 className="text-xl font-semibold">{item.title}</h3>
