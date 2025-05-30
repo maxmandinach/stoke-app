@@ -13,7 +13,7 @@ export interface Database {
         Row: {
           id: string
           title: string
-          source: 'podcast' | 'youtube'
+          source: 'podcast' | 'video' | 'article' | 'book' | 'conversation'
           source_url: string
           transcript: string
           summary: string
@@ -27,7 +27,7 @@ export interface Database {
         Insert: {
           id?: string
           title: string
-          source: 'podcast' | 'youtube'
+          source: 'podcast' | 'video' | 'article' | 'book' | 'conversation'
           source_url: string
           transcript: string
           summary: string
@@ -41,7 +41,7 @@ export interface Database {
         Update: {
           id?: string
           title?: string
-          source?: 'podcast' | 'youtube'
+          source?: 'podcast' | 'video' | 'article' | 'book' | 'conversation'
           source_url?: string
           transcript?: string
           summary?: string

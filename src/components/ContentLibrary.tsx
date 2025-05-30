@@ -9,6 +9,7 @@ import LibraryHeader from './LibraryHeader';
 import { AIInsight, AIProcessingStatus, AIContentBadge } from './AIIndicators';
 import { TopicFilterBar, TopicList, TopicGroupHeader, getAllTopics, groupContentByTopics } from './TopicComponents';
 import { ContentMetadata } from './ContentTypeIndicator';
+import StartReviewButton from './StartReviewButton';
 
 type Json = Database['public']['Tables']['content']['Row']['insights'][number];
 
@@ -45,6 +46,16 @@ function convertJsonToInsight(json: Json): Insight {
     confidence: insight.confidence,
     processingStatus: insight.processingStatus || 'completed'
   };
+}
+
+// Helper function to validate URL format
+function isValidUrl(string: string): boolean {
+  try {
+    new URL(string);
+    return true;
+  } catch (_) {
+    return false;
+  }
 }
 
 export default function ContentLibrary() {
@@ -233,6 +244,13 @@ export default function ContentLibrary() {
     });
   };
 
+  const handleStartReview = () => {
+    // TODO: Implement review session navigation
+    console.log(`Starting review with ${selectedIds.length} selected items:`, selectedIds);
+    // This will be implemented when the review session is created
+    // For now, just log the selected items
+  };
+
   if (isLoading) {
     return (
       <div className="px-4 pt-4 pb-[84px] bg-white min-h-screen">
@@ -322,81 +340,155 @@ export default function ContentLibrary() {
 
       {isAddingContent && (
         <div 
-          className="mb-6 p-4 bg-white border border-[#F1F5F9] rounded-xl transition-all duration-200"
+          className="mb-6 p-6 bg-white border border-[#E2E8F0] rounded-xl transition-all duration-200"
           style={{
             boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)'
           }}
         >
-          <h2 className="text-[22px] leading-[28px] font-semibold text-slate-800 mb-4">Add New Content</h2>
-          <div className="space-y-4">
+          <h2 className="text-[22px] leading-[28px] font-semibold text-slate-800 mb-6">Add New Content</h2>
+          <div className="space-y-6">
+            {/* Title Field */}
             <div>
-              <label htmlFor="content-title" className="block text-[14px] leading-[20px] font-normal text-slate-800 mb-1">Title</label>
+              <label htmlFor="content-title" className="block text-[14px] leading-[20px] font-medium text-slate-700 mb-2">
+                Title <span className="text-red-500">*</span>
+              </label>
               <input
                 id="content-title"
                 type="text"
                 value={newContent.title}
                 onChange={(e) => setNewContent({ ...newContent, title: e.target.value })}
                 placeholder="Enter content title"
-                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-3 text-[16px] leading-[24px] font-normal min-h-[44px] focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:border-blue-500 transition-all duration-200 ease-out"
+                className={`w-full bg-[#F8FAFC] border rounded-lg px-3 py-3 text-[16px] leading-[24px] font-normal transition-all duration-200 ease-out ${
+                  newContent.title.trim() === '' && newContent.title !== ''
+                    ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
+                    : 'border-[#E2E8F0] focus:border-[#2563EB] focus:ring-[#2563EB]'
+                } focus:ring-2 focus:ring-offset-2`}
+                style={{ minHeight: '44px', borderRadius: '8px' }}
+                required
               />
+              {newContent.title.trim() === '' && newContent.title !== '' && (
+                <p className="mt-1 text-[12px] leading-[16px] text-red-600">Title is required</p>
+              )}
             </div>
             
+            {/* Source Type Field */}
             <div>
-              <label htmlFor="content-source" className="block text-[14px] leading-[20px] font-normal text-slate-800 mb-1">Source Type</label>
+              <label htmlFor="content-source" className="block text-[14px] leading-[20px] font-medium text-slate-700 mb-2">
+                Source Type <span className="text-red-500">*</span>
+              </label>
               <select
                 id="content-source"
                 value={newContent.source}
                 onChange={(e) => setNewContent({ ...newContent, source: e.target.value as ContentSource })}
-                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-3 text-[16px] leading-[24px] font-normal min-h-[44px] focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:border-blue-500 transition-all duration-200 ease-out"
+                className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-3 text-[16px] leading-[24px] font-normal focus:ring-2 focus:ring-[#2563EB] focus:ring-offset-2 focus:border-[#2563EB] transition-all duration-200 ease-out"
+                style={{ minHeight: '44px', borderRadius: '8px' }}
+                required
               >
                 <option value="podcast">Podcast</option>
-                <option value="youtube">YouTube</option>
+                <option value="video">Video</option>
+                <option value="article">Article</option>
+                <option value="book">Book</option>
+                <option value="conversation">Conversation</option>
               </select>
             </div>
 
+            {/* Source URL Field */}
             <div>
-              <label htmlFor="content-url" className="block text-[14px] leading-[20px] font-normal text-slate-800 mb-1">Source URL (optional)</label>
+              <label htmlFor="content-url" className="block text-[14px] leading-[20px] font-medium text-slate-700 mb-2">
+                Source URL <span className="text-slate-400">(optional)</span>
+              </label>
               <input
                 id="content-url"
-                type="text"
+                type="url"
                 value={newContent.sourceUrl}
                 onChange={(e) => setNewContent({ ...newContent, sourceUrl: e.target.value })}
-                placeholder="Enter source URL"
-                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-3 text-[16px] leading-[24px] font-normal min-h-[44px] focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:border-blue-500 transition-all duration-200 ease-out"
+                placeholder="https://example.com"
+                className={`w-full bg-[#F8FAFC] border rounded-lg px-3 py-3 text-[16px] leading-[24px] font-normal transition-all duration-200 ease-out ${
+                  newContent.sourceUrl && !isValidUrl(newContent.sourceUrl)
+                    ? 'border-amber-300 focus:border-amber-500 focus:ring-amber-500'
+                    : 'border-[#E2E8F0] focus:border-[#2563EB] focus:ring-[#2563EB]'
+                } focus:ring-2 focus:ring-offset-2`}
+                style={{ minHeight: '44px', borderRadius: '8px' }}
               />
+              {newContent.sourceUrl && !isValidUrl(newContent.sourceUrl) && (
+                <p className="mt-1 text-[12px] leading-[16px] text-amber-600">Please enter a valid URL</p>
+              )}
             </div>
 
+            {/* Transcript Field */}
             <div>
-              <label htmlFor="content-transcript" className="block text-[14px] leading-[20px] font-normal text-slate-800 mb-1">Transcript</label>
-              <textarea
-                id="content-transcript"
-                value={newContent.transcript}
-                onChange={(e) => setNewContent({ ...newContent, transcript: e.target.value })}
-                placeholder="Paste transcript here"
-                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-3 text-[16px] leading-[24px] font-normal min-h-[120px] focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:border-blue-500 transition-all duration-200 ease-out resize-none"
-              />
+              <label htmlFor="content-transcript" className="block text-[14px] leading-[20px] font-medium text-slate-700 mb-2">
+                Transcript <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <textarea
+                  id="content-transcript"
+                  value={newContent.transcript}
+                  onChange={(e) => setNewContent({ ...newContent, transcript: e.target.value })}
+                  placeholder="Paste your transcript here..."
+                  rows={8}
+                  className={`w-full bg-[#F8FAFC] border rounded-lg px-3 py-3 text-[16px] leading-[24px] font-normal transition-all duration-200 ease-out resize-y ${
+                    newContent.transcript.trim() === '' && newContent.transcript !== ''
+                      ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
+                      : 'border-[#E2E8F0] focus:border-[#2563EB] focus:ring-[#2563EB]'
+                  } focus:ring-2 focus:ring-offset-2`}
+                  style={{ 
+                    minHeight: '120px',
+                    borderRadius: '8px'
+                  }}
+                  required
+                />
+                <div className="absolute bottom-3 right-3 text-[12px] leading-[16px] text-slate-400">
+                  {newContent.transcript.length} characters
+                </div>
+              </div>
+              {newContent.transcript.trim() === '' && newContent.transcript !== '' && (
+                <p className="mt-1 text-[12px] leading-[16px] text-red-600">Transcript is required</p>
+              )}
+              <p className="mt-1 text-[12px] leading-[16px] text-slate-500">
+                Paste the full transcript content. AI will automatically extract insights and topics.
+              </p>
             </div>
-
-            <div className="flex gap-2">
+            
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-2">
               <button
+                type="button"
+                onClick={() => {
+                  setIsAddingContent(false);
+                  setNewContent({
+                    title: '',
+                    source: 'podcast',
+                    sourceUrl: '',
+                    transcript: ''
+                  });
+                }}
+                disabled={isSubmitting}
+                className="flex-1 bg-white text-slate-700 border border-[#E2E8F0] px-4 py-3 rounded-lg font-medium text-[16px] leading-[24px] transition-all duration-200 ease-out hover:bg-slate-50 hover:-translate-y-0.5 active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+                style={{ minHeight: '44px', borderRadius: '8px' }}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
                 onClick={handleAddContent}
-                className="flex-1 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 hover:-translate-y-0.5 active:opacity-90 transition-all duration-200 ease-out min-h-[44px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-[16px] leading-[24px] font-normal disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
-                disabled={!newContent.transcript || isSubmitting}
+                disabled={!newContent.transcript.trim() || !newContent.title.trim() || isSubmitting}
+                className="flex-1 bg-[#2563EB] text-white px-4 py-3 rounded-lg font-medium text-[16px] leading-[24px] transition-all duration-200 ease-out hover:bg-[#1D4ED8] hover:-translate-y-0.5 active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:ring-offset-2 flex items-center justify-center gap-2"
+                style={{ minHeight: '44px', borderRadius: '8px' }}
               >
                 {isSubmitting ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Saving...
+                    Processing...
                   </>
                 ) : (
-                  'Save Content'
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Add Content
+                  </>
                 )}
-              </button>
-              <button
-                onClick={() => setIsAddingContent(false)}
-                className="flex-1 bg-white text-slate-600 border border-slate-300 px-4 py-2 rounded-lg hover:bg-slate-50 hover:-translate-y-0.5 active:opacity-90 transition-all duration-200 ease-out min-h-[44px] focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 text-[16px] leading-[24px] font-normal"
-              >
-                Cancel
               </button>
             </div>
           </div>
@@ -434,6 +526,12 @@ export default function ContentLibrary() {
           </div>
         )}
       </div>
+
+      {/* Start Review Button - positioned outside main content container */}
+      <StartReviewButton 
+        selectedCount={selectedIds.length}
+        onStartReview={handleStartReview}
+      />
     </div>
   );
 

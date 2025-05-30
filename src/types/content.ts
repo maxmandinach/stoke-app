@@ -1,4 +1,4 @@
-export type ContentSource = 'podcast' | 'youtube';
+export type ContentSource = 'podcast' | 'video' | 'article' | 'book' | 'conversation';
 
 export type ConfidenceLevel = 'high' | 'medium' | 'low';
 

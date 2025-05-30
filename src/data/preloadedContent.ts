@@ -79,7 +79,7 @@ export const preloadedContent: Content[] = [
   {
     id: 'sample-failed',
     title: 'Sample Content - Processing Failed',
-    source: 'youtube',
+    source: 'video',
     source_url: 'https://example.com/failed',
     transcript: 'Another sample transcript...',
     summary: 'This content demonstrates failed processing status.',
