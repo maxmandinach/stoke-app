@@ -50,13 +50,13 @@ export default function BottomNavigation() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center w-full h-full min-h-[44px] transition-colors duration-200 ${
+              className={`flex flex-col items-center justify-center w-full h-full min-h-[44px] transition-all duration-200 ease-out hover:-translate-y-0.5 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg ${
                 isActive ? 'text-blue-600' : 'text-slate-600 hover:text-slate-800'
               }`}
               aria-current={isActive ? 'page' : undefined}
             >
               <div className="w-6 h-6" aria-hidden="true">{item.icon}</div>
-              <span className="text-xs mt-1">{item.label}</span>
+              <span className="text-[12px] leading-[16px] font-normal mt-1">{item.label}</span>
             </Link>
           );
         })}
