@@ -10,6 +10,7 @@ import { AIInsight, AIProcessingStatus, AIContentBadge } from './AIIndicators';
 import { TopicFilterBar, TopicList, TopicGroupHeader, getAllTopics, groupContentByTopics } from './TopicComponents';
 import { ContentMetadata } from './ContentTypeIndicator';
 import StartReviewButton from './StartReviewButton';
+import { PageSkeleton, LoadingTransition, ProcessingSkeleton, InlineProcessing } from './SkeletonComponents';
 
 type Json = Database['public']['Tables']['content']['Row']['insights'][number];
 
@@ -252,24 +253,7 @@ export default function ContentLibrary() {
   };
 
   if (isLoading) {
-    return (
-      <div className="px-4 pt-4 pb-[84px] bg-white min-h-screen">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-slate-200 rounded-lg w-1/4 mb-6"></div>
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div 
-                key={i} 
-                className="h-32 bg-slate-100 rounded-xl border border-[#F1F5F9]"
-                style={{
-                  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)'
-                }}
-              ></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
+    return <PageSkeleton cardCount={3} />;
   }
 
   if (error) {
@@ -477,10 +461,7 @@ export default function ContentLibrary() {
                 style={{ minHeight: '44px', borderRadius: '8px' }}
               >
                 {isSubmitting ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Processing...
-                  </>
+                  <InlineProcessing text="Processing..." size="sm" />
                 ) : (
                   <>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

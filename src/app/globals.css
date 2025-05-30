@@ -23,6 +23,131 @@
   }
 }
 
+/* Skeleton loading animations */
+@layer components {
+  .skeleton-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skeleton-shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.6) 50%,
+      transparent 100%
+    );
+    animation: shimmer 1.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  /* Staggered shimmer animations for multiple skeletons */
+  .skeleton-shimmer:nth-child(1)::after { animation-delay: 0s; }
+  .skeleton-shimmer:nth-child(2)::after { animation-delay: 0.1s; }
+  .skeleton-shimmer:nth-child(3)::after { animation-delay: 0.2s; }
+  .skeleton-shimmer:nth-child(4)::after { animation-delay: 0.3s; }
+  .skeleton-shimmer:nth-child(5)::after { animation-delay: 0.4s; }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Loading transition container */
+  .loading-transition {
+    position: relative;
+    min-height: 200px;
+  }
+
+  /* Smooth fade transitions for loading states */
+  .skeleton-fade-in {
+    animation: skeletonFadeIn 0.3s ease-out;
+  }
+
+  .skeleton-fade-out {
+    animation: skeletonFadeOut 0.3s ease-out;
+  }
+
+  @keyframes skeletonFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes skeletonFadeOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+
+  /* Animation delay utilities */
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+
+  .animation-delay-900 {
+    animation-delay: 900ms;
+  }
+
+  /* Pulse animation for processing indicators */
+  .pulse-slow {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-processing {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .animate-pulse-processing {
+    animation: pulse-processing 1.5s ease-in-out infinite;
+  }
+
+  /* Disable shimmer animation for users who prefer reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton-shimmer::after {
+      animation: none;
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .animate-pulse-processing {
+      animation: none;
+    }
+    
+    .pulse-slow {
+      animation: none;
+    }
+  }
+}
+
 /* Safe area insets for modern mobile browsers */
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0);
@@ -47,5 +172,235 @@ input, textarea, select {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+  }
+}
+
+/* Existing skeleton animations */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+/* Staggered animation delays */
+.animate-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.animate-stagger > *:nth-child(2) { animation-delay: 100ms; }
+.animate-stagger > *:nth-child(3) { animation-delay: 200ms; }
+.animate-stagger > *:nth-child(4) { animation-delay: 300ms; }
+.animate-stagger > *:nth-child(5) { animation-delay: 400ms; }
+.animate-stagger > *:nth-child(6) { animation-delay: 500ms; }
+
+/* Processing animation */
+.animate-processing {
+  animation: processing 1.5s ease-in-out infinite;
+}
+
+@keyframes processing {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Accessibility: Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-shimmer,
+  .animate-stagger > *,
+  .animate-processing {
+    animation: none;
+  }
+}
+
+/* PWA-specific animations */
+@keyframes ripple {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.5;
+  }
+  100% {
+    width: 120px;
+    height: 120px;
+    opacity: 0;
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromTop {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromBottom {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* PWA utility classes */
+.pwa-slide-right {
+  animation: slideInFromRight 0.3s ease-out;
+}
+
+.pwa-slide-left {
+  animation: slideInFromLeft 0.3s ease-out;
+}
+
+.pwa-slide-up {
+  animation: slideInFromBottom 0.3s ease-out;
+}
+
+.pwa-slide-down {
+  animation: slideInFromTop 0.3s ease-out;
+}
+
+.pwa-fade {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Touch feedback */
+.touch-feedback:active {
+  transform: scale(0.95);
+  transition: transform 0.1s ease-out;
+}
+
+/* Safe area support */
+.safe-area-inset-top {
+  padding-top: max(env(safe-area-inset-top), 0px);
+}
+
+.safe-area-inset-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom), 0px);
+}
+
+.safe-area-inset-left {
+  padding-left: max(env(safe-area-inset-left), 0px);
+}
+
+.safe-area-inset-right {
+  padding-right: max(env(safe-area-inset-right), 0px);
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .ios-scroll-fix {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Android Chrome specific fixes */
+@media screen and (max-width: 768px) {
+  .android-scroll-fix {
+    overscroll-behavior: contain;
+  }
+}
+
+/* App-like transitions */
+.app-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Pull-to-refresh indicator */
+@keyframes pullToRefresh {
+  0% {
+    transform: translateY(-100%) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-50%) rotate(180deg);
+  }
+  100% {
+    transform: translateY(0) rotate(360deg);
+  }
+}
+
+.pull-to-refresh {
+  animation: pullToRefresh 1s ease-in-out infinite;
+}
+
+/* Offline mode styling */
+.offline-mode {
+  filter: grayscale(0.3) brightness(0.9);
+  transition: filter 0.3s ease;
+}
+
+.offline-mode::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(0, 0, 0, 0.03) 10px,
+    rgba(0, 0, 0, 0.03) 20px
+  );
+  pointer-events: none;
+}
+
+/* Install prompt animation */
+.install-prompt-enter {
+  animation: slideInFromBottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.install-prompt-exit {
+  animation: slideInFromBottom 0.3s ease-in reverse;
+}
+
+/* Update notification pulse */
+.update-pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
   }
 }
