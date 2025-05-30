@@ -24,6 +24,9 @@ export function OfflineIndicator({ className = '', showWhenOnline = false }: Off
   const [showIndicator, setShowIndicator] = useState(false);
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     const handleOnline = () => {
       setIsOnline(true);
       if (showWhenOnline) {
@@ -107,6 +110,9 @@ export function InstallPrompt({ onInstall, onDismiss, className = '' }: InstallP
   const [isInstalling, setIsInstalling] = useState(false);
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
@@ -426,7 +432,7 @@ export function TouchFeedback({
   const elementRef = useRef<HTMLDivElement>(null);
 
   const triggerHaptic = () => {
-    if (haptic && 'vibrate' in navigator) {
+    if (haptic && typeof window !== 'undefined' && 'vibrate' in navigator) {
       navigator.vibrate(50); // Light haptic feedback
     }
   };
@@ -583,8 +589,12 @@ export function usePWAStatus() {
   const [isOnline, setIsOnline] = useState(true);
   const [isInstalled, setIsInstalled] = useState(false);
   const [hasUpdate, setHasUpdate] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+
     // Online/Offline status
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
@@ -599,6 +609,7 @@ export function usePWAStatus() {
     
     // Check if already installed (standalone mode)
     setIsInstalled(window.matchMedia('(display-mode: standalone)').matches);
+    setIsStandalone(window.matchMedia('(display-mode: standalone)').matches);
 
     // Service Worker updates
     if ('serviceWorker' in navigator) {
@@ -618,6 +629,6 @@ export function usePWAStatus() {
     isOnline,
     isInstalled,
     hasUpdate,
-    isStandalone: window.matchMedia('(display-mode: standalone)').matches
+    isStandalone
   };
 } 

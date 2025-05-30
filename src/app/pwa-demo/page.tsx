@@ -68,7 +68,7 @@ export default function PWADemoPage() {
   };
 
   const triggerHapticFeedback = () => {
-    if ('vibrate' in navigator) {
+    if (typeof window !== 'undefined' && 'vibrate' in navigator) {
       navigator.vibrate([50, 100, 50]);
       addToast({
         type: 'success',
