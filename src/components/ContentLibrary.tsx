@@ -34,6 +34,7 @@ export default function ContentLibrary() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAddingContent, setIsAddingContent] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [newContent, setNewContent] = useState({
     title: '',
     source: 'podcast' as ContentSource,
@@ -133,6 +134,22 @@ export default function ContentLibrary() {
     setIsAddingContent(true);
   };
 
+  const toggleSelection = (id: string) => {
+    setSelectedIds(prev => 
+      prev.includes(id) 
+        ? prev.filter(itemId => itemId !== id)
+        : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    setSelectedIds(prev => 
+      prev.length === content.length 
+        ? [] 
+        : content.map(item => item.id)
+    );
+  };
+
   if (isLoading) {
     return (
       <div className="px-4 pt-4 pb-[84px] bg-white">
@@ -162,6 +179,12 @@ export default function ContentLibrary() {
     <div className="px-4 pt-4 pb-[84px] bg-white">
       <LibraryHeader>
         <>
+          <button
+            onClick={toggleSelectAll}
+            className="bg-white text-blue-600 border border-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50"
+          >
+            {selectedIds.length === content.length ? 'Deselect All' : 'Select All'}
+          </button>
           <input
             type="file"
             accept=".txt"
@@ -185,26 +208,26 @@ export default function ContentLibrary() {
       </LibraryHeader>
 
       {isAddingContent && (
-        <div className="mb-6 p-4 border rounded-lg">
-          <h2 className="text-lg font-semibold mb-4">Add New Content</h2>
+        <div className="mb-6 p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
+          <h2 className="text-[22px] leading-7 font-semibold text-slate-800 mb-4">Add New Content</h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Title</label>
+              <label className="block text-sm font-medium text-slate-800 mb-1">Title</label>
               <input
                 type="text"
                 value={newContent.title}
                 onChange={(e) => setNewContent({ ...newContent, title: e.target.value })}
                 placeholder="Enter content title"
-                className="w-full p-2 border rounded"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-3 text-base min-h-[44px] focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium mb-1">Source Type</label>
+              <label className="block text-sm font-medium text-slate-800 mb-1">Source Type</label>
               <select
                 value={newContent.source}
                 onChange={(e) => setNewContent({ ...newContent, source: e.target.value as ContentSource })}
-                className="w-full p-2 border rounded"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-3 text-base min-h-[44px] focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="podcast">Podcast</option>
                 <option value="youtube">YouTube</option>
@@ -212,36 +235,36 @@ export default function ContentLibrary() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Source URL (optional)</label>
+              <label className="block text-sm font-medium text-slate-800 mb-1">Source URL (optional)</label>
               <input
                 type="text"
                 value={newContent.sourceUrl}
                 onChange={(e) => setNewContent({ ...newContent, sourceUrl: e.target.value })}
                 placeholder="Enter source URL"
-                className="w-full p-2 border rounded"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-3 text-base min-h-[44px] focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Transcript</label>
+              <label className="block text-sm font-medium text-slate-800 mb-1">Transcript</label>
               <textarea
                 value={newContent.transcript}
                 onChange={(e) => setNewContent({ ...newContent, transcript: e.target.value })}
                 placeholder="Paste transcript here"
-                className="w-full p-2 border rounded h-48"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-3 text-base min-h-[44px] h-48 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
             <div className="flex gap-2">
               <button
                 onClick={handleAddContent}
-                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                className="bg-green-600 text-white rounded-lg px-4 py-3 font-medium min-h-[44px] hover:bg-green-700 flex items-center justify-center"
               >
                 Process
               </button>
               <button
                 onClick={() => setIsAddingContent(false)}
-                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                className="bg-transparent text-slate-500 border border-slate-500 rounded-lg px-4 py-3 font-medium min-h-[44px] hover:bg-slate-100 flex items-center justify-center"
               >
                 Cancel
               </button>
@@ -250,15 +273,32 @@ export default function ContentLibrary() {
         </div>
       )}
 
-      <div className="grid gap-3">
+      <div className="space-y-4">
         {content.map((item) => (
-          <div key={item.id} className="bg-white border border-gray-200 rounded-xl p-4 shadow">
+          <div
+            key={item.id}
+            className={`relative p-4 border rounded-xl shadow-sm transition-colors ${
+              selectedIds.includes(item.id)
+                ? 'border-blue-500 bg-blue-50'
+                : 'border-slate-200'
+            }`}
+          >
             <div className="flex justify-between items-start">
-              <div>
-                <h3 className="text-[22px] leading-7 font-semibold text-slate-800 mb-1">{item.title}</h3>
-                <p className="text-base font-normal text-slate-500 mb-2">{item.source}</p>
+              <div className="flex-1 pr-12">
+                <h3 className="text-lg font-semibold text-slate-800">{item.title}</h3>
+                <p className="text-sm text-slate-500 mt-1">{item.source}</p>
+                {item.source_url && (
+                  <a
+                    href={item.source_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-600 hover:text-blue-700 mt-1 block"
+                  >
+                    View Source
+                  </a>
+                )}
                 <div className="mt-2">
-                  <span className="text-sm font-normal text-slate-500">
+                  <span className="text-sm text-slate-500">
                     {new Date(item.created_at).toLocaleDateString()}
                   </span>
                 </div>
@@ -267,45 +307,77 @@ export default function ContentLibrary() {
                     {item.topics.map((topic) => (
                       <span
                         key={topic}
-                        className="bg-blue-100 text-blue-800 text-xs font-normal px-2 py-1 rounded-md"
+                        className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-md"
                       >
                         {topic}
                       </span>
                     ))}
                   </div>
                 )}
-              </div>
-              <button
-                onClick={() => handleEditContent(item.id)}
-                className="text-slate-500 hover:text-slate-600 font-normal py-3 px-4 min-h-[44px] self-start"
-              >
-                Edit
-              </button>
-            </div>
-            {item.summary && (
-              <div className="mt-4">
-                <h4 className="text-lg leading-6 font-medium text-slate-800 mb-1">Summary</h4>
-                <p className="text-base font-normal text-slate-500">{item.summary}</p>
-              </div>
-            )}
-            <div className="mt-4">
-              <h4 className="text-lg leading-6 font-medium text-slate-800 mb-1">Insights ({item.insights.length})</h4>
-              <div className="space-y-2">
-                {item.insights.slice(0, 3).map((insight) => (
-                  <div key={insight.id} className="text-base font-normal text-slate-500">
-                    {insight.content}
-                  </div>
-                ))}
-                {item.insights.length > 3 && (
-                  <div className="text-sm text-blue-600 hover:text-blue-700 cursor-pointer mt-1">
-                    +{item.insights.length - 3} more insights
+                {item.summary && (
+                  <div className="mt-4">
+                    <h4 className="text-sm font-medium text-slate-800 mb-1">Summary</h4>
+                    <p className="text-sm text-slate-500">{item.summary}</p>
                   </div>
                 )}
+                <div className="mt-4">
+                  <h4 className="text-sm font-medium text-slate-800 mb-1">Insights ({item.insights.length})</h4>
+                  <div className="space-y-2">
+                    {item.insights.slice(0, 3).map((insight) => (
+                      <div key={insight.id} className="text-sm text-slate-500">
+                        {insight.content}
+                      </div>
+                    ))}
+                    {item.insights.length > 3 && (
+                      <div className="text-sm text-blue-600 hover:text-blue-700 cursor-pointer">
+                        +{item.insights.length - 3} more insights
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-start gap-2">
+                <button
+                  onClick={() => handleEditContent(item.id)}
+                  className="text-slate-500 hover:text-slate-600 p-2"
+                  aria-label="Edit content"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => toggleSelection(item.id)}
+                  className="w-11 h-11 flex items-center justify-center"
+                  aria-label={selectedIds.includes(item.id) ? 'Deselect content' : 'Select content'}
+                >
+                  <div className={`w-6 h-6 border-2 rounded ${
+                    selectedIds.includes(item.id)
+                      ? 'border-blue-500 bg-blue-500'
+                      : 'border-slate-300'
+                  }`}>
+                    {selectedIds.includes(item.id) && (
+                      <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </div>
+                </button>
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      {selectedIds.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4">
+          <button
+            className="w-full bg-blue-500 text-white px-4 py-3 rounded-lg hover:bg-blue-600 font-medium"
+          >
+            Start Review ({selectedIds.length} selected)
+          </button>
+        </div>
+      )}
     </div>
   );
 } 
