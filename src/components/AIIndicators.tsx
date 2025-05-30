@@ -12,31 +12,18 @@ export function AIInsight({ children, isAiGenerated = false, confidence }: AIIns
     return <div className="mb-2">{children}</div>;
   }
 
-  const getConfidenceBorderColor = (confidence?: ConfidenceLevel): string => {
-    switch (confidence) {
-      case 'high':
-        return '#059669'; // green
-      case 'medium':
-        return '#D97706'; // amber
-      case 'low':
-        return '#DC2626'; // red
-      default:
-        return '#7C3AED'; // purple - default AI indicator
-    }
-  };
-
   return (
-    <div
-      className="mb-2 pl-3 bg-[#FAFAFA] italic text-slate-700"
-      style={{
-        borderLeft: `3px solid ${getConfidenceBorderColor(confidence)}`,
-        paddingLeft: '12px'
-      }}
-    >
+    <div className="mb-2 pl-3 bg-[#FAFAFA] italic text-[#64748B] border-l-2 border-[#7C3AED] rounded-r-md py-2">
       {children}
       {confidence && (
         <div className="flex items-center mt-1">
-          <AIConfidenceIndicator confidence={confidence} />
+          <span className="text-xs text-[#64748B] mr-1">AI Confidence:</span>
+          <span 
+            className="text-xs font-medium"
+            style={{ color: getConfidenceColor(confidence) }}
+          >
+            {confidence.charAt(0).toUpperCase() + confidence.slice(1)}
+          </span>
         </div>
       )}
     </div>
@@ -92,81 +79,93 @@ interface AIProcessingStatusProps {
 }
 
 export function AIProcessingStatus({ status, className = '' }: AIProcessingStatusProps) {
-  const getStatusConfig = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return {
-          color: '#94A3B8', // slate-400
-          text: 'Pending processing',
-          icon: (
-            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-            </svg>
-          )
-        };
-      case 'processing':
-        return {
-          color: '#7C3AED', // purple
-          text: 'AI processing',
-          icon: (
-            <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
-          )
-        };
-      case 'completed':
-        return {
-          color: '#059669', // green
-          text: 'AI processed',
-          icon: (
-            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-            </svg>
-          )
-        };
-      case 'failed':
-        return {
-          color: '#DC2626', // red
-          text: 'Processing failed',
-          icon: (
-            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-            </svg>
-          )
-        };
-      default:
-        return {
-          color: '#94A3B8',
-          text: 'Unknown status',
-          icon: null
-        };
-    }
-  };
-
-  const config = getStatusConfig(status);
-
+  const statusColor = getStatusColor(status);
+  
   return (
     <div className={`flex items-center gap-1 ${className}`}>
-      <div style={{ color: config.color }}>
-        {config.icon}
-      </div>
-      <span className="text-xs font-normal" style={{ color: config.color }}>
-        {config.text}
+      <div 
+        className="w-2 h-2 rounded-full animate-pulse"
+        style={{ backgroundColor: statusColor }}
+        aria-hidden="true"
+      />
+      <span 
+        className="text-xs font-medium capitalize"
+        style={{ color: statusColor }}
+      >
+        {status}
       </span>
     </div>
   );
 }
 
+// Status color mapping using style guide
+function getStatusColor(status: string): string {
+  switch (status) {
+    case 'completed':
+      return '#059669'; // Success Green
+    case 'processing':
+      return '#D97706'; // Warning Amber
+    case 'failed':
+      return '#DC2626'; // Subtle Red
+    case 'pending':
+    default:
+      return '#94A3B8'; // Soft gray variant
+  }
+}
+
 interface AIContentBadgeProps {
   isAiProcessed?: boolean;
+  confidence?: ConfidenceLevel;
   className?: string;
 }
 
-export function AIContentBadge({ isAiProcessed = false, className = '' }: AIContentBadgeProps) {
+export function AIContentBadge({ isAiProcessed, confidence, className = '' }: AIContentBadgeProps) {
   if (!isAiProcessed) return null;
+
+  const badgeColor = confidence ? getConfidenceColor(confidence) : '#7C3AED'; // Default to neutral purple
 
   return (
     <div className={`inline-flex items-center gap-1 px-2 py-1 bg-purple-50 border border-purple-200 rounded-full ${className}`}>
-      <div className="w-1.5 h-1.5 bg-purple-500 rounded-full" />
-      <span className="text-xs font-medium text-purple-700">AI Enhanced</span>
+      <div className="flex items-center gap-1">
+        <svg 
+          className="w-3 h-3" 
+          fill="currentColor" 
+          viewBox="0 0 20 20"
+          style={{ color: badgeColor }}
+          aria-hidden="true"
+        >
+          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span 
+          className="text-xs font-medium"
+          style={{ color: badgeColor }}
+        >
+          AI Processed
+        </span>
+      </div>
+      {confidence && (
+        <span 
+          className="text-xs"
+          style={{ color: getConfidenceColor(confidence) }}
+          aria-label={`AI confidence level: ${confidence}`}
+        >
+          ({confidence})
+        </span>
+      )}
     </div>
   );
+}
+
+// Helper function to get confidence color using style guide colors
+function getConfidenceColor(confidence?: 'high' | 'medium' | 'low'): string {
+  switch (confidence) {
+    case 'high':
+      return '#059669'; // Success Green
+    case 'medium':
+      return '#D97706'; // Warning Amber
+    case 'low':
+      return '#DC2626'; // Subtle Red
+    default:
+      return '#7C3AED'; // Neutral Purple - default AI indicator
+  }
 } 

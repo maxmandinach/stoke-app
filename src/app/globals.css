@@ -404,3 +404,21 @@ input, textarea, select {
     opacity: 0.7;
   }
 }
+
+/* Design System Utilities */
+@layer utilities {
+  /* 8px Grid Spacing System */
+  .space-xs { margin: 4px; }
+  .space-sm { margin: 8px; }
+  .space-md { margin: 16px; }
+  .space-lg { margin: 24px; }
+  .space-xl { margin: 32px; }
+  .space-2xl { margin: 48px; }
+  .space-3xl { margin: 64px; }
+
+  /* Touch targets - minimum 44px */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

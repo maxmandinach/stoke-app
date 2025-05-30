@@ -3,18 +3,101 @@ import React, { useState, useEffect } from 'react';
 // Feedback types and colors from style guide
 export type FeedbackType = 'success' | 'warning' | 'error' | 'info';
 
-interface FeedbackColors {
-  success: string;
-  warning: string;
-  error: string;
-  info: string;
+interface FeedbackProps {
+  title: string;
+  description: string;
+  onDismiss?: () => void;
 }
 
-const feedbackColors: FeedbackColors = {
-  success: '#059669',
-  warning: '#D97706', 
-  error: '#DC2626',
-  info: '#2563EB'
+interface DismissibleNotificationProps {
+  title?: string;
+  message: string;
+  type?: FeedbackType;
+  onDismiss?: () => void;
+  autoHide?: boolean;
+  autoHideDelay?: number;
+}
+
+// Feedback color mapping using style guide colors
+const feedbackColors = {
+  success: '#059669',    // Success Green
+  warning: '#D97706',    // Warning Amber  
+  error: '#DC2626',      // Subtle Red
+  info: '#2563EB'        // Primary Blue
+} as const;
+
+// Background colors for feedback states
+const feedbackBackgrounds = {
+  success: {
+    bgColor: '#ECFDF5',    // Very light green
+    borderColor: '#10B981', // Emerald-500
+    textColor: '#065F46',   // Emerald-800
+    iconColor: '#059669'    // Success Green
+  },
+  warning: {
+    bgColor: '#FEF3C7',    // Very light amber
+    borderColor: '#F59E0B', // Amber-500
+    textColor: '#92400E',   // Amber-800
+    iconColor: '#D97706'    // Warning Amber
+  },
+  error: {
+    bgColor: '#FEF2F2',    // Very light red
+    borderColor: '#EF4444', // Red-500
+    textColor: '#B91C1C',   // Red-700
+    iconColor: '#DC2626'    // Subtle Red
+  },
+  info: {
+    bgColor: '#EFF6FF',    // Very light blue
+    borderColor: '#3B82F6', // Blue-500
+    textColor: '#1E40AF',   // Blue-800
+    iconColor: '#2563EB'    // Primary Blue
+  }
+} as const;
+
+// Icon components
+const CheckCircleIcon = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 20 20" style={style}>
+    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+  </svg>
+);
+
+const ExclamationTriangleIcon = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 20 20" style={style}>
+    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+  </svg>
+);
+
+const XCircleIcon = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 20 20" style={style}>
+    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+  </svg>
+);
+
+const XMarkIcon = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 20 20" style={style}>
+    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+  </svg>
+);
+
+const InfoIcon = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 20 20" style={style}>
+    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+  </svg>
+);
+
+// Helper function to get icon for feedback type
+const getIconForType = (type: FeedbackType) => {
+  switch (type) {
+    case 'success':
+      return CheckCircleIcon;
+    case 'warning':
+      return ExclamationTriangleIcon;
+    case 'error':
+      return XCircleIcon;
+    case 'info':
+    default:
+      return InfoIcon;
+  }
 };
 
 // Base feedback message component
@@ -505,4 +588,205 @@ export function useToast() {
     dismissToast,
     dismissAll
   };
+}
+
+// Positive feedback component
+export function PositiveFeedback({ title, description, onDismiss }: FeedbackProps) {
+  return (
+    <div 
+      className="p-4 rounded-lg border transition-all duration-200"
+      style={{ backgroundColor: '#ECFDF5' }}
+      role="alert"
+      aria-live="polite"
+    >
+      <div className="flex items-start">
+        <div className="flex-shrink-0">
+          <CheckCircleIcon 
+            className="h-5 w-5"
+            style={{ color: '#059669' }}
+            aria-hidden="true"
+          />
+        </div>
+        <div className="ml-3 flex-1">
+          <h3 className="text-lg font-semibold text-[#1E293B] mb-2">
+            {title}
+          </h3>
+          <div className="text-sm space-y-2">
+            <p className="text-[#64748B] mb-4">
+              {description}
+            </p>
+            {onDismiss && (
+              <button
+                onClick={onDismiss}
+                className="text-sm font-medium text-[#059669] hover:text-[#047857] focus:outline-none focus:ring-2 focus:ring-[#059669] focus:ring-offset-2 transition-colors duration-200 px-3 py-2 rounded-md hover:bg-green-50 touch-target"
+                aria-label="Dismiss positive feedback"
+              >
+                Got it!
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Warning feedback component  
+export function WarningFeedback({ title, description, onDismiss }: FeedbackProps) {
+  return (
+    <div 
+      className="p-4 rounded-lg border transition-all duration-200"
+      style={{ backgroundColor: '#FEF3C7' }}
+      role="alert"
+      aria-live="polite"
+    >
+      <div className="flex items-start">
+        <div className="flex-shrink-0">
+          <ExclamationTriangleIcon 
+            className="h-5 w-5"
+            style={{ color: '#D97706' }}
+            aria-hidden="true"
+          />
+        </div>
+        <div className="ml-3 flex-1">
+          <h3 className="text-lg font-semibold text-[#1E293B] mb-2">
+            {title}
+          </h3>
+          <div className="text-sm space-y-2">
+            <p className="text-[#64748B] mb-4">
+              {description}
+            </p>
+            {onDismiss && (
+              <button
+                onClick={onDismiss}
+                className="text-sm font-medium text-[#D97706] hover:text-[#B45309] focus:outline-none focus:ring-2 focus:ring-[#D97706] focus:ring-offset-2 transition-colors duration-200 px-3 py-2 rounded-md hover:bg-amber-50 touch-target"
+                aria-label="Dismiss warning"
+              >
+                Still working on this
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Error feedback component
+export function ErrorFeedback({ title, description, onDismiss }: FeedbackProps) {
+  return (
+    <div 
+      className="p-4 rounded-lg border transition-all duration-200"
+      style={{ backgroundColor: '#FEF2F2' }}
+      role="alert"
+      aria-live="assertive"
+    >
+      <div className="flex items-start">
+        <div className="flex-shrink-0">
+          <XCircleIcon 
+            className="h-5 w-5"
+            style={{ color: '#DC2626' }}
+            aria-hidden="true"
+          />
+        </div>
+        <div className="ml-3 flex-1">
+          <h3 className="text-lg font-semibold text-[#1E293B] mb-2">
+            {title}
+          </h3>
+          <div className="text-sm space-y-2">
+            <p className="text-[#64748B] mb-4">
+              {description}
+            </p>
+            {onDismiss && (
+              <button
+                onClick={onDismiss}
+                className="text-sm font-medium text-[#DC2626] hover:text-[#B91C1C] focus:outline-none focus:ring-2 focus:ring-[#DC2626] focus:ring-offset-2 transition-colors duration-200 px-3 py-2 rounded-md hover:bg-red-50 touch-target"
+                aria-label="Dismiss error"
+              >
+                Don't show me this again
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Dismissible notification component
+export function DismissibleNotification({ 
+  title, 
+  message, 
+  type = 'info',
+  onDismiss,
+  autoHide = true,
+  autoHideDelay = 5000
+}: DismissibleNotificationProps) {
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    if (autoHide && autoHideDelay > 0) {
+      const timer = setTimeout(() => {
+        setIsVisible(false);
+        onDismiss?.();
+      }, autoHideDelay);
+
+      return () => clearTimeout(timer);
+    }
+    // Return empty cleanup function when condition is not met
+    return () => {};
+  }, [autoHide, autoHideDelay, onDismiss]);
+
+  if (!isVisible) return null;
+
+  const config = feedbackBackgrounds[type];
+  const Icon = getIconForType(type);
+
+  return (
+    <div 
+      className="p-4 rounded-lg border shadow-sm transition-all duration-200"
+      style={{ backgroundColor: config.bgColor, borderColor: config.borderColor }}
+      role="alert"
+      aria-live={type === 'error' ? 'assertive' : 'polite'}
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex items-start">
+          <div className="flex-shrink-0">
+            <Icon 
+              className="h-5 w-5"
+              style={{ color: config.iconColor }}
+              aria-hidden="true"
+            />
+          </div>
+          <div className="ml-3">
+            {title && (
+              <p className="text-sm font-semibold text-[#1E293B]">
+                {title}
+              </p>
+            )}
+            <p className={`text-sm text-[#64748B] ${title ? 'mt-1' : ''}`}>
+              {message}
+            </p>
+          </div>
+        </div>
+        
+        {onDismiss && (
+          <div className="ml-4 flex-shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                setIsVisible(false);
+                onDismiss();
+              }}
+              className="rounded-md inline-flex text-[#94A3B8] hover:text-[#64748B] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#64748B] transition-colors duration-200 p-2 touch-target"
+              aria-label="Dismiss notification"
+            >
+              <span className="sr-only">Dismiss</span>
+              <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 } 
