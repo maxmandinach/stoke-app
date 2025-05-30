@@ -152,12 +152,12 @@ export default function ContentLibrary() {
 
   if (isLoading) {
     return (
-      <div className="px-4 pt-4 pb-[84px] bg-white">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
+      <div className="px-4 pt-4 pb-[84px] bg-white min-h-screen">
+        <div className="animate-pulse space-y-6">
+          <div className="h-8 bg-slate-200 rounded-lg w-1/4 mb-6"></div>
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-32 bg-gray-200 rounded"></div>
+              <div key={i} className="h-32 bg-slate-100 rounded-xl border border-slate-200"></div>
             ))}
           </div>
         </div>
@@ -167,21 +167,22 @@ export default function ContentLibrary() {
 
   if (error) {
     return (
-      <div className="px-4 pt-4 pb-[84px] bg-white">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-          {error}
+      <div className="px-4 pt-4 pb-[84px] bg-white min-h-screen">
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg" role="alert">
+          <p className="font-medium">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="px-4 pt-4 pb-[84px] bg-white">
+    <div className="px-4 pt-4 pb-[84px] bg-white min-h-screen">
       <LibraryHeader>
         <>
           <button
             onClick={toggleSelectAll}
-            className="bg-white text-blue-600 border border-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50"
+            className="bg-white text-blue-600 border border-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors duration-200 min-h-[44px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            aria-label={selectedIds.length === content.length ? 'Deselect all content' : 'Select all content'}
           >
             {selectedIds.length === content.length ? 'Deselect All' : 'Select All'}
           </button>
@@ -191,16 +192,18 @@ export default function ContentLibrary() {
             onChange={handleFileUpload}
             className="hidden"
             id="file-upload"
+            aria-label="Import transcript file"
           />
           <label
             htmlFor="file-upload"
-            className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 cursor-pointer"
+            className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 cursor-pointer transition-colors duration-200 min-h-[44px] inline-flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
           >
             Import Transcript
           </label>
           <button
             onClick={() => setIsAddingContent(true)}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200 min-h-[44px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            aria-label="Add new content"
           >
             Add Content
           </button>
@@ -208,26 +211,28 @@ export default function ContentLibrary() {
       </LibraryHeader>
 
       {isAddingContent && (
-        <div className="mb-6 p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
+        <div className="mb-6 p-4 bg-white border border-slate-200 rounded-xl shadow-sm transition-all duration-200">
           <h2 className="text-[22px] leading-7 font-semibold text-slate-800 mb-4">Add New Content</h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-800 mb-1">Title</label>
+              <label htmlFor="content-title" className="block text-sm font-medium text-slate-800 mb-1">Title</label>
               <input
+                id="content-title"
                 type="text"
                 value={newContent.title}
                 onChange={(e) => setNewContent({ ...newContent, title: e.target.value })}
                 placeholder="Enter content title"
-                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-3 text-base min-h-[44px] focus:ring-blue-500 focus:border-blue-500"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-3 text-base min-h-[44px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-slate-800 mb-1">Source Type</label>
+              <label htmlFor="content-source" className="block text-sm font-medium text-slate-800 mb-1">Source Type</label>
               <select
+                id="content-source"
                 value={newContent.source}
                 onChange={(e) => setNewContent({ ...newContent, source: e.target.value as ContentSource })}
-                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-3 text-base min-h-[44px] focus:ring-blue-500 focus:border-blue-500"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-3 text-base min-h-[44px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
               >
                 <option value="podcast">Podcast</option>
                 <option value="youtube">YouTube</option>
@@ -235,36 +240,39 @@ export default function ContentLibrary() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-800 mb-1">Source URL (optional)</label>
+              <label htmlFor="content-url" className="block text-sm font-medium text-slate-800 mb-1">Source URL (optional)</label>
               <input
+                id="content-url"
                 type="text"
                 value={newContent.sourceUrl}
                 onChange={(e) => setNewContent({ ...newContent, sourceUrl: e.target.value })}
                 placeholder="Enter source URL"
-                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-3 text-base min-h-[44px] focus:ring-blue-500 focus:border-blue-500"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-3 text-base min-h-[44px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-800 mb-1">Transcript</label>
+              <label htmlFor="content-transcript" className="block text-sm font-medium text-slate-800 mb-1">Transcript</label>
               <textarea
+                id="content-transcript"
                 value={newContent.transcript}
                 onChange={(e) => setNewContent({ ...newContent, transcript: e.target.value })}
                 placeholder="Paste transcript here"
-                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-3 text-base min-h-[44px] h-48 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-3 text-base min-h-[120px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
               />
             </div>
 
             <div className="flex gap-2">
               <button
                 onClick={handleAddContent}
-                className="bg-green-600 text-white rounded-lg px-4 py-3 font-medium min-h-[44px] hover:bg-green-700 flex items-center justify-center"
+                className="flex-1 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200 min-h-[44px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                disabled={!newContent.transcript}
               >
-                Process
+                Save Content
               </button>
               <button
                 onClick={() => setIsAddingContent(false)}
-                className="bg-transparent text-slate-500 border border-slate-500 rounded-lg px-4 py-3 font-medium min-h-[44px] hover:bg-slate-100 flex items-center justify-center"
+                className="flex-1 bg-white text-slate-600 border border-slate-300 px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors duration-200 min-h-[44px] focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
               >
                 Cancel
               </button>
@@ -277,107 +285,51 @@ export default function ContentLibrary() {
         {content.map((item) => (
           <div
             key={item.id}
-            className={`relative p-4 border rounded-xl shadow-sm transition-colors ${
+            className={`p-4 bg-white border rounded-xl shadow-sm transition-all duration-200 cursor-pointer ${
               selectedIds.includes(item.id)
                 ? 'border-blue-500 bg-blue-50'
-                : 'border-slate-200'
+                : 'border-slate-200 hover:border-slate-300'
             }`}
+            onClick={() => toggleSelection(item.id)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                toggleSelection(item.id);
+              }
+            }}
+            aria-selected={selectedIds.includes(item.id)}
           >
-            <div className="flex justify-between items-start">
-              <div className="flex-1 pr-12">
-                <h3 className="text-lg font-semibold text-slate-800">{item.title}</h3>
-                <p className="text-sm text-slate-500 mt-1">{item.source}</p>
-                {item.source_url && (
-                  <a
-                    href={item.source_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-blue-600 hover:text-blue-700 mt-1 block"
-                  >
-                    View Source
-                  </a>
-                )}
-                <div className="mt-2">
-                  <span className="text-sm text-slate-500">
-                    {new Date(item.created_at).toLocaleDateString()}
-                  </span>
-                </div>
-                {item.topics.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {item.topics.map((topic) => (
-                      <span
-                        key={topic}
-                        className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-md"
-                      >
-                        {topic}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                {item.summary && (
-                  <div className="mt-4">
-                    <h4 className="text-sm font-medium text-slate-800 mb-1">Summary</h4>
-                    <p className="text-sm text-slate-500">{item.summary}</p>
-                  </div>
-                )}
-                <div className="mt-4">
-                  <h4 className="text-sm font-medium text-slate-800 mb-1">Insights ({item.insights.length})</h4>
-                  <div className="space-y-2">
-                    {item.insights.slice(0, 3).map((insight) => (
-                      <div key={insight.id} className="text-sm text-slate-500">
-                        {insight.content}
-                      </div>
-                    ))}
-                    {item.insights.length > 3 && (
-                      <div className="text-sm text-blue-600 hover:text-blue-700 cursor-pointer">
-                        +{item.insights.length - 3} more insights
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <button
-                  onClick={() => handleEditContent(item.id)}
-                  className="text-slate-500 hover:text-slate-600 p-2"
-                  aria-label="Edit content"
+            <div className="flex justify-between items-start mb-2">
+              <h3 className="text-lg font-semibold text-slate-800">{item.title}</h3>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleEditContent(item.id);
+                }}
+                className="text-slate-400 hover:text-slate-600 transition-colors duration-200 p-1 rounded-full hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+                aria-label={`Edit ${item.title}`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
+              </button>
+            </div>
+            <p className="text-sm text-slate-600 mb-2">{item.summary}</p>
+            <div className="flex flex-wrap gap-2">
+              {item.topics.map((topic) => (
+                <span
+                  key={topic}
+                  className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-full"
                 >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                </button>
-                <button
-                  onClick={() => toggleSelection(item.id)}
-                  className="w-11 h-11 flex items-center justify-center"
-                  aria-label={selectedIds.includes(item.id) ? 'Deselect content' : 'Select content'}
-                >
-                  <div className={`w-6 h-6 border-2 rounded ${
-                    selectedIds.includes(item.id)
-                      ? 'border-blue-500 bg-blue-500'
-                      : 'border-slate-300'
-                  }`}>
-                    {selectedIds.includes(item.id) && (
-                      <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    )}
-                  </div>
-                </button>
-              </div>
+                  {topic}
+                </span>
+              ))}
             </div>
           </div>
         ))}
       </div>
-
-      {selectedIds.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4">
-          <button
-            className="w-full bg-blue-500 text-white px-4 py-3 rounded-lg hover:bg-blue-600 font-medium"
-          >
-            Start Review ({selectedIds.length} selected)
-          </button>
-        </div>
-      )}
     </div>
   );
 } 

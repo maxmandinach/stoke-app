@@ -6,14 +6,18 @@ interface LibraryHeaderProps {
 
 export default function LibraryHeader({ children }: LibraryHeaderProps) {
   return (
-    <div
-      className="library-header flex justify-between items-center mb-6"
+    <header
+      className="flex justify-between items-center mb-6"
       style={{ paddingTop: 'env(safe-area-inset-top)' }}
     >
-      <h1 className="text-2xl font-bold text-gray-900" style={{ fontSize: 28, lineHeight: '32px', fontWeight: 600 }}>
+      <h1 className="text-[28px] leading-[32px] font-semibold text-slate-800">
         Content Library
       </h1>
-      {children && <div className="flex gap-2">{children}</div>}
-    </div>
+      {children && (
+        <div className="flex gap-2" role="toolbar" aria-label="Content library actions">
+          {children}
+        </div>
+      )}
+    </header>
   );
 } 

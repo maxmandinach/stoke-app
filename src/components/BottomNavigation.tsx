@@ -39,7 +39,10 @@ export default function BottomNavigation() {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-[0_-1px_3px_rgba(0,0,0,0.1)]">
+    <nav 
+      className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 shadow-[0_-1px_3px_rgba(0,0,0,0.1)]"
+      aria-label="Main navigation"
+    >
       <div className="flex justify-around items-center h-[60px] px-4 pb-[env(safe-area-inset-bottom,0)]">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
@@ -47,11 +50,12 @@ export default function BottomNavigation() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center w-full h-full min-h-[44px] ${
-                isActive ? 'text-blue-600' : 'text-gray-600'
+              className={`flex flex-col items-center justify-center w-full h-full min-h-[44px] transition-colors duration-200 ${
+                isActive ? 'text-blue-600' : 'text-slate-600 hover:text-slate-800'
               }`}
+              aria-current={isActive ? 'page' : undefined}
             >
-              <div className="w-6 h-6">{item.icon}</div>
+              <div className="w-6 h-6" aria-hidden="true">{item.icon}</div>
               <span className="text-xs mt-1">{item.label}</span>
             </Link>
           );
