@@ -94,14 +94,6 @@ export function TopicBadge({ topic, size = 'md', onClick, isSelected = false, cl
     borderColor: colors.border,
   };
 
-  const hoverStyle = {
-    ':hover': {
-      backgroundColor: isSelected ? colors.border : colors.hover,
-      transform: 'translateY(-1px)',
-      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
-    }
-  };
-
   return (
     <span
       className={baseClasses}
