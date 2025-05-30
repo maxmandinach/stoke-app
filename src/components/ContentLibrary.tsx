@@ -10,7 +10,7 @@ import { AIInsight, AIProcessingStatus, AIContentBadge } from './AIIndicators';
 import { TopicFilterBar, TopicList, TopicGroupHeader, getAllTopics, groupContentByTopics } from './TopicComponents';
 import { ContentMetadata } from './ContentTypeIndicator';
 import StartReviewButton from './StartReviewButton';
-import { PageSkeleton, LoadingTransition, ProcessingSkeleton, InlineProcessing } from './SkeletonComponents';
+import { PageSkeleton, InlineProcessing } from './SkeletonComponents';
 
 type Json = Database['public']['Tables']['content']['Row']['insights'][number];
 

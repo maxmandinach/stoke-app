@@ -280,6 +280,9 @@ export function UpdateNotification({ onUpdate, onDismiss }: UpdateNotificationPr
       
       return () => clearInterval(interval);
     }
+    
+    // Return empty cleanup function when serviceWorker is not available
+    return () => {};
   }, []);
 
   const handleUpdate = async () => {

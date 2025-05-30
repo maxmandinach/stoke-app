@@ -315,6 +315,9 @@ export function ToastNotification({
       }, duration);
       return () => clearTimeout(timer);
     }
+    
+    // Return empty cleanup function when duration is not greater than 0
+    return () => {};
   }, [duration]);
 
   const handleDismiss = () => {
@@ -360,6 +363,7 @@ export function ToastNotification({
           )
         };
       case 'info':
+      default:
         return {
           bgColor: '#FFFFFF',
           borderColor: feedbackColors.info,

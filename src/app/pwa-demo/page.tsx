@@ -8,7 +8,6 @@ import {
   SafeAreaContainer, 
   TouchFeedback, 
   PageTransition, 
-  AppShell,
   usePWAStatus 
 } from '@/components/PWAComponents';
 import { FeedbackMessage, ToastContainer, useToast } from '@/components/FeedbackComponents';
