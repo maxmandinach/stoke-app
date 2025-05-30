@@ -2,28 +2,464 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ========================================
+   STOKE DESIGN SYSTEM - CSS CUSTOM PROPERTIES
+   ======================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* === PRIMARY COLOR PALETTE === */
+  --stoke-primary-blue: #2563EB;
+  --stoke-deep-navy: #1E293B;
+  --stoke-soft-gray: #64748B;
+  
+  /* === BACKGROUND COLORS === */
+  --stoke-pure-white: #FFFFFF;
+  --stoke-light-gray: #F8FAFC;
+  --stoke-warm-white: #FEFEFE;
+  
+  /* === FEEDBACK COLORS === */
+  --stoke-success-green: #059669;
+  --stoke-warning-amber: #D97706;
+  --stoke-subtle-red: #DC2626;
+  --stoke-neutral-purple: #7C3AED;
+  
+  /* === EXTENDED COLOR PALETTE === */
+  --stoke-blue-50: #EFF6FF;
+  --stoke-blue-100: #DBEAFE;
+  --stoke-blue-200: #BFDBFE;
+  --stoke-blue-500: #3B82F6;
+  --stoke-gray-50: #F8FAFC;
+  --stoke-gray-100: #F1F5F9;
+  --stoke-gray-200: #E2E8F0;
+  --stoke-gray-300: #CBD5E1;
+  --stoke-gray-400: #94A3B8;
+  --stoke-gray-500: #64748B;
+  --stoke-gray-600: #475569;
+  --stoke-gray-700: #334155;
+  --stoke-gray-800: #1E293B;
+  --stoke-gray-900: #0F172A;
+  
+  /* === TYPOGRAPHY SCALE === */
+  --stoke-font-display: 28px;
+  --stoke-line-display: 32px;
+  --stoke-weight-display: 600;
+  
+  --stoke-font-title: 22px;
+  --stoke-line-title: 28px;
+  --stoke-weight-title: 600;
+  
+  --stoke-font-subtitle: 18px;
+  --stoke-line-subtitle: 24px;
+  --stoke-weight-subtitle: 500;
+  
+  --stoke-font-body: 16px;
+  --stoke-line-body: 24px;
+  --stoke-weight-body: 400;
+  
+  --stoke-font-caption: 14px;
+  --stoke-line-caption: 20px;
+  --stoke-weight-caption: 400;
+  
+  --stoke-font-small: 12px;
+  --stoke-line-small: 16px;
+  --stoke-weight-small: 400;
+  
+  /* === SPACING SCALE (8px Grid System) === */
+  --stoke-space-xs: 4px;
+  --stoke-space-sm: 8px;
+  --stoke-space-md: 16px;
+  --stoke-space-lg: 24px;
+  --stoke-space-xl: 32px;
+  --stoke-space-2xl: 48px;
+  --stoke-space-3xl: 64px;
+  
+  /* === BORDER RADIUS === */
+  --stoke-radius-sm: 4px;
+  --stoke-radius-md: 8px;
+  --stoke-radius-lg: 12px;
+  --stoke-radius-xl: 16px;
+  
+  /* === SHADOWS === */
+  --stoke-shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --stoke-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --stoke-shadow-elevated: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --stoke-shadow-prominent: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  
+  /* === TRANSITIONS === */
+  --stoke-transition-fast: 150ms ease-out;
+  --stoke-transition-normal: 200ms ease-out;
+  --stoke-transition-slow: 300ms ease-out;
+  
+  /* === LEGACY PROPERTIES === */
+  --background: var(--stoke-pure-white);
+  --foreground: var(--stoke-deep-navy);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
   }
   
   body {
     background: var(--background);
     color: var(--foreground);
-    font-family: var(--font-geist-sans);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Prevent zoom on input focus for iOS */
+  input, textarea, select {
+    font-size: 16px;
+  }
+  
+  /* Remove default button styles */
+  button {
+    font-family: inherit;
   }
 }
 
-/* Skeleton loading animations */
+/* ========================================
+   STOKE TYPOGRAPHY CLASSES
+   ======================================== */
+
+@layer components {
+  .stoke-display {
+    font-size: var(--stoke-font-display);
+    line-height: var(--stoke-line-display);
+    font-weight: var(--stoke-weight-display);
+    color: var(--stoke-deep-navy);
+    letter-spacing: -0.025em;
+  }
+  
+  .stoke-title {
+    font-size: var(--stoke-font-title);
+    line-height: var(--stoke-line-title);
+    font-weight: var(--stoke-weight-title);
+    color: var(--stoke-deep-navy);
+    letter-spacing: -0.025em;
+  }
+  
+  .stoke-subtitle {
+    font-size: var(--stoke-font-subtitle);
+    line-height: var(--stoke-line-subtitle);
+    font-weight: var(--stoke-weight-subtitle);
+    color: var(--stoke-deep-navy);
+  }
+  
+  .stoke-body {
+    font-size: var(--stoke-font-body);
+    line-height: var(--stoke-line-body);
+    font-weight: var(--stoke-weight-body);
+    color: var(--stoke-deep-navy);
+  }
+  
+  .stoke-caption {
+    font-size: var(--stoke-font-caption);
+    line-height: var(--stoke-line-caption);
+    font-weight: var(--stoke-weight-caption);
+    color: var(--stoke-soft-gray);
+  }
+  
+  .stoke-small {
+    font-size: var(--stoke-font-small);
+    line-height: var(--stoke-line-small);
+    font-weight: var(--stoke-weight-small);
+    color: var(--stoke-soft-gray);
+  }
+  
+  /* ========================================
+     STOKE BUTTON SYSTEM
+     ======================================== */
+  
+  .stoke-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--stoke-radius-md);
+    padding: 12px 16px;
+    font-weight: 500;
+    min-height: 44px;
+    font-size: var(--stoke-font-body);
+    line-height: 1;
+    transition: all var(--stoke-transition-normal);
+    cursor: pointer;
+    border: 1px solid transparent;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .stoke-btn:focus {
+    outline: 2px solid var(--stoke-primary-blue);
+    outline-offset: 2px;
+  }
+  
+  .stoke-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
+  /* Primary Button */
+  .stoke-btn-primary {
+    background: var(--stoke-primary-blue);
+    color: var(--stoke-pure-white);
+  }
+  
+  .stoke-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--stoke-shadow-elevated);
+    background: #1D4ED8; /* Slightly darker blue */
+  }
+  
+  .stoke-btn-primary:active {
+    transform: translateY(0);
+    background: #1E40AF; /* Even darker blue */
+  }
+  
+  /* Secondary Button */
+  .stoke-btn-secondary {
+    background: transparent;
+    color: var(--stoke-primary-blue);
+    border-color: var(--stoke-primary-blue);
+  }
+  
+  .stoke-btn-secondary:hover {
+    background: var(--stoke-blue-50);
+    transform: translateY(-1px);
+    box-shadow: var(--stoke-shadow-subtle);
+  }
+  
+  .stoke-btn-secondary:active {
+    transform: translateY(0);
+    background: var(--stoke-blue-100);
+  }
+  
+  /* Tertiary Button */
+  .stoke-btn-tertiary {
+    background: transparent;
+    color: var(--stoke-soft-gray);
+    border: none;
+  }
+  
+  .stoke-btn-tertiary:hover {
+    color: var(--stoke-deep-navy);
+    background: var(--stoke-gray-100);
+  }
+  
+  .stoke-btn-tertiary:active {
+    background: var(--stoke-gray-200);
+  }
+  
+  /* Button Sizes */
+  .stoke-btn-sm {
+    padding: 8px 12px;
+    min-height: 36px;
+    font-size: var(--stoke-font-caption);
+  }
+  
+  .stoke-btn-lg {
+    padding: 16px 24px;
+    min-height: 52px;
+    font-size: var(--stoke-font-subtitle);
+  }
+  
+  /* ========================================
+     STOKE CARD SYSTEM
+     ======================================== */
+  
+  .stoke-card {
+    background: var(--stoke-pure-white);
+    border-radius: var(--stoke-radius-lg);
+    padding: var(--stoke-space-md);
+    box-shadow: var(--stoke-shadow-card);
+    border: 1px solid var(--stoke-gray-200);
+    transition: all var(--stoke-transition-fast);
+    position: relative;
+  }
+  
+  .stoke-card:hover {
+    box-shadow: var(--stoke-shadow-elevated);
+    transform: translateY(-1px);
+    border-color: var(--stoke-gray-300);
+  }
+  
+  /* Card Selection States */
+  .stoke-card-selectable {
+    cursor: pointer;
+  }
+  
+  .stoke-card-selected {
+    border: 2px solid var(--stoke-primary-blue);
+    background: var(--stoke-blue-50);
+    transform: scale(1.02);
+    box-shadow: var(--stoke-shadow-prominent);
+  }
+  
+  .stoke-card-selected:hover {
+    transform: scale(1.02) translateY(-1px);
+  }
+  
+  /* ========================================
+     STOKE INPUT SYSTEM
+     ======================================== */
+  
+  .stoke-input {
+    background: var(--stoke-light-gray);
+    border: 1px solid var(--stoke-gray-200);
+    border-radius: var(--stoke-radius-md);
+    padding: 12px;
+    font-size: var(--stoke-font-body);
+    min-height: 44px;
+    width: 100%;
+    transition: all var(--stoke-transition-normal);
+    color: var(--stoke-deep-navy);
+  }
+  
+  .stoke-input::placeholder {
+    color: var(--stoke-soft-gray);
+  }
+  
+  .stoke-input:focus {
+    outline: none;
+    border-color: var(--stoke-primary-blue);
+    background: var(--stoke-pure-white);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+  
+  .stoke-input:invalid {
+    border-color: var(--stoke-subtle-red);
+  }
+  
+  /* ========================================
+     STOKE LAYOUT CLASSES
+     ======================================== */
+  
+  .stoke-container {
+    padding: var(--stoke-space-md);
+    min-height: 100vh;
+    background: var(--stoke-pure-white);
+  }
+  
+  .stoke-section {
+    margin-bottom: var(--stoke-space-lg);
+  }
+  
+  .stoke-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--stoke-space-lg);
+    padding-top: env(safe-area-inset-top, 0);
+  }
+  
+  .stoke-grid {
+    display: grid;
+    gap: var(--stoke-space-sm);
+    margin-bottom: var(--stoke-space-lg);
+  }
+  
+  /* ========================================
+     AI CONTENT STYLING
+     ======================================== */
+  
+  .stoke-ai-content {
+    border-left: 3px solid var(--stoke-neutral-purple);
+    padding-left: var(--stoke-space-sm);
+    background: var(--stoke-gray-50);
+    font-style: italic;
+  }
+  
+  .stoke-ai-confidence-high {
+    border-left-color: var(--stoke-success-green);
+  }
+  
+  .stoke-ai-confidence-low {
+    border-left-color: var(--stoke-warning-amber);
+  }
+  
+  /* ========================================
+     PROGRESS INDICATORS
+     ======================================== */
+  
+  .stoke-progress {
+    height: 4px;
+    background: var(--stoke-gray-200);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  
+  .stoke-progress-fill {
+    height: 100%;
+    background: var(--stoke-primary-blue);
+    border-radius: 2px;
+    transition: width var(--stoke-transition-slow);
+  }
+  
+  /* ========================================
+     TOPIC SYSTEM
+     ======================================== */
+  
+  .stoke-topic-tag {
+    display: inline-flex;
+    align-items: center;
+    font-weight: 500;
+    border-radius: 9999px;
+    border: 1px solid;
+    transition: all var(--stoke-transition-normal);
+    user-select: none;
+    text-decoration: none;
+  }
+  
+  .stoke-topic-tag-sm {
+    padding: 4px 8px;
+    font-size: var(--stoke-font-small);
+    min-height: 24px;
+  }
+  
+  .stoke-topic-tag-md {
+    padding: 6px 12px;
+    font-size: var(--stoke-font-caption);
+    min-height: 32px;
+  }
+  
+  .stoke-topic-tag-lg {
+    padding: 8px 16px;
+    font-size: var(--stoke-font-body);
+    min-height: 44px;
+  }
+  
+  .stoke-topic-tag-interactive {
+    cursor: pointer;
+  }
+  
+  .stoke-topic-tag-interactive:hover {
+    transform: translateY(-1px);
+  }
+  
+  .stoke-topic-tag-interactive:active {
+    transform: scale(0.95);
+  }
+  
+  .stoke-topic-tag-interactive:focus {
+    outline: 2px solid var(--stoke-primary-blue);
+    outline-offset: 2px;
+  }
+}
+
+/* ========================================
+   SKELETON LOADING ANIMATIONS (MAINTAINED)
+   ======================================== */
+
 @layer components {
   .skeleton-shimmer {
     position: relative;
@@ -145,8 +581,18 @@
     .pulse-slow {
       animation: none;
     }
+    
+    .stoke-btn:hover,
+    .stoke-card:hover,
+    .stoke-topic-tag-interactive:hover {
+      transform: none;
+    }
   }
 }
+
+/* ========================================
+   MOBILE-SPECIFIC OPTIMIZATIONS (MAINTAINED)
+   ======================================== */
 
 /* Safe area insets for modern mobile browsers */
 .pb-safe {
@@ -157,9 +603,12 @@
   padding-top: env(safe-area-inset-top, 0);
 }
 
-/* Prevent zoom on input focus for iOS */
-input, textarea, select {
-  font-size: 16px;
+.pl-safe {
+  padding-left: env(safe-area-inset-left, 0);
+}
+
+.pr-safe {
+  padding-right: env(safe-area-inset-right, 0);
 }
 
 /* Smooth scrolling for mobile */
@@ -168,201 +617,65 @@ input, textarea, select {
   overflow-y: auto;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-/* Existing skeleton animations */
-@keyframes shimmer {
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: calc(200px + 100%) 0;
-  }
-}
-
-/* Staggered animation delays */
-.animate-stagger > *:nth-child(1) { animation-delay: 0ms; }
-.animate-stagger > *:nth-child(2) { animation-delay: 100ms; }
-.animate-stagger > *:nth-child(3) { animation-delay: 200ms; }
-.animate-stagger > *:nth-child(4) { animation-delay: 300ms; }
-.animate-stagger > *:nth-child(5) { animation-delay: 400ms; }
-.animate-stagger > *:nth-child(6) { animation-delay: 500ms; }
-
-/* Processing animation */
-.animate-processing {
-  animation: processing 1.5s ease-in-out infinite;
-}
-
-@keyframes processing {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-
-/* Accessibility: Respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .animate-shimmer,
-  .animate-stagger > *,
-  .animate-processing {
-    animation: none;
-  }
-}
-
-/* PWA-specific animations */
-@keyframes ripple {
-  0% {
-    width: 0;
-    height: 0;
-    opacity: 0.5;
-  }
-  100% {
-    width: 120px;
-    height: 120px;
-    opacity: 0;
-  }
-}
-
-@keyframes slideInFromRight {
-  0% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideInFromLeft {
-  0% {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideInFromTop {
-  0% {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideInFromBottom {
-  0% {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-/* PWA utility classes */
-.pwa-slide-right {
-  animation: slideInFromRight 0.3s ease-out;
-}
-
-.pwa-slide-left {
-  animation: slideInFromLeft 0.3s ease-out;
-}
-
-.pwa-slide-up {
-  animation: slideInFromBottom 0.3s ease-out;
-}
-
-.pwa-slide-down {
-  animation: slideInFromTop 0.3s ease-out;
-}
-
-.pwa-fade {
-  animation: fadeIn 0.3s ease-out;
-}
-
 /* Touch feedback */
 .touch-feedback:active {
-  transform: scale(0.95);
-  transition: transform 0.1s ease-out;
+  transform: scale(0.98);
+  opacity: 0.8;
 }
 
-/* Safe area support */
 .safe-area-inset-top {
-  padding-top: max(env(safe-area-inset-top), 0px);
+  padding-top: env(safe-area-inset-top);
 }
 
 .safe-area-inset-bottom {
-  padding-bottom: max(env(safe-area-inset-bottom), 0px);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .safe-area-inset-left {
-  padding-left: max(env(safe-area-inset-left), 0px);
+  padding-left: env(safe-area-inset-left);
 }
 
 .safe-area-inset-right {
-  padding-right: max(env(safe-area-inset-right), 0px);
+  padding-right: env(safe-area-inset-right);
 }
 
-/* iOS Safari specific fixes */
-@supports (-webkit-touch-callout: none) {
+@media screen and (max-width: 768px) {
   .ios-scroll-fix {
     -webkit-overflow-scrolling: touch;
   }
 }
 
-/* Android Chrome specific fixes */
 @media screen and (max-width: 768px) {
   .android-scroll-fix {
-    overscroll-behavior: contain;
+    overflow-y: auto;
   }
 }
 
-/* App-like transitions */
 .app-transition {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
-/* Pull-to-refresh indicator */
 @keyframes pullToRefresh {
   0% {
-    transform: translateY(-100%) rotate(0deg);
+    transform: translateY(-100%);
+    opacity: 0;
   }
   50% {
-    transform: translateY(-50%) rotate(180deg);
+    opacity: 1;
   }
   100% {
-    transform: translateY(0) rotate(360deg);
+    transform: translateY(0);
+    opacity: 1;
   }
 }
 
 .pull-to-refresh {
-  animation: pullToRefresh 1s ease-in-out infinite;
+  animation: pullToRefresh 0.5s ease-out;
 }
 
-/* Offline mode styling */
 .offline-mode {
-  filter: grayscale(0.3) brightness(0.9);
-  transition: filter 0.3s ease;
+  position: relative;
+  opacity: 0.6;
 }
 
 .offline-mode::after {
@@ -376,22 +689,20 @@ input, textarea, select {
     45deg,
     transparent,
     transparent 10px,
-    rgba(0, 0, 0, 0.03) 10px,
-    rgba(0, 0, 0, 0.03) 20px
+    rgba(0, 0, 0, 0.1) 10px,
+    rgba(0, 0, 0, 0.1) 20px
   );
   pointer-events: none;
 }
 
-/* Install prompt animation */
 .install-prompt-enter {
-  animation: slideInFromBottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: slideInFromBottom 0.5s ease-out;
 }
 
 .install-prompt-exit {
-  animation: slideInFromBottom 0.3s ease-in reverse;
+  animation: slideInFromTop 0.3s ease-in reverse;
 }
 
-/* Update notification pulse */
 .update-pulse {
   animation: pulse 2s infinite;
 }
@@ -401,24 +712,102 @@ input, textarea, select {
     opacity: 1;
   }
   50% {
-    opacity: 0.7;
+    opacity: 0.5;
   }
 }
 
-/* Design System Utilities */
-@layer utilities {
-  /* 8px Grid Spacing System */
-  .space-xs { margin: 4px; }
-  .space-sm { margin: 8px; }
-  .space-md { margin: 16px; }
-  .space-lg { margin: 24px; }
-  .space-xl { margin: 32px; }
-  .space-2xl { margin: 48px; }
-  .space-3xl { margin: 64px; }
+/* Utility spacing classes (maintained for compatibility) */
+.space-xs { margin: 4px; }
+.space-sm { margin: 8px; }
+.space-md { margin: 16px; }
+.space-lg { margin: 24px; }
+.space-xl { margin: 32px; }
+.space-2xl { margin: 48px; }
+.space-3xl { margin: 64px; }
 
-  /* Touch targets - minimum 44px */
-  .touch-target {
-    min-height: 44px;
-    min-width: 44px;
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Additional animation keyframes (maintained) */
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.pwa-slide-right {
+  animation: slideInFromRight 0.3s ease-out;
+}
+
+.pwa-slide-left {
+  animation: slideInFromLeft 0.3s ease-out;
+}
+
+.pwa-slide-up {
+  animation: slideInFromTop 0.3s ease-out;
+}
+
+.pwa-slide-down {
+  animation: slideInFromBottom 0.3s ease-out;
+}
+
+.pwa-fade {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+

@@ -1,38 +1,57 @@
 import React from 'react';
 
-// Topic color themes based on style guide
+// Enhanced topic color themes using Stoke design system
 const topicColorThemes = {
   primary: {
-    bg: '#EFF6FF',      // Light blue background
-    text: '#1E40AF',    // Blue-800
-    border: '#2563EB',  // Primary Blue
-    hover: '#DBEAFE'    // Blue-100
+    bg: 'var(--stoke-blue-50)',
+    text: 'var(--stoke-primary-blue)',
+    border: 'var(--stoke-primary-blue)',
+    hover: 'var(--stoke-blue-100)',
+    selected: 'var(--stoke-primary-blue)'
   },
   success: {
-    bg: '#F0FDF4',      // Light green background  
-    text: '#166534',    // Green-800
-    border: '#059669',  // Success Green
-    hover: '#DCFCE7'    // Green-100
+    bg: '#F0FDF4',
+    text: '#166534',
+    border: 'var(--stoke-success-green)',
+    hover: '#DCFCE7',
+    selected: 'var(--stoke-success-green)'
   },
   warning: {
-    bg: '#FEF3C7',      // Light amber background
-    text: '#92400E',    // Amber-800
-    border: '#D97706',  // Warning Amber
-    hover: '#FDE68A'    // Amber-200
+    bg: '#FEF3C7',
+    text: '#92400E',
+    border: 'var(--stoke-warning-amber)',
+    hover: '#FDE68A',
+    selected: 'var(--stoke-warning-amber)'
   },
   info: {
-    bg: '#F0F9FF',      // Light sky background
-    text: '#0C4A6E',    // Sky-900
-    border: '#0EA5E9',  // Sky-500
-    hover: '#E0F2FE'    // Sky-100
+    bg: '#F0F9FF',
+    text: '#0C4A6E',
+    border: '#0EA5E9',
+    hover: '#E0F2FE',
+    selected: '#0EA5E9'
   },
   neutral: {
-    bg: '#F8FAFC',      // Light gray background
-    text: '#64748B',    // Slate-500
-    border: '#94A3B8',  // Slate-400
-    hover: '#F1F5F9'    // Slate-100
+    bg: 'var(--stoke-gray-50)',
+    text: 'var(--stoke-soft-gray)',
+    border: 'var(--stoke-gray-400)',
+    hover: 'var(--stoke-gray-100)',
+    selected: 'var(--stoke-soft-gray)'
+  },
+  purple: {
+    bg: '#F5F3FF',
+    text: '#6B21A8',
+    border: 'var(--stoke-neutral-purple)',
+    hover: '#EDE9FE',
+    selected: 'var(--stoke-neutral-purple)'
   }
 } as const;
+
+// Color rotation for visual variety
+const getTopicTheme = (topic: string): keyof typeof topicColorThemes => {
+  const themes: (keyof typeof topicColorThemes)[] = ['primary', 'success', 'warning', 'info', 'purple', 'neutral'];
+  const hash = topic.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return themes[hash % themes.length];
+};
 
 interface TopicTagProps {
   topic: string;
@@ -43,48 +62,57 @@ interface TopicTagProps {
   className?: string;
 }
 
-const tagSizes = {
-  sm: 'px-2 py-1 text-xs touch-target',
-  md: 'px-3 py-1.5 text-sm touch-target', 
-  lg: 'px-4 py-2 text-base touch-target'
-} as const;
-
 export function TopicTag({ 
   topic, 
-  theme = 'neutral', 
+  theme, 
   size = 'md',
   onClick,
   isSelected = false,
   className = ''
 }: TopicTagProps) {
-  const colorTheme = topicColorThemes[theme];
-  const sizeClasses = tagSizes[size];
+  // Auto-assign theme based on topic name if not provided
+  const finalTheme = theme || getTopicTheme(topic);
+  const colorTheme = topicColorThemes[finalTheme];
+  
+  const sizeClass = size === 'sm' ? 'stoke-topic-tag-sm' : 
+                   size === 'lg' ? 'stoke-topic-tag-lg' : 
+                   'stoke-topic-tag-md';
   
   const Component = onClick ? 'button' : 'span';
+  
+  const baseClasses = `
+    stoke-topic-tag 
+    ${sizeClass}
+    ${onClick ? 'stoke-topic-tag-interactive' : ''}
+    ${className}
+  `.trim();
+  
+  const tagStyle = {
+    backgroundColor: isSelected ? colorTheme.selected : colorTheme.bg,
+    color: isSelected ? 'var(--stoke-pure-white)' : colorTheme.text,
+    borderColor: colorTheme.border,
+    '--hover-bg': colorTheme.hover
+  } as React.CSSProperties;
   
   return (
     <Component
       onClick={onClick}
-      className={`
-        inline-flex items-center font-medium rounded-full 
-        border transition-all duration-200 ease-out
-        ${sizeClasses}
-        ${onClick ? 'cursor-pointer hover:-translate-y-0.5 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2' : ''}
-        ${isSelected ? 'ring-2 ring-offset-1' : ''}
-        ${className}
-      `}
-      style={{
-        backgroundColor: isSelected ? colorTheme.border : colorTheme.bg,
-        color: isSelected ? '#FFFFFF' : colorTheme.text,
-        borderColor: colorTheme.border,
-        ...(onClick && {
-          focusRingColor: colorTheme.border
-        })
-      }}
+      className={baseClasses}
+      style={tagStyle}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
       aria-pressed={onClick && isSelected ? true : undefined}
       aria-label={onClick ? `Toggle ${topic} topic filter` : `Topic: ${topic}`}
+      onMouseEnter={(e) => {
+        if (onClick && !isSelected) {
+          (e.target as HTMLElement).style.backgroundColor = colorTheme.hover;
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (onClick && !isSelected) {
+          (e.target as HTMLElement).style.backgroundColor = colorTheme.bg;
+        }
+      }}
     >
       {topic}
     </Component>
@@ -99,37 +127,60 @@ interface TopicFilterBarProps {
 }
 
 export function TopicFilterBar({ allTopics, selectedTopics, onTopicToggle, onClearAll }: TopicFilterBarProps) {
+  if (allTopics.length === 0) return null;
+  
   return (
-    <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-medium text-slate-700">Filter by Topics</h3>
+    <div className="stoke-section">
+      <div className="stoke-card">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="stoke-subtitle">Filter by Topics</h3>
+          {selectedTopics.length > 0 && (
+            <button
+              onClick={onClearAll}
+              className="stoke-btn-tertiary stoke-btn-sm"
+              aria-label="Clear all topic filters"
+            >
+              Clear all
+            </button>
+          )}
+        </div>
+        
+        {/* Topic Tags Grid */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {allTopics.map((topic) => (
+            <TopicTag
+              key={topic}
+              topic={topic}
+              size="sm"
+              isSelected={selectedTopics.includes(topic)}
+              onClick={() => onTopicToggle(topic)}
+            />
+          ))}
+        </div>
+        
+        {/* Active Filter Summary */}
         {selectedTopics.length > 0 && (
-          <button
-            onClick={onClearAll}
-            className="text-xs text-slate-500 hover:text-slate-700 transition-colors duration-200"
-          >
-            Clear all
-          </button>
+          <div className="pt-4 border-t border-gray-200">
+            <div className="flex items-center gap-2">
+              <span className="stoke-caption">Active filters:</span>
+              <div className="flex flex-wrap gap-1">
+                {selectedTopics.map((topic) => (
+                  <span
+                    key={topic}
+                    className="stoke-small px-2 py-1 bg-blue-50 text-blue-700 rounded-full"
+                  >
+                    {topic}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <p className="stoke-small mt-2 text-gray-500">
+              Showing {selectedTopics.length === 1 ? '1 topic' : `${selectedTopics.length} topics`}
+            </p>
+          </div>
         )}
       </div>
-      <div className="flex flex-wrap gap-2">
-        {allTopics.map((topic) => (
-          <TopicTag
-            key={topic}
-            topic={topic}
-            size="sm"
-            isSelected={selectedTopics.includes(topic)}
-            onClick={() => onTopicToggle(topic)}
-          />
-        ))}
-      </div>
-      {selectedTopics.length > 0 && (
-        <div className="mt-3 pt-3 border-t border-slate-200">
-          <p className="text-xs text-slate-600">
-            Showing content with: {selectedTopics.join(', ')}
-          </p>
-        </div>
-      )}
     </div>
   );
 }
@@ -140,17 +191,25 @@ interface TopicGroupHeaderProps {
 }
 
 export function TopicGroupHeader({ topic, count }: TopicGroupHeaderProps) {
-  const colors = topicColorThemes.neutral; // Use neutral theme as default
+  const theme = getTopicTheme(topic);
+  const colorTheme = topicColorThemes[theme];
   
   return (
-    <div
-      className="flex items-center gap-3 mb-4 pb-2 border-b-2"
-      style={{ borderColor: colors.border }}
+    <div 
+      className="flex items-center gap-3 mb-6 pb-3 border-b-2"
+      style={{ borderColor: colorTheme.border }}
     >
       <TopicTag topic={topic} size="lg" />
-      <span className="text-sm text-[#64748B] font-medium">
-        {count} {count === 1 ? 'item' : 'items'}
-      </span>
+      <div className="flex items-center gap-2">
+        <span className="stoke-caption">
+          {count} {count === 1 ? 'item' : 'items'}
+        </span>
+        <div 
+          className="w-2 h-2 rounded-full"
+          style={{ backgroundColor: colorTheme.border }}
+          aria-hidden="true"
+        />
+      </div>
     </div>
   );
 }
@@ -160,19 +219,33 @@ interface TopicListProps {
   size?: 'sm' | 'md' | 'lg';
   maxDisplay?: number;
   className?: string;
+  interactive?: boolean;
+  onTopicClick?: (topic: string) => void;
 }
 
-export function TopicList({ topics, size = 'md', maxDisplay = Infinity, className = '' }: TopicListProps) {
+export function TopicList({ 
+  topics, 
+  size = 'md', 
+  maxDisplay = Infinity, 
+  className = '',
+  interactive = false,
+  onTopicClick
+}: TopicListProps) {
   const displayTopics = topics.slice(0, maxDisplay);
   const remainingCount = topics.length - maxDisplay;
 
   return (
     <div className={`flex flex-wrap gap-2 ${className}`}>
       {displayTopics.map((topic) => (
-        <TopicTag key={topic} topic={topic} size={size} />
+        <TopicTag 
+          key={topic} 
+          topic={topic} 
+          size={size}
+          onClick={interactive && onTopicClick ? () => onTopicClick(topic) : undefined}
+        />
       ))}
       {remainingCount > 0 && (
-        <span className="px-2 py-1 text-xs text-slate-500 bg-slate-100 rounded-full">
+        <span className="stoke-topic-tag stoke-topic-tag-sm opacity-60">
           +{remainingCount} more
         </span>
       )}
@@ -180,10 +253,10 @@ export function TopicList({ topics, size = 'md', maxDisplay = Infinity, classNam
   );
 }
 
-// Utility function to group content by topics
+// Enhanced content grouping with better sorting
 export function groupContentByTopics<T extends { topics: string[] }>(
   content: T[]
-): Array<{ topic: string; items: T[] }> {
+): Array<{ topic: string; items: T[]; theme: keyof typeof topicColorThemes }> {
   const topicGroups = new Map<string, T[]>();
   
   content.forEach((item) => {
@@ -196,15 +269,63 @@ export function groupContentByTopics<T extends { topics: string[] }>(
   });
 
   return Array.from(topicGroups.entries())
-    .map(([topic, items]) => ({ topic, items }))
-    .sort((a, b) => b.items.length - a.items.length); // Sort by item count descending
+    .map(([topic, items]) => ({ 
+      topic, 
+      items,
+      theme: getTopicTheme(topic)
+    }))
+    .sort((a, b) => {
+      // Sort by item count descending, then alphabetically
+      if (b.items.length !== a.items.length) {
+        return b.items.length - a.items.length;
+      }
+      return a.topic.localeCompare(b.topic);
+    });
 }
 
-// Utility function to get all unique topics from content
+// Get all unique topics with enhanced sorting
 export function getAllTopics<T extends { topics: string[] }>(content: T[]): string[] {
-  const allTopics = new Set<string>();
+  const topicCounts = new Map<string, number>();
+  
   content.forEach((item) => {
-    item.topics.forEach((topic) => allTopics.add(topic));
+    item.topics.forEach((topic) => {
+      topicCounts.set(topic, (topicCounts.get(topic) || 0) + 1);
+    });
   });
-  return Array.from(allTopics).sort();
+
+  return Array.from(topicCounts.entries())
+    .sort((a, b) => {
+      // Sort by frequency descending, then alphabetically
+      if (b[1] !== a[1]) {
+        return b[1] - a[1];
+      }
+      return a[0].localeCompare(b[0]);
+    })
+    .map(([topic]) => topic);
+}
+
+// New utility for topic statistics
+export function getTopicStats<T extends { topics: string[] }>(content: T[]) {
+  const stats = new Map<string, {
+    count: number;
+    theme: keyof typeof topicColorThemes;
+    items: T[];
+  }>();
+  
+  content.forEach((item) => {
+    item.topics.forEach((topic) => {
+      if (!stats.has(topic)) {
+        stats.set(topic, {
+          count: 0,
+          theme: getTopicTheme(topic),
+          items: []
+        });
+      }
+      const stat = stats.get(topic)!;
+      stat.count++;
+      stat.items.push(item);
+    });
+  });
+  
+  return stats;
 } 
