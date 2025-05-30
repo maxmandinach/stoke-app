@@ -14,17 +14,24 @@ export function processTranscript(rawTranscript: string): Partial<Content> {
   // Process segments into insights
   const insights: Insight[] = segments.map((segment, index) => {
     const [speaker, content] = segment.split(':').map(s => s.trim());
+    const fullContent = `${speaker}: ${content}`;
+    
+    // Simulate AI processing confidence based on content characteristics
+    let confidence: 'high' | 'medium' | 'low' = 'medium';
+    if (fullContent.length > 100 && fullContent.includes('AI')) {
+      confidence = 'high';
+    } else if (fullContent.length < 50) {
+      confidence = 'low';
+    }
+    
     return {
       id: `insight-${index}`,
-      content: `${speaker}: ${content}`,
-      importance: 1, // Default importance
-      topics: [], // Topics will be extracted by AI
-      reviewSchedule: {
-        nextReview: new Date().toISOString(),
-        easeFactor: 2.5,
-        interval: 1,
-        repetitions: 0
-      }
+      content: fullContent,
+      timestamp: new Date().toISOString(),
+      type: 'conversation',
+      isAiGenerated: true,
+      confidence: confidence,
+      processingStatus: 'completed' as const
     };
   });
 
@@ -40,7 +47,9 @@ export function processTranscript(rawTranscript: string): Partial<Content> {
     insights,
     topics,
     created_at: new Date().toISOString(),
-    processed_at: new Date().toISOString()
+    processed_at: new Date().toISOString(),
+    isAiProcessed: true,
+    processingStatus: 'completed' as const
   };
 }
 

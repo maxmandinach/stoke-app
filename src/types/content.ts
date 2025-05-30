@@ -1,10 +1,15 @@
 export type ContentSource = 'podcast' | 'youtube';
 
+export type ConfidenceLevel = 'high' | 'medium' | 'low';
+
 export interface Insight {
   id: string;
   content: string;
   timestamp?: string;
   type?: string;
+  isAiGenerated?: boolean;
+  confidence?: ConfidenceLevel;
+  processingStatus?: 'pending' | 'processing' | 'completed' | 'failed';
 }
 
 export interface Content {
@@ -18,6 +23,8 @@ export interface Content {
   topics: string[];
   created_at: string;
   processed_at: string;
+  isAiProcessed?: boolean;
+  processingStatus?: 'pending' | 'processing' | 'completed' | 'failed';
 }
 
 export interface ReviewSchedule {

@@ -1,11 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Content, ContentSource, Insight } from '@/types/content';
 import { processTranscript } from '@/utils/contentProcessor';
 import { getContent, addContent } from '@/lib/content';
 import type { Database } from '@/types/database.types';
 import LibraryHeader from './LibraryHeader';
+import { AIInsight, AIProcessingStatus, AIContentBadge } from './AIIndicators';
+import { TopicFilterBar, TopicList, TopicGroupHeader, getAllTopics, groupContentByTopics } from './TopicComponents';
+import { ContentMetadata } from './ContentTypeIndicator';
 
 type Json = Database['public']['Tables']['content']['Row']['insights'][number];
 
@@ -16,16 +19,31 @@ function convertJsonToInsight(json: Json): Insight {
       id: crypto.randomUUID(),
       content: '',
       timestamp: new Date().toISOString(),
-      type: 'unknown'
+      type: 'unknown',
+      isAiGenerated: false,
+      confidence: undefined,
+      processingStatus: 'completed'
     };
   }
   
-  const insight = json as { id?: string; content?: string; timestamp?: string; type?: string };
+  const insight = json as { 
+    id?: string; 
+    content?: string; 
+    timestamp?: string; 
+    type?: string;
+    isAiGenerated?: boolean;
+    confidence?: 'high' | 'medium' | 'low';
+    processingStatus?: 'pending' | 'processing' | 'completed' | 'failed';
+  };
+  
   return {
     id: insight.id || crypto.randomUUID(),
     content: insight.content || '',
     timestamp: insight.timestamp || new Date().toISOString(),
-    type: insight.type || 'unknown'
+    type: insight.type || 'unknown',
+    isAiGenerated: insight.isAiGenerated || false,
+    confidence: insight.confidence,
+    processingStatus: insight.processingStatus || 'completed'
   };
 }
 
@@ -36,12 +54,36 @@ export default function ContentLibrary() {
   const [isAddingContent, setIsAddingContent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  const [viewMode, setViewMode] = useState<'list' | 'grouped'>('list');
+  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
   const [newContent, setNewContent] = useState({
     title: '',
     source: 'podcast' as ContentSource,
     sourceUrl: '',
     transcript: ''
   });
+
+  // Get all unique topics from content
+  const allTopics = useMemo(() => getAllTopics(content), [content]);
+
+  // Filter content based on selected topics
+  const filteredContent = useMemo(() => {
+    if (selectedTopics.length === 0) {
+      return content;
+    }
+    return content.filter((item) =>
+      selectedTopics.some((topic) => item.topics.includes(topic))
+    );
+  }, [content, selectedTopics]);
+
+  // Group content by topics if in grouped view mode
+  const groupedContent = useMemo(() => {
+    if (viewMode === 'list') {
+      return null;
+    }
+    return groupContentByTopics(filteredContent);
+  }, [filteredContent, viewMode]);
 
   // Fetch content from Supabase
   useEffect(() => {
@@ -86,21 +128,30 @@ export default function ContentLibrary() {
     setIsSubmitting(true);
     try {
       const processedContent = processTranscript(newContent.transcript);
+      
+      // Simulate AI processing with confidence levels for insights
+      const enhancedInsights = (processedContent.insights || []).map(insight => ({
+        id: insight.id,
+        content: insight.content,
+        timestamp: insight.timestamp,
+        type: insight.type,
+        isAiGenerated: true,
+        confidence: ['high', 'medium', 'low'][Math.floor(Math.random() * 3)] as 'high' | 'medium' | 'low',
+        processingStatus: 'completed' as const
+      }));
+      
       const newItem = await addContent({
         title: processedContent.title || newContent.title,
         source: processedContent.source || newContent.source,
         source_url: newContent.sourceUrl,
         transcript: newContent.transcript,
         summary: processedContent.summary || '',
-        insights: (processedContent.insights || []).map(insight => ({
-          id: insight.id,
-          content: insight.content,
-          timestamp: insight.timestamp,
-          type: insight.type
-        })),
+        insights: enhancedInsights,
         topics: processedContent.topics || [],
         created_at: new Date().toISOString(),
-        processed_at: new Date().toISOString()
+        processed_at: new Date().toISOString(),
+        isAiProcessed: true,
+        processingStatus: 'completed'
       });
 
       // Convert Json insights to Insight type
@@ -154,6 +205,34 @@ export default function ContentLibrary() {
     );
   };
 
+  const handleTopicToggle = (topic: string) => {
+    setSelectedTopics(prev =>
+      prev.includes(topic)
+        ? prev.filter(t => t !== topic)
+        : [...prev, topic]
+    );
+  };
+
+  const handleClearAllTopics = () => {
+    setSelectedTopics([]);
+  };
+
+  const toggleViewMode = () => {
+    setViewMode(prev => prev === 'list' ? 'grouped' : 'list');
+  };
+
+  const toggleCardExpansion = (cardId: string) => {
+    setExpandedCards(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(cardId)) {
+        newSet.delete(cardId);
+      } else {
+        newSet.add(cardId);
+      }
+      return newSet;
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="px-4 pt-4 pb-[84px] bg-white min-h-screen">
@@ -195,6 +274,27 @@ export default function ContentLibrary() {
             aria-label={selectedIds.length === content.length ? 'Deselect all content' : 'Select all content'}
           >
             {selectedIds.length === content.length ? 'Deselect All' : 'Select All'}
+          </button>
+          <button
+            onClick={toggleViewMode}
+            className="bg-white text-purple-600 border border-purple-600 px-4 py-2 rounded-lg hover:bg-purple-50 hover:-translate-y-0.5 active:opacity-90 transition-all duration-200 ease-out min-h-[44px] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 text-[16px] leading-[24px] font-normal"
+            aria-label={`Switch to ${viewMode === 'list' ? 'grouped' : 'list'} view`}
+          >
+            {viewMode === 'list' ? (
+              <>
+                <svg className="w-4 h-4 mr-2 inline" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 16a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" />
+                </svg>
+                Group by Topics
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4 mr-2 inline" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 16a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                </svg>
+                List View
+              </>
+            )}
           </button>
           <input
             type="file"
@@ -304,32 +404,83 @@ export default function ContentLibrary() {
       )}
 
       <div className="space-y-4">
-        {content.map((item) => (
-          <div
-            key={item.id}
-            className={`p-4 bg-white border rounded-xl cursor-pointer transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-              selectedIds.includes(item.id)
-                ? 'border-2 border-[#2563EB] bg-[#EFF6FF] shadow-lg transform scale-[1.02]'
-                : 'border border-[#F1F5F9] hover:border-[#E2E8F0] hover:shadow-lg hover:transform hover:scale-[1.01] hover:-translate-y-0.5'
-            }`}
-            style={{
-              boxShadow: selectedIds.includes(item.id) 
-                ? '0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)' 
-                : '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)',
-              transition: 'border-color 150ms ease-out, transform 200ms ease-out, box-shadow 200ms ease-out'
-            }}
-            onClick={() => toggleSelection(item.id)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                toggleSelection(item.id);
-              }
-            }}
-            aria-selected={selectedIds.includes(item.id)}
-          >
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="text-[18px] leading-[24px] font-medium text-slate-800">{item.title}</h3>
+        {/* Topic Filter Bar */}
+        {allTopics.length > 0 && (
+          <TopicFilterBar
+            allTopics={allTopics}
+            selectedTopics={selectedTopics}
+            onTopicToggle={handleTopicToggle}
+            onClearAll={handleClearAllTopics}
+          />
+        )}
+
+        {/* Content Display */}
+        {viewMode === 'grouped' && groupedContent ? (
+          // Grouped view
+          <div className="space-y-12">
+            {groupedContent.map(({ topic, items }) => (
+              <div key={topic}>
+                <TopicGroupHeader topic={topic} count={items.length} />
+                <div className="space-y-6">
+                  {items.map((item) => renderContentCard(item))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          // List view
+          <div className="space-y-6">
+            {filteredContent.map((item) => renderContentCard(item))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  // Helper function to render content cards
+  function renderContentCard(item: Content) {
+    const isExpanded = expandedCards.has(item.id);
+    const hasInsights = item.insights.length > 0;
+    const visibleInsights = isExpanded ? item.insights : item.insights.slice(0, 2);
+    
+    return (
+      <div
+        key={item.id}
+        className={`bg-white border rounded-xl transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+          selectedIds.includes(item.id)
+            ? 'border-2 border-[#2563EB] bg-[#EFF6FF] shadow-lg transform scale-[1.02]'
+            : 'border border-[#F1F5F9] hover:border-[#E2E8F0] hover:shadow-lg hover:transform hover:scale-[1.01] hover:-translate-y-0.5'
+        }`}
+        style={{
+          boxShadow: selectedIds.includes(item.id) 
+            ? '0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)' 
+            : '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)',
+          transition: 'border-color 150ms ease-out, transform 200ms ease-out, box-shadow 200ms ease-out'
+        }}
+        role="button"
+        tabIndex={0}
+        aria-selected={selectedIds.includes(item.id)}
+      >
+        {/* Header Section - Always Visible */}
+        <div 
+          className="p-4 cursor-pointer"
+          onClick={() => toggleSelection(item.id)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              toggleSelection(item.id);
+            }
+          }}
+        >
+          {/* Title and AI Badge Row */}
+          <div className="flex items-start justify-between mb-2">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <h3 className="text-lg font-semibold text-slate-900 truncate">{item.title}</h3>
+              <AIContentBadge isAiProcessed={item.isAiProcessed} />
+            </div>
+            <div className="flex items-center gap-2 ml-2">
+              {item.processingStatus && (
+                <AIProcessingStatus status={item.processingStatus} />
+              )}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -338,26 +489,111 @@ export default function ContentLibrary() {
                 className="text-slate-400 hover:text-slate-600 hover:-translate-y-0.5 active:opacity-90 transition-all duration-200 ease-out p-1 rounded-full hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
                 aria-label={`Edit ${item.title}`}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                 </svg>
               </button>
             </div>
-            <p className="text-[16px] leading-[24px] font-normal text-slate-600 mb-2">{item.summary}</p>
-            <div className="flex flex-wrap gap-2">
-              {item.topics.map((topic) => (
-                <span
-                  key={topic}
-                  className="px-2 py-1 bg-slate-100 text-slate-600 text-[12px] leading-[16px] font-normal rounded-full"
+          </div>
+
+          {/* Metadata Row */}
+          <ContentMetadata 
+            source={item.source}
+            createdAt={item.created_at}
+            processedAt={item.processed_at}
+            className="mb-3"
+          />
+
+          {/* Summary Section */}
+          <p className="text-base leading-relaxed text-slate-700 mb-4">{item.summary}</p>
+
+          {/* Topics Row */}
+          <TopicList topics={item.topics} size="sm" maxDisplay={4} className="mb-4" />
+        </div>
+
+        {/* Visual Separator */}
+        {hasInsights && (
+          <div className="border-t border-slate-100" />
+        )}
+
+        {/* Insights Section - Progressive Disclosure */}
+        {hasInsights && (
+          <div className="px-4 pb-4">
+            {/* Insights Header */}
+            <div className="flex items-center justify-between py-3">
+              <h4 className="text-sm font-semibold text-slate-800">
+                Key Insights ({item.insights.length})
+              </h4>
+              {item.insights.length > 2 && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleCardExpansion(item.id);
+                  }}
+                  className="flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700 transition-colors duration-200 py-1 px-2 rounded-md hover:bg-blue-50"
                 >
-                  {topic}
-                </span>
+                  {isExpanded ? (
+                    <>
+                      <span>Show less</span>
+                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
+                      </svg>
+                    </>
+                  ) : (
+                    <>
+                      <span>Show all insights</span>
+                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+
+            {/* Insights Content */}
+            <div className="space-y-3">
+              {visibleInsights.map((insight, index) => (
+                <div key={insight.id}>
+                  <AIInsight
+                    isAiGenerated={insight.isAiGenerated}
+                    confidence={insight.confidence}
+                  >
+                    <div className="text-sm leading-relaxed text-slate-700">
+                      {insight.content}
+                    </div>
+                  </AIInsight>
+                  {/* Subtle separator between insights */}
+                  {index < visibleInsights.length - 1 && (
+                    <div className="border-t border-slate-50 mt-3" />
+                  )}
+                </div>
               ))}
             </div>
+
+            {/* Collapsed state indicator */}
+            {!isExpanded && item.insights.length > 2 && (
+              <div className="mt-3 pt-3 border-t border-slate-100">
+                <p className="text-xs text-slate-500 text-center">
+                  +{item.insights.length - 2} more insights • Click "Show all insights" to expand
+                </p>
+              </div>
+            )}
           </div>
-        ))}
+        )}
+
+        {/* Empty state for no insights */}
+        {!hasInsights && (
+          <div className="px-4 pb-4">
+            <div className="border-t border-slate-100 pt-3">
+              <p className="text-sm text-slate-500 text-center py-2">
+                No insights available for this content
+              </p>
+            </div>
+          </div>
+        )}
       </div>
-    </div>
-  );
+    );
+  }
 } 

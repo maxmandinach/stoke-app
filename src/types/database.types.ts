@@ -21,6 +21,8 @@ export interface Database {
           topics: string[]
           created_at: string
           processed_at: string
+          isAiProcessed?: boolean
+          processingStatus?: 'pending' | 'processing' | 'completed' | 'failed'
         }
         Insert: {
           id?: string
@@ -33,6 +35,8 @@ export interface Database {
           topics?: string[]
           created_at?: string
           processed_at?: string
+          isAiProcessed?: boolean
+          processingStatus?: 'pending' | 'processing' | 'completed' | 'failed'
         }
         Update: {
           id?: string
@@ -45,6 +49,8 @@ export interface Database {
           topics?: string[]
           created_at?: string
           processed_at?: string
+          isAiProcessed?: boolean
+          processingStatus?: 'pending' | 'processing' | 'completed' | 'failed'
         }
       }
     }
