@@ -255,10 +255,10 @@ export default function ContentLibrary() {
           <div key={item.id} className="bg-white border border-gray-200 rounded-xl p-4 shadow">
             <div className="flex justify-between items-start">
               <div>
-                <h3 className="text-xl font-semibold">{item.title}</h3>
-                <p className="text-gray-600">{item.source}</p>
+                <h3 className="text-[22px] leading-7 font-semibold text-slate-800 mb-1">{item.title}</h3>
+                <p className="text-base font-normal text-slate-500 mb-2">{item.source}</p>
                 <div className="mt-2">
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm font-normal text-slate-500">
                     {new Date(item.created_at).toLocaleDateString()}
                   </span>
                 </div>
@@ -267,7 +267,7 @@ export default function ContentLibrary() {
                     {item.topics.map((topic) => (
                       <span
                         key={topic}
-                        className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
+                        className="bg-blue-100 text-blue-800 text-xs font-normal px-2 py-1 rounded-md"
                       >
                         {topic}
                       </span>
@@ -277,27 +277,27 @@ export default function ContentLibrary() {
               </div>
               <button
                 onClick={() => handleEditContent(item.id)}
-                className="text-blue-500 hover:text-blue-600"
+                className="text-slate-500 hover:text-slate-600 font-normal py-3 px-4 min-h-[44px] self-start"
               >
                 Edit
               </button>
             </div>
             {item.summary && (
               <div className="mt-4">
-                <h4 className="font-medium mb-2">Summary</h4>
-                <p className="text-sm text-gray-700">{item.summary}</p>
+                <h4 className="text-lg leading-6 font-medium text-slate-800 mb-1">Summary</h4>
+                <p className="text-base font-normal text-slate-500">{item.summary}</p>
               </div>
             )}
             <div className="mt-4">
-              <h4 className="font-medium mb-2">Insights ({item.insights.length})</h4>
+              <h4 className="text-lg leading-6 font-medium text-slate-800 mb-1">Insights ({item.insights.length})</h4>
               <div className="space-y-2">
                 {item.insights.slice(0, 3).map((insight) => (
-                  <div key={insight.id} className="text-sm text-gray-700">
+                  <div key={insight.id} className="text-base font-normal text-slate-500">
                     {insight.content}
                   </div>
                 ))}
                 {item.insights.length > 3 && (
-                  <div className="text-sm text-blue-500">
+                  <div className="text-sm text-blue-600 hover:text-blue-700 cursor-pointer mt-1">
                     +{item.insights.length - 3} more insights
                   </div>
                 )}
