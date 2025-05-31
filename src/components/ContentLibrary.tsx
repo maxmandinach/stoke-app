@@ -10,6 +10,7 @@ import { TopicFilterBar, TopicList, TopicGroupHeader, getAllTopics, groupContent
 import { ContentMetadata } from './ContentTypeIndicator';
 import StartReviewButton from './StartReviewButton';
 import { PageSkeleton, InlineProcessing } from './SkeletonComponents';
+import StokeLogo from './StokeLogo';
 
 type Json = Database['public']['Tables']['content']['Row']['insights'][number];
 
@@ -307,8 +308,11 @@ export default function ContentLibrary() {
       {/* Professional Header */}
       <div className="stoke-header">
         <div>
-          <h1 id="library-heading" className="stoke-display">Content Library</h1>
-          <p className="stoke-caption mt-1">
+          <div className="flex items-center gap-3 mb-1">
+            <StokeLogo size="lg" className="text-[#2563EB]" />
+            <h1 id="library-heading" className="stoke-display">Stoke</h1>
+          </div>
+          <p className="stoke-caption">
             {content.length} {content.length === 1 ? 'item' : 'items'}
             {selectedTopics.length > 0 && ` • ${filteredContent.length} filtered`}
             {selectedIds.length > 0 && ` • ${selectedIds.length} selected`}
