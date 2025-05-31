@@ -13,6 +13,64 @@ Stoke's interface embodies **calm intelligence** - a design that feels thoughtfu
 
 ---
 
+## Brand Identity & Logo
+
+### Memory Waves Logo System
+
+#### Conceptual Foundation
+The Memory Waves logo embodies Stoke's core mission through concentric circles representing knowledge rippling outward from a central insight. This visual metaphor captures:
+- **Memory Formation**: Progressive rings represent how knowledge builds and retains
+- **Gentle Retention**: Soft, organic progression without harsh boundaries
+- **Mindful Technology**: Systematic but calming geometric precision
+- **Knowledge Connections**: Ripple effects suggesting insights connecting across content
+
+#### Technical Specifications
+**Base SVG Implementation** (40x40px viewBox):
+- Center point: (20, 20)
+- Circle radii: 12px, 8px, 4px, 2px (outer to inner)
+- Stroke width: 2px for all circles
+- Opacity levels: 30%, 50%, 70%, 100% (outer to inner)
+- Uses `currentColor` for seamless theming integration
+
+#### Sizing Guidelines
+- **Favicon**: 16px (simplified to center dot + outer ring)
+- **UI Elements**: 20px-32px (2-4 rings visible)
+- **Header Branding**: 48px (optimal with "Stoke" wordmark)
+- **App Icons**: 180px-512px (full detail with padding)
+
+#### Color Applications
+- **Primary**: #1E293B (Deep Navy) for main branding
+- **Interactive**: #2563EB (Primary Blue) for active states
+- **Subtle**: #64748B (Soft Gray) for secondary contexts
+- **Success**: #059669 (Success Green) for completion indicators
+
+#### Extended Design System Applications
+- Circular progress indicators using concentric ring patterns
+- Loading animations with gentle ripple effects
+- Knowledge retention visualizations (progressive ring activation)
+- Connection mapping between insights using overlapping circles
+
+#### Usage Guidelines
+**Primary Applications**:
+- Header branding paired with "Stoke" wordmark
+- App icons and PWA installation assets
+- Loading states and progress indicators
+- Knowledge retention level visualizations
+
+**Extended Design System**:
+- Circular progress rings following concentric pattern
+- Ripple animations for micro-interactions
+- Connection mapping between insights using overlapping circles
+- Skeleton loading states featuring concentric placeholder patterns
+
+**Forbidden Uses**:
+- Never distort proportions or modify ring relationships
+- Avoid placing on busy backgrounds that reduce clarity
+- Don't use as decorative element without functional purpose
+- Never animate in ways that feel nervous or attention-grabbing
+
+---
+
 ## Color Palette
 
 ### Primary Colors

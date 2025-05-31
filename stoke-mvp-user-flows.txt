@@ -10,7 +10,8 @@
 - User views curated podcast library organized by topics
 - Content displays as cards with title, podcast name, duration, and topic tags
 - User can filter by topic or search for specific content
-- Interface loads with skeleton placeholders while content fetches
+- Interface loads with skeleton placeholders featuring Memory Waves concentric patterns while content fetches
+- Header displays Memory Waves logo with "Discover" title following brand design language
 
 **Step 2: Episode Selection**
 - User taps episode card to view detailed preview modal
@@ -81,9 +82,11 @@
 
 **Step 1: Content Library Landing Page**
 - User arrives at Content Library as primary app entry point
+- Header features Memory Waves logo (48px) paired with "Stoke" wordmark
 - Views personal collection of processed content with status indicators
 - Checkbox selection UX with "Select All/None" functionality
 - Start Review button dynamically updates: "Start Review" vs "Start Review (3 episodes)"
+- Visual hierarchy follows Memory Waves design principles with generous white space
 
 **Step 2: Review Session Initialization**
 - **With Selection**: Review session includes insights only from selected episodes
@@ -94,9 +97,10 @@
 **Step 3: Mixed Content Review Experience**
 - Insights from multiple episodes randomly interweaved throughout session
 - Various question types: recall, recognition, application
-- Clean, distraction-free interface with one question at a time
-- Progress indicator shows overall session progress, not episode breakdown
+- Clean, distraction-free interface with one question at a time following Memory Waves aesthetic
+- Progress indicator using concentric circle patterns shows overall session progress, not episode breakdown
 - Auto-save progress to prevent data loss
+- Loading between questions features subtle Memory Waves ripple animations
 
 **Step 4: Individual Content Feedback**
 - After each question, user can provide insight-level feedback:
@@ -170,15 +174,28 @@
 - Generous white space to reduce visual clutter and cognitive load
 - Thumb-zone optimization for primary actions
 - Clear visual hierarchy using scale and contrast
+- Memory Waves logo integration in headers and key brand touchpoints
+- Concentric circle design patterns throughout interface for visual consistency
+- Progressive opacity treatments following Memory Waves design language
+
+### Brand Integration & Visual Identity
+- **Header Branding**: Memory Waves logo (48px) paired with "Stoke" wordmark in primary navigation
+- **Progress Visualization**: Circular indicators using concentric ring patterns for session progress
+- **Loading States**: Animated Memory Waves ripple effects during AI processing and content extraction
+- **Knowledge Retention Indicators**: Progressive ring activation patterns showing mastery levels (new → learning → familiar → mastered)
+- **Connection Visualization**: Overlapping circle motifs when displaying content relationships
+- **Micro-interactions**: Subtle ripple effects for user actions maintaining calm, purposeful feel
 
 ### Progressive Loading & Offline Support
-- Skeleton screens maintain perceived performance during loading
+- Skeleton screens maintain perceived performance during loading with Memory Waves placeholder patterns
 - Offline review sessions with sync when connection restored
 - Cached content library for browsing without network
 - Progressive Web App capabilities for app-like experience
+- Memory Waves app icons and splash screens for PWA installation
 
 ### Error Prevention & Recovery
 - Input validation with immediate, helpful feedback
-- Graceful degradation when network connectivity is poor
+- Graceful degradation when network connectivity is poor  
 - Auto-save functionality prevents data loss during interruptions
 - Clear error messages with actionable recovery steps
+- Consistent visual treatment using Memory Waves design principles for all feedback states

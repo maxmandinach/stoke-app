@@ -8,7 +8,7 @@ Stoke UX Strategy
 How do we create a mobile web experience that feels like a **calm knowledge companion** rather than another attention-demanding app, while still driving meaningful engagement with spaced repetition learning?
 
 ### UX Positioning Statement
-Stoke is the **mindful knowledge retention tool** that transforms passive content consumption into active understanding through gentle, intelligent review cycles that respect users' cognitive bandwidth.
+Stoke is the **mindful knowledge retention tool** that transforms passive content consumption into active understanding through gentle, intelligent review cycles that respect users' cognitive bandwidth. Our Memory Waves visual identity embodies knowledge rippling outward from insights, creating a calm, systematic learning environment.
 
 ## UX Strategy Pillars
 
@@ -58,10 +58,12 @@ Hidden: Advanced features (accessible via progressive disclosure)
 - **Quick Exit Points**: Easy escape from any deep state
 
 #### Review Session Design
-- **Session Containers**: Clear beginning, middle, end with progress indicators
-- **Micro-Interactions**: Satisfying feedback for correct answers without gamification
+- **Session Containers**: Clear beginning, middle, end with progress indicators using concentric circle patterns
+- **Micro-Interactions**: Satisfying feedback for correct answers without gamification, featuring subtle Memory Waves ripple effects
 - **Adaptive Pacing**: System learns user's optimal session length
 - **Graceful Interruption**: Pause/resume anywhere without loss
+- **Progress Visualization**: Circular completion indicators following Memory Waves design language
+- **Knowledge State Feedback**: Progressive ring activation showing retention levels
 
 ### Mobile Web PWA Considerations
 
@@ -130,18 +132,39 @@ Hidden: Advanced features (accessible via progressive disclosure)
 - **Hierarchy Through Scale**: Clear information hierarchy without visual noise
 - **Purposeful Color**: Limited palette focused on status and guidance
 - **Typography for Retention**: Optimized for reading comprehension and recall
+- **Memory Waves Integration**: Concentric circle motifs throughout interface design
+- **Progressive Visual Depth**: Layer information using opacity and scale patterns
+- **Calm Geometric Precision**: Clean, systematic visual language that conveys reliability
+
+### Brand Visual Language
+**Memory Waves Logo System**:
+- Primary branding element featuring concentric circles (12px, 8px, 4px, 2px radii)
+- Progressive opacity levels (30%, 50%, 70%, 100%) for visual hierarchy
+- Scalable SVG implementation supporting 16px favicon to 512px app icons
+- `currentColor` theming for seamless integration across interface states
+
+**Conceptual Applications**:
+- **Knowledge Retention Visualization**: Progressive ring activation showing mastery levels
+- **Progress Indicators**: Circular patterns following concentric design principles  
+- **Loading States**: Animated ripple effects representing knowledge processing
+- **Connection Mapping**: Overlapping circles showing relationships between insights
+- **AI Processing**: Gentle pulsing animations using Memory Waves motif
 
 ### Interaction Design Standards
 - **44px Touch Targets**: Minimum for reliable mobile interaction
 - **Gesture Vocabulary**: Consistent swipe/tap meanings across features
 - **Feedback Timing**: Immediate acknowledgment, then appropriate processing time
 - **Error Prevention**: Guide users away from mistakes rather than catching them
+- **Memory Waves Micro-interactions**: Subtle ripple effects for user actions
+- **Concentric Feedback Patterns**: Visual confirmation using expanding circle motifs
 
 ### Component Strategy
 - **Atomic Design**: Reusable components that maintain consistency
 - **Mobile-First Components**: Designed for touch, enhanced for other inputs
 - **Accessibility Integration**: WCAG compliance built into component design
 - **Performance-Conscious**: Lightweight components optimized for mobile web
+- **Brand-Integrated Elements**: Memory Waves patterns woven throughout component library
+- **Thematic Consistency**: Unified visual language supporting knowledge retention metaphors
 
 ## Success Metrics & UX Validation
 

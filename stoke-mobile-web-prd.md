@@ -17,6 +17,44 @@ We emphasize the relationships between pieces of knowledge rather than mere accu
 ### 5. Measurable Growth
 We provide clear, non-competitive metrics focused on understanding and application. Progress is measured by depth of knowledge integration, not streaks or points.
 
+## Brand Identity & Visual Design
+
+### Memory Waves Logo
+**Concept**: Concentric circles representing knowledge rippling outward from a central insight, embodying the gentle retention and mindful technology aspects of Stoke's positioning.
+
+**Technical Specifications**:
+- SVG format with 40x40px viewBox for optimal scalability
+- Four-layer concentric circle design (12px, 8px, 4px, 2px radii)
+- Progressive opacity levels (30%, 50%, 70%, 100%) creating visual depth
+- Uses `currentColor` for seamless theming integration
+- Stroke-only design with 2px width, filled center dot
+
+**Visual Metaphor**: 
+- Represents memory formation and knowledge retention patterns
+- Suggests systematic, reliable learning through geometric precision  
+- Embodies gradual, mindful knowledge building through concentric progression
+- Conveys the ripple effect of insights connecting across content
+
+### Design System Integration
+**Color Palette**: Logo integrates seamlessly with existing brand colors:
+- Primary Blue (#2563EB) for active/interactive states
+- Deep Navy (#1E293B) for main branding applications
+- Soft Gray (#64748B) for subtle/secondary usage
+- Success Green (#059669) for knowledge mastery indicators
+
+**Scalable Applications**:
+- Header branding (48px) with "Stoke" wordmark
+- Progress indicators using concentric circle motif
+- Loading states with animated ripple effects
+- Knowledge retention level indicators
+- Favicon and PWA app icons (16px-512px range)
+
+**Aesthetic Extensions**:
+- Circular progress rings following the concentric pattern
+- Memory ripple animations for AI processing states
+- Retention level visualization using progressive ring activation
+- Connection mapping between insights using overlapping circles
+
 ## User Journey
 
 ### 1. Discovery & Selection
@@ -96,10 +134,15 @@ We provide clear, non-competitive metrics focused on understanding and applicati
 - Batch processing for efficient resource usage
 
 #### User Experience
-- Clean, minimal interface with adequate white space
-- Touch-optimized interface for mobile web browsers
+- Clean, minimal interface with adequate white space following Memory Waves aesthetic principles
+- Touch-optimized interface for mobile web browsers with 44px minimum touch targets
 - Offline functionality for review sessions via browser storage
 - Content library with sorting and filtering
+- Memory Waves logo integration in headers and key brand touchpoints
+- Concentric circle design motifs throughout UI for visual consistency
+- Progress visualization using circular/ripple patterns aligned with brand metaphor
+- Loading states featuring animated Memory Waves ripple effects
+- Knowledge retention indicators using progressive ring activation patterns
 
 #### Data Management
 - User account and authentication system
@@ -118,17 +161,21 @@ We provide clear, non-competitive metrics focused on understanding and applicati
 ### Mobile Web Specific Features
 
 #### PWA Capabilities
-- Installable web app (add to home screen)
+- Installable web app (add to home screen) with Memory Waves logo app icons
 - Offline review sessions
 - Push notifications for review reminders (where supported)
 - Fast loading with service worker caching
+- App icon set (16px-512px) featuring Memory Waves concentric circle design
+- Splash screens incorporating brand visual identity
 
 #### Mobile Optimization
-- Touch-friendly interface elements
+- Touch-friendly interface elements with Memory Waves design language
 - Swipe gestures for navigation
-- Responsive typography and spacing
+- Responsive typography and spacing following brand guidelines
 - Mobile-optimized forms and inputs
 - Battery-efficient background processing
+- Circular progress indicators using concentric ring patterns
+- Brand-consistent loading animations and micro-interactions
 
 #### Browser Compatibility
 - Support for modern mobile browsers (iOS Safari, Chrome, Firefox)

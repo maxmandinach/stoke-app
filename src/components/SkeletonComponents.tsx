@@ -1,4 +1,5 @@
 import React from 'react';
+import MemoryWavesLoader from './MemoryWavesLoader';
 
 // Base skeleton component with shimmer animation
 interface SkeletonProps {
@@ -189,7 +190,19 @@ export function ListSkeleton({
 export function HeaderSkeleton() {
   return (
     <div className="flex items-center justify-between mb-6">
-      <Skeleton className="h-8 bg-[#E2E8F0] rounded-lg w-1/3" />
+      <div className="flex items-center gap-3">
+        {/* Memory Waves logo placeholder */}
+        <div className="w-12 h-12 relative">
+          <svg width="48" height="48" viewBox="0 0 40 40" className="opacity-20">
+            <circle cx="20" cy="20" r="12" fill="none" stroke="#E2E8F0" strokeWidth="2" opacity="0.3"/>
+            <circle cx="20" cy="20" r="8" fill="none" stroke="#E2E8F0" strokeWidth="2" opacity="0.5"/>
+            <circle cx="20" cy="20" r="4" fill="none" stroke="#E2E8F0" strokeWidth="2" opacity="0.7"/>
+            <circle cx="20" cy="20" r="2" fill="#E2E8F0"/>
+          </svg>
+        </div>
+        {/* Stoke wordmark placeholder */}
+        <Skeleton className="h-8 bg-[#E2E8F0] rounded-lg w-20" />
+      </div>
       <Skeleton className="h-9 w-9 bg-[#F8FAFC] rounded-lg border border-[#E2E8F0]" />
     </div>
   );
@@ -415,41 +428,32 @@ export function ProcessingSkeleton({
   status = "AI is analyzing your content" 
 }: ProcessingSkeletonProps) {
   return (
-    <div className="bg-white border border-[#E2E8F0] rounded-xl p-6 text-center">
-      <div className="mb-4">
-        {/* Animated processing icon */}
-        <div className="mx-auto w-12 h-12 bg-[#7C3AED] rounded-full flex items-center justify-center mb-3">
-          <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+    <div className="flex flex-col items-center justify-center min-h-[400px] px-4">
+      <div className="w-full max-w-md text-center space-y-6">
+        {/* Memory Waves loading animation */}
+        <MemoryWavesLoader size="lg" message="" />
+        
+        {/* Title */}
+        <div className="space-y-2">
+          <h2 className="text-xl font-semibold text-[#1E293B]">
+            {title}
+          </h2>
+          <p className="text-[#64748B] text-sm">
+            {status}
+          </p>
         </div>
         
-        <h3 className="text-lg font-semibold text-[#1E293B] mb-2">{title}</h3>
-        <p className="text-sm text-[#64748B]">{status}</p>
-      </div>
-      
-      {/* Progress-like animation */}
-      <div className="space-y-3">
-        <div className="bg-[#F8FAFC] rounded-lg p-3">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-2 h-2 bg-[#7C3AED] rounded-full animate-pulse" />
-            <Skeleton className="h-3 bg-[#E2E8F0] rounded w-32" />
+        {/* Progress indication */}
+        <div className="w-full">
+          <div className="w-full bg-[#F1F5F9] rounded-full h-2 mb-4">
+            <div 
+              className="bg-[#2563EB] h-2 rounded-full transition-all duration-1000 ease-out animate-pulse"
+              style={{ width: '45%' }}
+            />
           </div>
-          <Skeleton className="h-3 bg-[#F8FAFC] rounded w-full" />
-        </div>
-        
-        <div className="bg-[#F8FAFC] rounded-lg p-3">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-2 h-2 bg-[#D97706] rounded-full animate-pulse animation-delay-300" />
-            <Skeleton className="h-3 bg-[#E2E8F0] rounded w-40" />
-          </div>
-          <Skeleton className="h-3 bg-[#F8FAFC] rounded w-4/5" />
-        </div>
-        
-        <div className="bg-[#F8FAFC] rounded-lg p-3">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-2 h-2 bg-[#94A3B8] rounded-full" />
-            <Skeleton className="h-3 bg-[#E2E8F0] rounded w-36" />
-          </div>
-          <Skeleton className="h-3 bg-[#F8FAFC] rounded w-3/4" />
+          <p className="text-xs text-[#94A3B8] animate-pulse">
+            This usually takes 30-60 seconds
+          </p>
         </div>
       </div>
     </div>
