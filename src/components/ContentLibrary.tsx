@@ -1,19 +1,16 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
-// import { PlusIcon, XMarkIcon, DocumentTextIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
-import { Database, ContentSource } from '../types/database.types';
-import { Insight } from '../types/content';
-// import { getContent, addContent } from '../lib/content';
-// import { processTranscript } from '../lib/contentProcessor';
-// import { getAllTopics, groupContentByTopics } from '../lib/topicUtils';
-// import Button from './Button';
-import { ContentMetadata } from './ContentTypeIndicator';
-import StartReviewButton from './StartReviewButton';
-import { PageSkeleton } from './SkeletonComponents';
-import StokeLogo from './StokeLogo';
-import { AIInsight, AIProcessingStatus, AIContentBadge } from './AIIndicators';
-import { TopicFilterBar, TopicList, TopicGroupHeader } from './TopicComponents';
+import React from 'react';
+
+// Temporarily commenting out all imports while component is disabled
+// import { Database, ContentSource } from '../types/database.types';
+// import { Insight } from '../types/content';
+// import { ContentMetadata } from './ContentTypeIndicator';
+// import StartReviewButton from './StartReviewButton';
+// import { PageSkeleton } from './SkeletonComponents';
+// import StokeLogo from './StokeLogo';
+// import { AIInsight, AIProcessingStatus, AIContentBadge } from './AIIndicators';
+// import { TopicFilterBar, TopicList, TopicGroupHeader } from './TopicComponents';
 
 // Temporarily commenting out problematic type to fix deployment
 // type ContentRow = Database['public']['Tables']['content']['Row'];
