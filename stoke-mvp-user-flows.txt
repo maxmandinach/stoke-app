@@ -15,112 +15,157 @@
 
 **Step 2: Episode Selection**
 - User taps episode card to view detailed preview modal
-- Preview shows full description, key topics, and estimated number of insights
-- Processing time estimate displayed (optimized for speed)
+- Preview shows full description, key topics, and estimated processing time
+- **Pre-processing notice**: User informed that content will be processed once for all users
 - Clear add/cancel actions available
 
 **Step 3: Confirm Addition** 
 - User confirms adding episode to personal library
 - System immediately shows processing status
 - User redirected to Processing Status page
-- Background AI processing begins automatically
+- **Enhanced AI processing begins**: One-time generation of summaries (quick/full) and question pool (10-15 per hour)
 
 **Step 4: Return to Content Library**
 - After processing completes, user navigates back to Content Library (home)
-- New content appears in personal library ready for review
+- New content appears in personal library with all variants ready for any session type
 - Content Library remains the primary hub for ongoing activity
 
 ### Key Considerations
-- Curated Library is discovery-focused, not the primary landing page
+- **Shared content model**: First user to add an episode triggers processing for all future users
+- **Already processed content**: If episode exists, immediate addition to user's library
 - Handle network failures gracefully with offline queuing
 - Prevent duplicate additions with clear "already added" states
 - Seamless flow back to Content Library after addition
 
 ---
 
-## Flow 2: Content Approval & Library Addition
+## Flow 2: Content Addition Validation (Simplified)
 
 ```
-[Processing Complete] → [Quick Review] → [Accept/Defer Decision] → [Add to Library]
+[Processing Complete] → [Content Available] → [Add to Library]
 ```
 
 **Step 1: Processing Complete Notification**
 - User receives notification that content processing is finished
-- Can view results immediately or return to them later from library
-- Processing continues in background if user navigates away
+- **No validation step required**: Pre-processed content is standardized and consistent
+- Content immediately available for all session types
 
-**Step 2: Quick Content Review (30 seconds)**
-- User scans AI-generated summary and key insights in clean, scannable format
-- Simple validation: "Looks good" or "Not quite right" options
-- If "Not quite right" → optional brief feedback, but content still proceeds to library
-- No detailed editing or extensive validation required
-
-**Step 3: Immediate Action Decision**
-- Two clear options: "Start reviewing this now" or "Save for later"
-- Default selection: "Save for later" to reduce pressure
-- Both options add content to user's library with "Active" status
-- Choosing "Start reviewing this now" immediately begins single-episode review session
-
-**Step 4: Library Integration**
-- Content automatically added to library in "Active" state
-- Available for future review sessions and selection
-- User can access and review at any time from library interface
+**Step 2: Automatic Library Integration**
+- Content automatically added to user's library in "Available" state
+- **Ready for immediate use**: All summaries and questions pre-generated
+- User can begin any session type without additional processing
 
 ### Key Considerations
-- Minimize friction between processing completion and library addition
-- Build trust through quick, non-judgmental validation process
-- Default to defer immediate review to reduce cognitive pressure
-- Ensure all processed content reaches the library regardless of validation feedback
+- **Eliminate validation friction**: Standardized AI processing removes need for user review
+- **Immediate availability**: Content ready for Read Summaries, Test Knowledge, or Both sessions
+- **Consistent experience**: All users see identical content quality and structure
 
 ---
 
-## Flow 3: Review Session Experience (Primary Content Library Flow)
+## Flow 3: Review Session Experience (Two-Step Process)
 
 ```
-[Content Library Landing] → [Content Selection] → [Start Review] → [Mixed Session] → [Return to Library]
+[Content Library] → [Content Selection] → [Session Configuration] → [Session Experience] → [Return to Library]
 ```
 
-**Step 1: Content Library Landing Page**
+### Step 1: Content Selection Interface
+
+**Enhanced Selection Experience:**
 - User arrives at Content Library as primary app entry point
 - Header features Memory Waves logo (48px) paired with "Stoke" wordmark
-- Views personal collection of processed content with status indicators
-- Checkbox selection UX with "Select All/None" functionality
-- Start Review button dynamically updates: "Start Review" vs "Start Review (3 episodes)"
-- Visual hierarchy follows Memory Waves design principles with generous white space
+- **Multi-select functionality**: Checkbox selection UX with individual episode selection
+- **Selection counter**: Always visible count of selected episodes (e.g., "3 episodes selected")
+- **View toggle**: "Show Selected" vs "Show All" button to filter current view
+- **Selection persistence**: State maintained despite scrolling and navigation
 
-**Step 2: Review Session Initialization**
-- **With Selection**: Review session includes insights only from selected episodes
-- **No Selection**: Auto-curated session from last 30 days of active content (excluding dismissed)
-- **Fallback**: If insufficient content in 30 days, expand timeframe to 6 months
-- Session shows total question count: "Question 5 of 23"
+**Advanced Filtering Options:**
+- **Topic/Category filters**: Filter by one or multiple topics with smart deduplication
+- **Multi-topic episodes**: Episodes spanning multiple selected topics appear once with all relevant topics listed
+- **"Select All" functionality**: When filtered by topic, option to select all visible episodes
+- **Clear filters**: Easy reset to show all content
 
-**Step 3: Mixed Content Review Experience**
-- Insights from multiple episodes randomly interweaved throughout session
-- Various question types: recall, recognition, application
-- Clean, distraction-free interface with one question at a time following Memory Waves aesthetic
-- Progress indicator using concentric circle patterns shows overall session progress, not episode breakdown
-- Auto-save progress to prevent data loss
-- Loading between questions features subtle Memory Waves ripple animations
+**Selection State Management:**
+- Visual indicators for selected episodes with Memory Waves design language
+- Persistent selection count throughout the interface
+- Easy deselection with visual feedback
+- Smart handling of episodes that appear under multiple filtered topics
 
-**Step 4: Individual Content Feedback**
-- After each question, user can provide insight-level feedback:
-  - "Got it!" → Normal spaced repetition progression
-  - "Still working on this one" → Extends review frequency, stays prominent
-  - "Don't show me this again" → Dismisses insight from future sessions
-- Episode-level dismissal available: removes all remaining questions from that episode
-- Mid-session dismissal immediately skips to next episode's content
+### Step 2: Session Configuration
 
-**Step 5: Return to Content Library**
-- Summary of session performance without competitive metrics
-- All feedback automatically applied to future session curation
-- Clear indication of when next review session might be beneficial
-- Return to Content Library (home) with updated content states
+**Session Type Selection:**
+- **Read Summaries**: Review quick or full summaries without interaction
+- **Test Knowledge**: Answer questions from pre-generated pools with binary feedback
+- **Both**: Read all summaries first, then answer mixed questions from all selected content
+
+**Session Length Configuration:**
+- **Quick (1-3 minutes)**: Optimized for brief review sessions
+- **Medium (3-5 minutes)**: Balanced content exposure
+- **Extended (5-15 minutes)**: Comprehensive review depending on content volume
+- **Dynamic time estimates**: Updates based on selected content and session type
+
+**Content Summary Display:**
+- Shows selected episode count and total estimated duration
+- Preview of session structure (e.g., "5 summaries, then 12 questions")
+- Option to return to content selection to modify choices
+
+### Step 3: Session Experience Implementation
+
+#### Read Summaries Sessions
+- **Summary type selection**: User chooses quick (4 bullet points/hour) or full (2 paragraphs/hour)
+- **Sequential presentation**: One summary at a time with clean, readable formatting
+- **Progress indication**: "Summary 2 of 5" with Memory Waves circular progress
+- **No interaction required**: Simple "Next" navigation between summaries
+- **Optional transition**: "Continue to Test Knowledge" if user selected "Both"
+
+#### Test Knowledge Sessions
+- **Random question selection**: Questions pulled randomly from pre-generated pools
+- **Binary feedback system**: Only "Got it" vs "Revisit" responses
+- **No text input**: Eliminates answer validation complexity
+- **Mixed content presentation**: Questions from all selected episodes randomized together
+- **Weighted allocation**: Longer content gets proportionally more questions
+- **Progress tracking**: "Question 8 of 15" with session-wide progress indication
+
+#### Both Sessions (Sequential Structure)
+- **Phase 1**: Present all summaries from selected content first
+- **Transition phase**: Clear indication moving from summaries to questions
+- **Phase 2**: Mixed randomized questions from all selected content
+- **Unified progress**: Overall session progress across both phases
+
+### Step 4: Individual Question Experience
+
+**Question Presentation:**
+- **Clean interface**: One question at a time following Memory Waves aesthetic principles
+- **Binary response options**: Large, touch-friendly "Got it" and "Revisit" buttons
+- **No answer validation**: Questions designed for self-assessment
+- **Immediate progression**: Instant advance to next question after response
+- **Auto-save progress**: Prevent data loss during session interruptions
+
+**Spaced Repetition Integration:**
+- **Individual scheduling**: Each user's response affects their personal spaced repetition schedule
+- **Algorithm updates**: SuperMemo SM-2 adjustments based on "Got it" vs "Revisit" responses
+- **Shared content, individual progress**: Same questions for all users, personalized scheduling
+
+### Step 5: Session Completion & Return
+
+**Session Summary:**
+- **Performance overview**: Simple metrics without competitive elements
+- **Content covered**: Summary of episodes and question count completed
+- **Next session guidance**: Suggested timeframe for next review based on performance
+- **No detailed breakdown**: Avoid overwhelming users with granular statistics
+
+**Return to Content Library:**
+- All progress automatically saved to user's individual spaced repetition schedule
+- Updated content states reflecting recent review activity
+- Clear path to start new session or adjust library content
+- Content Library remains central hub for all activity
 
 ### Key Considerations
-- Content Library serves as both landing page and post-session destination
-- Random interweaving prevents predictable patterns and enhances learning
-- Multi-level dismissal gives users granular control over their experience
-- Auto-curation reduces decision fatigue while respecting user preferences
+- **Two-step process**: Clear separation between content selection and session configuration
+- **Selection state persistence**: Maintain user choices throughout the flow
+- **Multi-topic smart handling**: Avoid duplicate episode listings in filtered views
+- **Random question mixing**: Questions from multiple episodes randomized together
+- **Individual progress on shared content**: Personal spaced repetition schedules for consistent questions
+- **Simplified feedback**: Binary responses eliminate complexity while maintaining effectiveness
 
 ---
 
@@ -144,58 +189,64 @@
 **Step 3: Content Processing**
 - **YouTube Option**: User pastes URL, system extracts transcript automatically
 - **Transcript Upload**: User selects file from device, validates format and size
-- Processing status shows extraction progress and any potential issues
-- Error handling for invalid URLs, missing transcripts, or unsupported formats
+- **Enhanced processing pipeline**: Same pre-processing as curated content (summaries + questions)
+- Processing status shows extraction and AI processing progress
 
 **Step 4: Content Preview & Metadata**
 - User reviews extracted content with auto-detected title and topics
 - Option to edit title, description, and add custom topic tags
-- Preview shows word count and estimated processing time
-- Clear indication of what will happen when processing begins
+- Preview shows estimated question count and processing scope
+- **Pre-processing scope**: Clear indication of summaries and questions to be generated
 
 **Step 5: Return to Content Library**
-- User confirms addition and processing begins
+- User confirms addition and enhanced processing begins
 - Navigation back to Content Library (home) where new content will appear
-- Processing continues in background with status available from Content Library
+- **Full pre-processing**: Same treatment as curated content with all session types available
 - Success confirmation with next steps clearly communicated
 
 ### Key Considerations
-- Manual addition flows always return to Content Library as the central hub
+- **Consistent processing**: Manual additions get same pre-processing as curated content
+- **Enhanced pipeline**: Generate full summaries, quick summaries, and question pools
 - Handle YouTube API limitations and provide alternative solutions
 - Implement file size limits with clear guidance for large transcripts
-- Provide content quality feedback before processing begins
+- **Shared content potential**: Manually added content could become available to other users
 
 ---
 
-## Design & Experience Considerations
+## Enhanced Design & Experience Considerations
 
-### Mobile-First Interface Design
-- Touch targets minimum 44px for reliable mobile interaction
-- Generous white space to reduce visual clutter and cognitive load
-- Thumb-zone optimization for primary actions
-- Clear visual hierarchy using scale and contrast
-- Memory Waves logo integration in headers and key brand touchpoints
-- Concentric circle design patterns throughout interface for visual consistency
-- Progressive opacity treatments following Memory Waves design language
+### Mobile-First Two-Step Interface Design
+- **Step progression indicators**: Clear visual hierarchy showing content selection → session configuration
+- **Selection state visualization**: Persistent count display and selected/all view toggles
+- **Touch-optimized controls**: 44px minimum targets for all selection and configuration elements
+- **Memory Waves integration**: Concentric circle patterns in progress indicators and selection states
 
-### Brand Integration & Visual Identity
-- **Header Branding**: Memory Waves logo (48px) paired with "Stoke" wordmark in primary navigation
-- **Progress Visualization**: Circular indicators using concentric ring patterns for session progress
-- **Loading States**: Animated Memory Waves ripple effects during AI processing and content extraction
-- **Knowledge Retention Indicators**: Progressive ring activation patterns showing mastery levels (new → learning → familiar → mastered)
-- **Connection Visualization**: Overlapping circle motifs when displaying content relationships
-- **Micro-interactions**: Subtle ripple effects for user actions maintaining calm, purposeful feel
+### Advanced Selection Experience
+- **Multi-select patterns**: Checkbox interfaces with bulk actions and visual feedback
+- **Filter state management**: Clear indication of active filters with easy reset options
+- **Smart deduplication**: Episodes appear once even when matching multiple topic filters
+- **Responsive layout**: Selection interface adapts to content volume and filter states
 
-### Progressive Loading & Offline Support
-- Skeleton screens maintain perceived performance during loading with Memory Waves placeholder patterns
-- Offline review sessions with sync when connection restored
-- Cached content library for browsing without network
-- Progressive Web App capabilities for app-like experience
-- Memory Waves app icons and splash screens for PWA installation
+### Session Configuration Interface
+- **Session type preview**: Visual representation of what each session type includes
+- **Dynamic estimation**: Real-time updates of session length based on selections
+- **Content breakdown**: Clear summary of selected episodes and expected question volume
+- **Modification flow**: Easy return to content selection without losing configuration
 
-### Error Prevention & Recovery
-- Input validation with immediate, helpful feedback
-- Graceful degradation when network connectivity is poor  
-- Auto-save functionality prevents data loss during interruptions
-- Clear error messages with actionable recovery steps
-- Consistent visual treatment using Memory Waves design principles for all feedback states
+### Binary Feedback Optimization
+- **Large touch targets**: "Got it" and "Revisit" buttons optimized for thumb interaction
+- **Immediate response**: No loading states between question responses
+- **Visual feedback**: Subtle animations confirming user responses using Memory Waves principles
+- **Progress maintenance**: Clear indication of session progress without overwhelming detail
+
+### Brand-Consistent Session Experience
+- **Memory Waves session headers**: Logo integration with session type and progress indication
+- **Concentric progress patterns**: Circular indicators showing advancement through sessions
+- **Calm transitions**: Subtle animations between questions and summaries
+- **Loading state consistency**: Ripple effects during any processing or content loading
+
+### Enhanced Content Organization
+- **Topic-based visual grouping**: Clear organization of episodes by topic with smart filtering
+- **Selection persistence**: State maintained across navigation and scrolling
+- **Content relationship display**: Episodes spanning multiple topics show all relevant associations
+- **Library state indicators**: Visual cues for content readiness and user progress

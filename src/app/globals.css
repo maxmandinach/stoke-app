@@ -871,3 +871,305 @@
   -webkit-text-fill-color: transparent;
 }
 
+/* ========================================
+   MEMORY WAVES ENHANCED ANIMATIONS
+   ======================================== */
+
+@layer components {
+  /* Enhanced ripple animation for Memory Waves */
+  @keyframes memory-ripple-enhanced {
+    0% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.7;
+      transform: scale(1.1);
+    }
+    100% {
+      opacity: 0.3;
+      transform: scale(1.2);
+    }
+  }
+
+  /* Progressive wave activation */
+  @keyframes wave-activation {
+    0% {
+      opacity: 0.1;
+      stroke-dasharray: 0 100;
+    }
+    50% {
+      opacity: 0.7;
+    }
+    100% {
+      opacity: var(--final-opacity);
+      stroke-dasharray: 100 0;
+    }
+  }
+
+  /* Gentle pulse for mindful interactions */
+  @keyframes mindful-pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.02);
+    }
+  }
+
+  /* Memory formation animation */
+  @keyframes memory-formation {
+    0% {
+      opacity: 0;
+      transform: scale(0.8) rotate(-180deg);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(1.1) rotate(-90deg);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+  }
+
+  /* Calm attention draw */
+  @keyframes attention-draw {
+    0% {
+      box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.3);
+    }
+    70% {
+      box-shadow: 0 0 0 8px rgba(37, 99, 235, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+    }
+  }
+
+  /* Memory Waves component classes */
+  .memory-waves {
+    transition: all var(--stoke-transition-normal);
+  }
+
+  .memory-waves-ripple-enhanced {
+    animation: memory-ripple-enhanced 2.5s ease-out infinite;
+  }
+
+  .memory-waves-formation {
+    animation: memory-formation 1.2s ease-out;
+  }
+
+  .memory-waves-mindful-pulse {
+    animation: mindful-pulse 3s ease-in-out infinite;
+  }
+
+  .memory-waves-attention {
+    animation: attention-draw 2s ease-out infinite;
+  }
+
+  /* Enhanced interactive states */
+  .memory-waves-interactive {
+    cursor: pointer;
+    transition: all var(--stoke-transition-normal);
+  }
+
+  .memory-waves-interactive:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+  }
+
+  .memory-waves-interactive:active {
+    transform: scale(0.98);
+    filter: brightness(0.95);
+  }
+
+  /* Progress indication variants */
+  .memory-waves-progress-ring {
+    transition: stroke-dashoffset 0.6s ease-out;
+  }
+
+  /* Connection lines for knowledge mapping */
+  .memory-connection-line {
+    stroke: var(--stoke-primary-blue);
+    stroke-width: 2;
+    stroke-dasharray: 5 5;
+    opacity: 0.4;
+    animation: dash 20s linear infinite;
+  }
+
+  @keyframes dash {
+    to {
+      stroke-dashoffset: -100;
+    }
+  }
+
+  /* Retention level indicators */
+  .retention-high {
+    --memory-color: var(--stoke-success-green);
+    --memory-opacity: 1;
+  }
+
+  .retention-medium {
+    --memory-color: var(--stoke-primary-blue);
+    --memory-opacity: 0.7;
+  }
+
+  .retention-low {
+    --memory-color: var(--stoke-warning-amber);
+    --memory-opacity: 0.5;
+  }
+
+  .retention-new {
+    --memory-color: var(--stoke-soft-gray);
+    --memory-opacity: 0.3;
+  }
+}
+
+/* ========================================
+   ENHANCED BUTTON INTERACTIONS
+   ======================================== */
+
+@layer components {
+  .stoke-btn-memory-waves {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stoke-btn-memory-waves::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.2) 0%, transparent 70%);
+    transition: all 0.3s ease-out;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+  }
+
+  .stoke-btn-memory-waves:hover::before {
+    width: 100px;
+    height: 100px;
+  }
+
+  .stoke-btn-memory-waves:active::before {
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.3) 0%, transparent 70%);
+  }
+}
+
+/* ========================================
+   MICRO-INTERACTIONS FOR MINDFUL UX
+   ======================================== */
+
+@layer components {
+  /* Gentle hover states */
+  .mindful-hover {
+    transition: all var(--stoke-transition-normal);
+  }
+
+  .mindful-hover:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--stoke-shadow-elevated);
+  }
+
+  /* Calm focus states */
+  .mindful-focus:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    transition: box-shadow var(--stoke-transition-fast);
+  }
+
+  /* Gentle selection feedback */
+  .selection-feedback {
+    transition: all var(--stoke-transition-fast);
+  }
+
+  .selection-feedback.selected {
+    background: rgba(37, 99, 235, 0.1);
+    border-color: var(--stoke-primary-blue);
+    transform: scale(1.02);
+  }
+
+  /* Progress animation with easing */
+  .progress-smooth {
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Staggered animations for lists */
+  .stagger-animation {
+    animation: slideInFromBottom 0.6s ease-out both;
+  }
+
+  .stagger-animation:nth-child(1) { animation-delay: 0.1s; }
+  .stagger-animation:nth-child(2) { animation-delay: 0.2s; }
+  .stagger-animation:nth-child(3) { animation-delay: 0.3s; }
+  .stagger-animation:nth-child(4) { animation-delay: 0.4s; }
+  .stagger-animation:nth-child(5) { animation-delay: 0.5s; }
+  .stagger-animation:nth-child(6) { animation-delay: 0.6s; }
+}
+
+/* ========================================
+   ACCESSIBILITY & REDUCED MOTION
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .memory-waves-ripple-enhanced,
+  .memory-waves-formation,
+  .memory-waves-mindful-pulse,
+  .memory-waves-attention,
+  .memory-connection-line {
+    animation: none;
+  }
+
+  .mindful-hover:hover {
+    transform: none;
+  }
+
+  .selection-feedback.selected {
+    transform: none;
+  }
+
+  .stagger-animation {
+    animation: none;
+  }
+}
+
+/* ========================================
+   ENHANCED THEME SUPPORT
+   ======================================== */
+
+@layer base {
+  /* Custom properties for Memory Waves theming */
+  :root {
+    --memory-waves-primary: var(--stoke-primary-blue);
+    --memory-waves-secondary: var(--stoke-deep-navy);
+    --memory-waves-accent: var(--stoke-soft-gray);
+    --memory-waves-success: var(--stoke-success-green);
+    
+    /* Animation timing for mindful interactions */
+    --mindful-fast: 150ms;
+    --mindful-normal: 250ms;
+    --mindful-slow: 400ms;
+    
+    /* Memory formation timing */
+    --memory-formation-speed: 1.2s;
+    --memory-ripple-speed: 2.5s;
+    --memory-pulse-speed: 3s;
+  }
+}
+
+/* Dark mode support for Memory Waves */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --memory-waves-primary: #3B82F6;
+    --memory-waves-secondary: #E2E8F0;
+    --memory-waves-accent: #94A3B8;
+    --memory-waves-success: #10B981;
+  }
+}
+
