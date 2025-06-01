@@ -247,7 +247,7 @@ const mockTopics = [
 ];
 
 export default function ContentLibrary() {
-  const { state, dispatch } = useContentSelection();
+  const { dispatch } = useContentSelection();
 
   // Load mock data on component mount
   useEffect(() => {
