@@ -126,6 +126,80 @@
 }
 
 /* ========================================
+   CONTENT SELECTION UTILITIES
+   ======================================== */
+
+@layer utilities {
+  /* Line clamping utilities */
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+  
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+  
+  /* Selection ripple effect */
+  .selection-ripple {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .selection-ripple::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(37, 99, 235, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease-out, height 0.3s ease-out;
+  }
+  
+  .selection-ripple.selected::before {
+    width: 100px;
+    height: 100px;
+  }
+  
+  /* Memory Waves selection indicator */
+  .memory-selection-indicator {
+    position: relative;
+  }
+  
+  .memory-selection-indicator::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    border: 2px solid transparent;
+    background: linear-gradient(45deg, transparent, rgba(37, 99, 235, 0.1), transparent) border-box;
+    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    mask-composite: xor;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .memory-selection-indicator.selected::after {
+    opacity: 1;
+  }
+}
+
+/* ========================================
    STOKE TYPOGRAPHY CLASSES
    ======================================== */
 
