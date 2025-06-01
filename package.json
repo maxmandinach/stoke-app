@@ -2,13 +2,16 @@
   "name": "stoke-app",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "migrate": "node src/scripts/migrateContent.js"
+    "migrate": "node src/scripts/migrateContent.js",
+    "test:db": "node scripts/test-database-migration.js",
+    "validate:schema": "node scripts/test-database-migration.js"
   },
   "dependencies": {
     "@prisma/client": "^5.10.2",
