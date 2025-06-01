@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import type { 
-  Database, 
+
   Question, 
   FeedbackType, 
   SessionType, 
