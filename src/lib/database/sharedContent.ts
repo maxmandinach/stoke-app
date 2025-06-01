@@ -306,7 +306,7 @@ export async function getDueQuestions(
 export async function planLearningSession(
   userId: string,
   targetDurationMinutes: number,
-  sessionType: SessionType,
+
   options?: {
     contentIds?: string[];
     difficultyPreference?: DifficultyLevel;
@@ -358,6 +358,7 @@ export async function createLearningSession(
   userId: string,
   sessionPlan: SessionPlan,
   sessionType: SessionType,
+
   deviceType?: string
 ) {
   const { data, error } = await supabase
