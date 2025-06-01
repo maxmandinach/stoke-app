@@ -2,7 +2,8 @@
 
 import React, { useEffect } from 'react';
 import { useContentSelection, contentSelectionActions } from '@/contexts/ContentSelectionContext';
-import { ContentSelectionInterface } from './ContentSelectionInterface';
+import { SessionConfigurationProvider } from '@/contexts/SessionConfigurationContext';
+import { AppCoordinator } from './AppCoordinator';
 
 // Mock data for demonstration (in production, this would come from Supabase)
 const mockContent = [
@@ -260,7 +261,11 @@ export default function ContentLibrary() {
     }, 500);
   }, [dispatch]);
 
-  return <ContentSelectionInterface />;
+  return (
+    <SessionConfigurationProvider>
+      <AppCoordinator />
+    </SessionConfigurationProvider>
+  );
 }
 
 // ... existing code ... 
