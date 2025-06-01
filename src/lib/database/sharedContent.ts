@@ -693,7 +693,6 @@ export function validateContentSummaryVariants(
   }
 
   // Validate questions (10-15 per hour)
-  const expectedQuestions = Math.ceil(durationHours * 12); // Target 12 per hour
   const questionCount = variants.questions.length;
   
   if (questionCount < durationHours * 8 || questionCount > durationHours * 18) {
