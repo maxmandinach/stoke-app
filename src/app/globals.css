@@ -811,3 +811,63 @@
   }
 }
 
+/* ========================================
+   ENHANCED MEMORY WAVES ANIMATIONS
+   ======================================== */
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.02);
+  }
+}
+
+/* Enhanced Memory Waves ripple effects */
+.memory-waves-ripple {
+  animation: memory-ripple 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes memory-ripple {
+  0% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+}
+
+/* Elegant hover transitions for cards */
+.memory-waves-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.memory-waves-card:hover {
+  transform: translateY(-2px) scale(1.005);
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(59, 130, 246, 0.05);
+}
+
+/* Gradient text effects */
+.gradient-text-primary {
+  background: linear-gradient(135deg, #1E293B 0%, #475569 50%, #2563EB 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+

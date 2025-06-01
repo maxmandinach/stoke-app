@@ -258,45 +258,108 @@ export default function ContentLibrary() {
   if (!content.length) {
     return (
       <main className="stoke-container" role="main" aria-labelledby="library-heading">
-        {/* Empty State Header */}
-        <div className="stoke-header">
-          <h1 id="library-heading" className="stoke-display">Your Content Library</h1>
+        {/* Enhanced Empty State Header */}
+        <div className="stoke-header relative overflow-hidden">
+          {/* Subtle background pattern */}
+          <div className="absolute inset-0 opacity-[0.02]">
+            <div className="absolute top-4 left-8 w-32 h-32">
+              <div className="absolute inset-0 rounded-full border border-gray-300 opacity-30"></div>
+              <div className="absolute inset-4 rounded-full border border-gray-400 opacity-40"></div>
+              <div className="absolute inset-8 rounded-full border border-gray-500 opacity-50"></div>
+              <div className="absolute inset-12 rounded-full bg-gray-600 opacity-60"></div>
+            </div>
+          </div>
+          
+          <div className="relative">
+            <div className="flex items-center gap-4 mb-3">
+              <div className="relative">
+                <StokeLogo size="xl" className="text-[#2563EB] drop-shadow-sm" />
+                <div className="absolute inset-0 animate-pulse-slow opacity-20">
+                  <StokeLogo size="xl" className="text-[#2563EB]" />
+                </div>
+              </div>
+              <div>
+                <h1 id="library-heading" className="stoke-display bg-gradient-to-r from-[#1E293B] to-[#475569] bg-clip-text text-transparent">
+                  Memory Waves
+                </h1>
+                <p className="stoke-caption text-[#64748B] -mt-1">
+                  Your Knowledge Sanctuary
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Empty State Content */}
-        <div className="text-center space-y-8 mt-16">
-          <div className="max-w-md mx-auto">
-            <div className="w-16 h-16 mx-auto mb-6 bg-blue-50 rounded-full flex items-center justify-center">
-              <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-              </svg>
+        {/* Enhanced Empty State Content */}
+        <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-8 px-4">
+          {/* Central Memory Waves Illustration */}
+          <div className="relative">
+            <div className="w-32 h-32 relative">
+              {/* Animated concentric circles */}
+              <div className="absolute inset-0 rounded-full border-2 border-blue-200 opacity-30 animate-pulse-slow"></div>
+              <div className="absolute inset-4 rounded-full border-2 border-blue-300 opacity-50 animate-pulse-slow" style={{ animationDelay: '0.5s' }}></div>
+              <div className="absolute inset-8 rounded-full border-2 border-blue-400 opacity-70 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+              <div className="absolute inset-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 opacity-90 animate-pulse-slow" style={{ animationDelay: '1.5s' }}></div>
+              
+              {/* Floating particles */}
+              <div className="absolute -top-2 left-8 w-2 h-2 bg-blue-400 rounded-full opacity-60 animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              <div className="absolute top-6 -right-1 w-1.5 h-1.5 bg-blue-300 rounded-full opacity-50 animate-bounce" style={{ animationDelay: '0.8s' }}></div>
+              <div className="absolute bottom-4 -left-1 w-1 h-1 bg-blue-200 rounded-full opacity-40 animate-bounce" style={{ animationDelay: '1.2s' }}></div>
             </div>
-            <h2 className="stoke-title mb-4">Start building your content library</h2>
-            <p className="stoke-body text-gray-600 mb-8">
-              Add podcasts, interviews, lectures, and more to create personalized study sessions.
+          </div>
+
+          {/* Content */}
+          <div className="max-w-md space-y-6">
+            <h2 className="stoke-title text-[#1E293B]">
+              Begin Your Knowledge Journey
+            </h2>
+            <p className="stoke-body text-[#64748B] leading-relaxed">
+              Transform insights from podcasts, interviews, and lectures into lasting understanding. 
+              Each piece of content creates ripples of knowledge through gentle, mindful review.
             </p>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col gap-4 max-w-sm mx-auto">
+          {/* Enhanced Action Buttons */}
+          <div className="flex flex-col gap-4 w-full max-w-sm">
             <button
               onClick={() => setIsAddingContent(true)}
-              className="stoke-btn stoke-btn-primary"
+              className="relative overflow-hidden group stoke-btn bg-gradient-to-r from-[#2563EB] to-[#3B82F6] hover:from-[#1D4ED8] hover:to-[#2563EB] text-white shadow-xl shadow-blue-500/25 transform hover:scale-[1.02] transition-all duration-300"
               aria-label="Add new content to start building your library"
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Add Content
+              <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative flex items-center justify-center">
+                <div className="w-5 h-5 mr-3 relative">
+                  <div className="absolute inset-0 rounded-full border border-white/30"></div>
+                  <div className="absolute inset-1 rounded-full border border-white/50"></div>
+                  <div className="absolute inset-[6px] rounded-full bg-white"></div>
+                </div>
+                Create Your First Wave
+              </div>
             </button>
             
-            <label className="stoke-btn stoke-btn-secondary cursor-pointer">
+            <label className="relative overflow-hidden group stoke-btn bg-white border-2 border-gray-200 text-[#475569] hover:border-[#2563EB] hover:text-[#2563EB] cursor-pointer transform hover:scale-[1.02] transition-all duration-300">
               <input type="file" accept=".txt,.pdf" onChange={handleFileUpload} className="sr-only" />
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-              </svg>
-              Upload Transcript
+              <div className="relative flex items-center justify-center">
+                <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                Upload Transcript
+              </div>
             </label>
+          </div>
+
+          {/* Subtle guidance */}
+          <div className="mt-12 space-y-3 max-w-xs">
+            <p className="stoke-small text-[#94A3B8] text-center">
+              Start with any content format
+            </p>
+            <div className="flex justify-center gap-4 text-[#CBD5E1]">
+              <span className="stoke-small">Podcasts</span>
+              <span>•</span>
+              <span className="stoke-small">Interviews</span>
+              <span>•</span>
+              <span className="stoke-small">Lectures</span>
+            </div>
           </div>
         </div>
       </main>
@@ -305,167 +368,270 @@ export default function ContentLibrary() {
 
   return (
     <main className="stoke-container pb-24" role="main" aria-labelledby="library-heading">
-      {/* Professional Header */}
-      <div className="stoke-header">
-        <div>
-          <div className="flex items-center gap-3 mb-1">
-            <StokeLogo size="lg" className="text-[#2563EB]" />
-            <h1 id="library-heading" className="stoke-display">Stoke</h1>
+      {/* Professional Header with Enhanced Memory Waves Integration */}
+      <div className="stoke-header relative overflow-hidden">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 opacity-[0.02]">
+          <div className="absolute top-4 left-8 w-32 h-32">
+            <div className="absolute inset-0 rounded-full border border-gray-300 opacity-30"></div>
+            <div className="absolute inset-4 rounded-full border border-gray-400 opacity-40"></div>
+            <div className="absolute inset-8 rounded-full border border-gray-500 opacity-50"></div>
+            <div className="absolute inset-12 rounded-full bg-gray-600 opacity-60"></div>
           </div>
-          <p className="stoke-caption">
-            {content.length} {content.length === 1 ? 'item' : 'items'}
-            {selectedTopics.length > 0 && ` • ${filteredContent.length} filtered`}
-            {selectedIds.length > 0 && ` • ${selectedIds.length} selected`}
-          </p>
+          <div className="absolute bottom-2 right-12 w-24 h-24">
+            <div className="absolute inset-0 rounded-full border border-blue-200 opacity-25"></div>
+            <div className="absolute inset-3 rounded-full border border-blue-300 opacity-35"></div>
+            <div className="absolute inset-6 rounded-full bg-blue-400 opacity-45"></div>
+          </div>
         </div>
         
-        {/* Header Actions */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setViewMode(viewMode === 'list' ? 'grouped' : 'list')}
-            className="stoke-btn stoke-btn-tertiary stoke-btn-sm"
-            aria-label={`Switch to ${viewMode === 'list' ? 'grouped' : 'list'} view`}
-          >
-            <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-              <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
-            </svg>
-            {viewMode === 'list' ? 'Group' : 'List'}
-          </button>
+        <div className="relative">
+          <div className="flex items-center gap-4 mb-3">
+            <div className="relative">
+              <StokeLogo size="xl" className="text-[#2563EB] drop-shadow-sm" />
+              <div className="absolute inset-0 animate-pulse-slow opacity-20">
+                <StokeLogo size="xl" className="text-[#2563EB]" />
+              </div>
+            </div>
+            <div>
+              <h1 id="library-heading" className="stoke-display bg-gradient-to-r from-[#1E293B] to-[#475569] bg-clip-text text-transparent">
+                Memory Waves
+              </h1>
+              <p className="stoke-caption text-[#64748B] -mt-1">
+                Your Knowledge Sanctuary
+              </p>
+            </div>
+          </div>
           
-          <button
-            onClick={() => setIsAddingContent(true)}
-            className="stoke-btn stoke-btn-primary stoke-btn-sm"
-            aria-label="Add new content"
-          >
-            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Add
-          </button>
+          <div className="flex items-center justify-between">
+            <p className="stoke-caption">
+              {content.length} {content.length === 1 ? 'insight' : 'insights'} cultivated
+              {selectedTopics.length > 0 && ` • ${filteredContent.length} in view`}
+              {selectedIds.length > 0 && ` • ${selectedIds.length} selected`}
+            </p>
+            
+            {/* Enhanced Header Actions */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setViewMode(viewMode === 'list' ? 'grouped' : 'list')}
+                className="stoke-btn stoke-btn-tertiary stoke-btn-sm backdrop-blur-sm bg-white/80 border border-gray-200/50 hover:bg-white/90 transition-all duration-300"
+                aria-label={`Switch to ${viewMode === 'list' ? 'grouped' : 'list'} view`}
+              >
+                <div className="w-4 h-4 mr-1.5 relative">
+                  {viewMode === 'list' ? (
+                    <svg fill="currentColor" viewBox="0 0 20 20" className="w-4 h-4">
+                      <path d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" />
+                    </svg>
+                  ) : (
+                    <svg fill="currentColor" viewBox="0 0 20 20" className="w-4 h-4">
+                      <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                  )}
+                </div>
+                {viewMode === 'list' ? 'Cluster' : 'Flow'}
+              </button>
+              
+              <button
+                onClick={() => setIsAddingContent(true)}
+                className="stoke-btn stoke-btn-primary stoke-btn-sm bg-gradient-to-r from-[#2563EB] to-[#3B82F6] hover:from-[#1D4ED8] hover:to-[#2563EB] shadow-lg shadow-blue-500/25 transition-all duration-300"
+                aria-label="Add new content"
+              >
+                <div className="w-4 h-4 mr-1.5 relative">
+                  <div className="absolute inset-0 rounded-full border border-white/30"></div>
+                  <div className="absolute inset-1 rounded-full border border-white/50"></div>
+                  <div className="absolute inset-[6px] rounded-full bg-white"></div>
+                </div>
+                Capture
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
       {isAddingContent && (
         <section 
-          className="mb-6 p-6 bg-white border border-[#E2E8F0] rounded-xl transition-all duration-200"
+          className="mb-8 relative overflow-hidden bg-gradient-to-br from-white to-blue-50/30 border-2 border-blue-200/50 rounded-3xl shadow-lg shadow-blue-500/10 backdrop-blur-sm transition-all duration-500"
           aria-labelledby="add-content-heading"
         >
-          <div className="space-y-6">
-            <header>
-              <h2 id="add-content-heading" className="text-[22px] leading-[28px] font-semibold text-[#1E293B] mb-6">Add New Content</h2>
+          {/* Subtle Memory Waves background pattern */}
+          <div className="absolute top-0 right-0 w-48 h-48 opacity-[0.03] pointer-events-none">
+            <div className="w-full h-full relative">
+              <div className="absolute inset-0 rounded-full border-2 border-blue-400 animate-pulse-slow"></div>
+              <div className="absolute inset-6 rounded-full border-2 border-blue-500 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+              <div className="absolute inset-12 rounded-full border-2 border-blue-600 animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+              <div className="absolute inset-18 rounded-full bg-blue-700 animate-pulse-slow" style={{ animationDelay: '3s' }}></div>
+            </div>
+          </div>
+
+          <div className="relative p-8">
+            <header className="mb-8">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-8 h-8 relative">
+                  <div className="absolute inset-0 rounded-full border border-blue-400 opacity-40"></div>
+                  <div className="absolute inset-1.5 rounded-full border border-blue-500 opacity-60"></div>
+                  <div className="absolute inset-3 rounded-full bg-blue-600 opacity-80"></div>
+                </div>
+                <h2 id="add-content-heading" className="stoke-title text-[#1E293B]">
+                  Capture New Knowledge
+                </h2>
+              </div>
+              <p className="stoke-caption text-[#64748B] ml-11">
+                Transform your content into lasting insights through mindful processing
+              </p>
             </header>
 
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="content-title" className="block text-[14px] leading-[20px] font-medium text-[#1E293B] mb-2">
-                  Title <span className="text-[#DC2626]" aria-label="required">*</span>
-                </label>
-                <input
-                  id="content-title"
-                  type="text"
-                  value={newContent.title}
-                  onChange={(e) => setNewContent(prev => ({ ...prev, title: e.target.value }))}
-                  className={`w-full bg-[#F8FAFC] border rounded-lg px-3 py-3 text-[16px] leading-[24px] font-normal transition-all duration-200 ease-out touch-target ${
-                    !newContent.title.trim() 
-                      ? 'border-[#DC2626] focus:border-[#DC2626] focus:ring-[#DC2626]' 
-                      : 'border-[#E2E8F0] focus:border-[#2563EB] focus:ring-[#2563EB]'
-                  } focus:ring-2 focus:ring-offset-2`}
-                  placeholder="Enter content title"
-                  required
-                  aria-describedby={!newContent.title.trim() ? "title-error" : undefined}
-                />
-                {!newContent.title.trim() && (
-                  <p id="title-error" className="mt-1 text-[12px] leading-[16px] text-[#DC2626]" role="alert">Title is required</p>
-                )}
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Title Field */}
+                <div className="space-y-2">
+                  <label htmlFor="content-title" className="block stoke-caption font-medium text-[#1E293B] mb-3">
+                    Content Title <span className="text-[#DC2626]" aria-label="required">*</span>
+                  </label>
+                  <input
+                    id="content-title"
+                    type="text"
+                    value={newContent.title}
+                    onChange={(e) => setNewContent(prev => ({ ...prev, title: e.target.value }))}
+                    className={`w-full bg-white/70 backdrop-blur-sm border-2 rounded-xl px-4 py-4 text-[16px] leading-[24px] font-normal transition-all duration-300 ease-out shadow-inner ${
+                      !newContent.title.trim() 
+                        ? 'border-red-300 focus:border-red-400 focus:ring-red-400' 
+                        : 'border-blue-200 focus:border-blue-400 focus:ring-blue-400'
+                    } focus:ring-2 focus:ring-offset-2 hover:border-blue-300`}
+                    placeholder="Enter a meaningful title for your content"
+                    required
+                    aria-describedby={!newContent.title.trim() ? "title-error" : undefined}
+                  />
+                  {!newContent.title.trim() && (
+                    <p id="title-error" className="mt-2 text-[12px] leading-[16px] text-[#DC2626] flex items-center gap-1" role="alert">
+                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                      Title helps organize your knowledge waves
+                    </p>
+                  )}
+                </div>
+
+                {/* Content Type Field */}
+                <div className="space-y-2">
+                  <label htmlFor="content-source" className="block stoke-caption font-medium text-[#1E293B] mb-3">
+                    Content Type
+                  </label>
+                  <select
+                    id="content-source"
+                    value={newContent.source}
+                    onChange={(e) => setNewContent(prev => ({ ...prev, source: e.target.value as ContentSource }))}
+                    className="w-full bg-white/70 backdrop-blur-sm border-2 border-blue-200 rounded-xl px-4 py-4 text-[16px] leading-[24px] font-normal focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:border-blue-400 transition-all duration-300 ease-out hover:border-blue-300 shadow-inner"
+                  >
+                    <option value="podcast">🎧 Podcast</option>
+                    <option value="interview">🎤 Interview</option>
+                    <option value="lecture">🎓 Lecture</option>
+                    <option value="article">📄 Article</option>
+                    <option value="video">🎥 Video</option>
+                    <option value="other">💭 Other</option>
+                  </select>
+                </div>
               </div>
 
-              <div>
-                <label htmlFor="content-source" className="block text-[14px] leading-[20px] font-medium text-[#1E293B] mb-2">
-                  Content Type
-                </label>
-                <select
-                  id="content-source"
-                  value={newContent.source}
-                  onChange={(e) => setNewContent(prev => ({ ...prev, source: e.target.value as ContentSource }))}
-                  className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-3 text-[16px] leading-[24px] font-normal focus:ring-2 focus:ring-[#2563EB] focus:ring-offset-2 focus:border-[#2563EB] transition-all duration-200 ease-out touch-target"
-                >
-                  <option value="podcast">Podcast</option>
-                  <option value="interview">Interview</option>
-                  <option value="lecture">Lecture</option>
-                  <option value="article">Article</option>
-                  <option value="video">Video</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="content-url" className="block text-[14px] leading-[20px] font-medium text-[#1E293B] mb-2">
-                  Source URL (optional)
+              {/* Source URL Field */}
+              <div className="space-y-2">
+                <label htmlFor="content-url" className="block stoke-caption font-medium text-[#1E293B] mb-3">
+                  Source URL <span className="text-[#64748B] font-normal">(optional)</span>
                 </label>
                 <input
                   id="content-url"
                   type="url"
                   value={newContent.sourceUrl}
                   onChange={(e) => setNewContent(prev => ({ ...prev, sourceUrl: e.target.value }))}
-                  className={`w-full bg-[#F8FAFC] border rounded-lg px-3 py-3 text-[16px] leading-[24px] font-normal transition-all duration-200 ease-out touch-target ${
+                  className={`w-full bg-white/70 backdrop-blur-sm border-2 rounded-xl px-4 py-4 text-[16px] leading-[24px] font-normal transition-all duration-300 ease-out shadow-inner ${
                     newContent.sourceUrl && !isValidUrl(newContent.sourceUrl) 
-                      ? 'border-[#D97706] focus:border-[#D97706] focus:ring-[#D97706]' 
-                      : 'border-[#E2E8F0] focus:border-[#2563EB] focus:ring-[#2563EB]'
-                  } focus:ring-2 focus:ring-offset-2`}
-                  placeholder="https://example.com"
+                      ? 'border-amber-300 focus:border-amber-400 focus:ring-amber-400' 
+                      : 'border-blue-200 focus:border-blue-400 focus:ring-blue-400'
+                  } focus:ring-2 focus:ring-offset-2 hover:border-blue-300`}
+                  placeholder="https://example.com (helps track original source)"
                   aria-describedby={newContent.sourceUrl && !isValidUrl(newContent.sourceUrl) ? "url-error" : undefined}
                 />
                 {newContent.sourceUrl && !isValidUrl(newContent.sourceUrl) && (
-                  <p id="url-error" className="mt-1 text-[12px] leading-[16px] text-[#D97706]" role="alert">Please enter a valid URL</p>
+                  <p id="url-error" className="mt-2 text-[12px] leading-[16px] text-[#D97706] flex items-center gap-1" role="alert">
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                    Please enter a valid URL format
+                  </p>
                 )}
               </div>
 
-              <div>
-                <label htmlFor="content-transcript" className="block text-[14px] leading-[20px] font-medium text-[#1E293B] mb-2">
-                  Transcript <span className="text-[#DC2626]" aria-label="required">*</span>
+              {/* Transcript Field */}
+              <div className="space-y-2">
+                <label htmlFor="content-transcript" className="block stoke-caption font-medium text-[#1E293B] mb-3">
+                  Content Transcript <span className="text-[#DC2626]" aria-label="required">*</span>
                 </label>
                 <div className="relative">
                   <textarea
                     id="content-transcript"
                     value={newContent.transcript}
                     onChange={(e) => setNewContent(prev => ({ ...prev, transcript: e.target.value }))}
-                    className={`w-full bg-[#F8FAFC] border rounded-lg px-3 py-3 text-[16px] leading-[24px] font-normal transition-all duration-200 ease-out resize-y ${
+                    className={`w-full bg-white/70 backdrop-blur-sm border-2 rounded-xl px-4 py-4 text-[16px] leading-[24px] font-normal transition-all duration-300 ease-out resize-y shadow-inner ${
                       !newContent.transcript.trim() 
-                        ? 'border-[#DC2626] focus:border-[#DC2626] focus:ring-[#DC2626]' 
-                        : 'border-[#E2E8F0] focus:border-[#2563EB] focus:ring-[#2563EB]'
-                    } focus:ring-2 focus:ring-offset-2`}
+                        ? 'border-red-300 focus:border-red-400 focus:ring-red-400' 
+                        : 'border-blue-200 focus:border-blue-400 focus:ring-blue-400'
+                    } focus:ring-2 focus:ring-offset-2 hover:border-blue-300`}
                     rows={8}
-                    placeholder="Paste your transcript content here..."
+                    placeholder="Paste your transcript content here... This will be transformed into meaningful insights through our AI processing."
                     required
-                    aria-describedby={`transcript-count ${!newContent.transcript.trim() ? 'transcript-error' : ''}`}
+                    aria-describedby={!newContent.transcript.trim() ? "transcript-error" : "transcript-help"}
                   />
-                  <div className="absolute bottom-3 right-3 text-[12px] leading-[16px] text-[#64748B]" id="transcript-count" aria-live="polite">
-                    {newContent.transcript.length} characters
+                  <div className="absolute bottom-3 right-3 text-[#94A3B8] stoke-small">
+                    {newContent.transcript.length > 0 && `${newContent.transcript.length} characters`}
                   </div>
                 </div>
-                {!newContent.transcript.trim() && (
-                  <p id="transcript-error" className="mt-1 text-[12px] leading-[16px] text-[#DC2626]" role="alert">Transcript is required</p>
+                {!newContent.transcript.trim() ? (
+                  <p id="transcript-error" className="mt-2 text-[12px] leading-[16px] text-[#DC2626] flex items-center gap-1" role="alert">
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                    Transcript content is required for processing
+                  </p>
+                ) : (
+                  <p id="transcript-help" className="mt-2 text-[12px] leading-[16px] text-[#64748B] flex items-center gap-1">
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                    AI will extract key insights and create knowledge connections
+                  </p>
                 )}
-                <p className="mt-1 text-[12px] leading-[16px] text-[#64748B]">
-                  Your transcript will be automatically processed to extract insights and topics.
-                </p>
               </div>
             </div>
 
-            <div className="flex gap-3 pt-6 border-t border-[#F1F5F9]">
+            {/* Enhanced Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 mt-8 pt-6 border-t border-blue-100/50">
               <button
                 onClick={handleAddContent}
-                disabled={isSubmitting || !newContent.title.trim() || !newContent.transcript.trim()}
-                className="bg-[#2563EB] text-white px-6 py-3 rounded-lg hover:bg-[#1D4ED8] hover:-translate-y-0.5 active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#2563EB] disabled:hover:transform-none transition-all duration-200 ease-out touch-target focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:ring-offset-2 text-[16px] leading-[24px] font-medium inline-flex items-center gap-2"
+                disabled={!newContent.title.trim() || !newContent.transcript.trim() || isSubmitting}
+                className="relative overflow-hidden group flex-1 bg-gradient-to-r from-[#2563EB] to-[#3B82F6] hover:from-[#1D4ED8] hover:to-[#2563EB] text-white px-8 py-4 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-[#2563EB] disabled:hover:to-[#3B82F6] transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                aria-label="Create new content with AI processing"
               >
-                {isSubmitting ? (
-                  <>
-                    <InlineProcessing />
-                    Processing...
-                  </>
-                ) : (
-                  'Add Content'
-                )}
+                <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative flex items-center justify-center">
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-5 h-5 mr-3 relative">
+                        <div className="absolute inset-0 rounded-full border-2 border-white/30 animate-pulse-slow"></div>
+                        <div className="absolute inset-1 rounded-full border-2 border-white/50 animate-pulse-slow" style={{ animationDelay: '0.5s' }}></div>
+                        <div className="absolute inset-2 rounded-full bg-white animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+                      </div>
+                      Creating Memory Waves...
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-5 h-5 mr-3 relative">
+                        <div className="absolute inset-0 rounded-full border border-white/30"></div>
+                        <div className="absolute inset-1 rounded-full border border-white/50"></div>
+                        <div className="absolute inset-[6px] rounded-full bg-white"></div>
+                      </div>
+                      Begin Processing
+                    </>
+                  )}
+                </div>
               </button>
               
               <button
@@ -473,7 +639,7 @@ export default function ContentLibrary() {
                   setIsAddingContent(false);
                   setNewContent({ title: '', source: 'podcast', sourceUrl: '', transcript: '' });
                 }}
-                className="bg-white text-[#64748B] border border-[#94A3B8] px-6 py-3 rounded-lg hover:bg-[#F8FAFC] hover:-translate-y-0.5 active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 ease-out touch-target focus:outline-none focus:ring-2 focus:ring-[#94A3B8] focus:ring-offset-2 text-[16px] leading-[24px] font-medium"
+                className="sm:flex-initial bg-white/80 backdrop-blur-sm text-[#64748B] border-2 border-gray-200 px-8 py-4 rounded-xl hover:bg-white hover:border-gray-300 hover:text-[#475569] active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 text-[16px] leading-[24px] font-medium transform hover:scale-[1.02]"
                 disabled={isSubmitting}
               >
                 Cancel
@@ -523,7 +689,7 @@ export default function ContentLibrary() {
     </main>
   );
 
-  // Helper function to render content cards with new design
+  // Helper function to render content cards with enhanced Memory Waves design
   function renderContentCard(item: Content) {
     const isExpanded = expandedCards.has(item.id);
     const isSelected = selectedIds.includes(item.id);
@@ -533,7 +699,11 @@ export default function ContentLibrary() {
     return (
       <article
         key={item.id}
-        className={`stoke-card stoke-card-selectable ${isSelected ? 'stoke-card-selected' : ''}`}
+        className={`group relative overflow-hidden transition-all duration-300 ease-out ${
+          isSelected 
+            ? 'bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-300 shadow-lg shadow-blue-200/50 scale-[1.01]' 
+            : 'bg-white border border-gray-200 hover:border-gray-300 hover:shadow-lg hover:shadow-gray-200/50 hover:scale-[1.005]'
+        } rounded-2xl p-6 cursor-pointer`}
         role="button"
         tabIndex={0}
         aria-selected={isSelected}
@@ -545,15 +715,32 @@ export default function ContentLibrary() {
           }
         }}
       >
+        {/* Subtle Memory Waves pattern overlay */}
+        <div className="absolute top-4 right-4 opacity-[0.05] pointer-events-none">
+          <div className="w-16 h-16 relative">
+            <div className="absolute inset-0 rounded-full border border-current opacity-30"></div>
+            <div className="absolute inset-2 rounded-full border border-current opacity-50"></div>
+            <div className="absolute inset-4 rounded-full border border-current opacity-70"></div>
+            <div className="absolute inset-6 rounded-full bg-current opacity-90"></div>
+          </div>
+        </div>
+
+        {/* Selection indicator */}
+        {isSelected && (
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-t-2xl"></div>
+        )}
+
         {/* Header Section - Always Visible */}
         <div onClick={() => toggleSelection(item.id)}>
           {/* Title and AI Badge Row */}
-          <div className="flex items-start justify-between mb-3">
-            <div className="flex items-center gap-2 flex-1 min-w-0">
-              <h3 className="stoke-title truncate">{item.title}</h3>
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <h3 className="stoke-title text-[#1E293B] group-hover:text-[#2563EB] transition-colors duration-200">
+                {item.title}
+              </h3>
               <AIContentBadge isAiProcessed={item.isAiProcessed} />
             </div>
-            <div className="flex items-center gap-2 ml-2">
+            <div className="flex items-center gap-3 ml-3">
               {item.processingStatus && (
                 <AIProcessingStatus status={item.processingStatus} />
               )}
@@ -562,10 +749,10 @@ export default function ContentLibrary() {
                   e.stopPropagation();
                   handleEditContent(item.id);
                 }}
-                className="stoke-btn-tertiary p-2 min-h-0"
+                className="opacity-0 group-hover:opacity-100 transition-all duration-200 p-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-500 hover:text-gray-700"
                 aria-label={`Edit ${item.title}`}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                 </svg>
@@ -573,33 +760,58 @@ export default function ContentLibrary() {
             </div>
           </div>
 
-          {/* Metadata Row */}
-          <ContentMetadata 
-            source={item.source}
-            createdAt={item.created_at}
-            processedAt={item.processed_at}
-            className="mb-4"
-          />
+          {/* Metadata Row with enhanced styling */}
+          <div className="mb-4">
+            <ContentMetadata 
+              source={item.source}
+              createdAt={item.created_at}
+              processedAt={item.processed_at}
+              className="text-[#64748B]"
+            />
+          </div>
 
-          {/* Summary Section */}
-          <p className="stoke-body text-gray-600 mb-4">{item.summary}</p>
+          {/* Summary Section with enhanced typography */}
+          <div className="mb-5">
+            <p className="stoke-body text-[#475569] leading-relaxed">
+              {item.summary}
+            </p>
+          </div>
 
-          {/* Topics Row */}
-          <TopicList topics={item.topics} size="sm" maxDisplay={4} className="mb-4" />
+          {/* Topics Row with enhanced styling */}
+          <div className="mb-4">
+            <TopicList topics={item.topics} size="sm" maxDisplay={4} className="gap-2" />
+          </div>
         </div>
 
-        {/* Visual Separator */}
+        {/* Enhanced Visual Separator */}
         {hasInsights && (
-          <div className="border-t border-gray-100 my-4" />
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+            </div>
+            <div className="relative flex justify-center">
+              <div className="bg-white px-4">
+                <div className="w-6 h-6 relative opacity-20">
+                  <div className="absolute inset-0 rounded-full border border-blue-300"></div>
+                  <div className="absolute inset-1.5 rounded-full border border-blue-400"></div>
+                  <div className="absolute inset-[6px] rounded-full bg-blue-500"></div>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
 
         {/* Insights Section - Progressive Disclosure */}
         {hasInsights && (
-          <div>
+          <div className="space-y-4">
             {/* Insights Header */}
-            <div className="flex items-center justify-between mb-4">
-              <h4 className="stoke-subtitle">
-                Key Insights ({item.insights.length})
+            <div className="flex items-center justify-between">
+              <h4 className="stoke-subtitle text-[#1E293B] flex items-center gap-2">
+                <div className="w-4 h-4 relative opacity-60">
+                  <div className="absolute inset-0 rounded-full border border-blue-400"></div>
+                  <div className="absolute inset-1 rounded-full bg-blue-500"></div>
+                </div>
+                Knowledge Ripples ({item.insights.length})
               </h4>
               {item.insights.length > 2 && (
                 <button
@@ -607,43 +819,47 @@ export default function ContentLibrary() {
                     e.stopPropagation();
                     toggleCardExpansion(item.id);
                   }}
-                  className="stoke-btn-tertiary stoke-btn-sm"
+                  className="stoke-btn-tertiary stoke-btn-sm text-[#2563EB] hover:bg-blue-50 border border-blue-200 hover:border-blue-300 transition-all duration-200"
                   aria-label={isExpanded ? 'Show fewer insights' : 'Show all insights'}
                 >
                   {isExpanded ? (
                     <>
-                      Show less
-                      <svg className="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                      <svg className="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
                       </svg>
+                      Collapse
                     </>
                   ) : (
                     <>
-                      Show all
-                      <svg className="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                      <svg className="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                       </svg>
+                      Expand All
                     </>
                   )}
                 </button>
               )}
             </div>
 
-            {/* Insights Content */}
-            <div className="space-y-4">
+            {/* Insights Content with enhanced styling */}
+            <div className="space-y-5">
               {visibleInsights.map((insight, index) => (
-                <div key={insight.id}>
-                  <AIInsight
-                    isAiGenerated={insight.isAiGenerated}
-                    confidence={insight.confidence}
-                  >
-                    <div className="stoke-body">
-                      {insight.content}
-                    </div>
-                  </AIInsight>
-                  {/* Subtle separator between insights */}
+                <div key={insight.id} className="relative">
+                  <div className="bg-gradient-to-r from-blue-50/50 to-indigo-50/30 rounded-xl p-4 border border-blue-100/50">
+                    <AIInsight
+                      isAiGenerated={insight.isAiGenerated}
+                      confidence={insight.confidence}
+                    >
+                      <div className="stoke-body text-[#334155] leading-relaxed">
+                        {insight.content}
+                      </div>
+                    </AIInsight>
+                  </div>
+                  {/* Connection line between insights */}
                   {index < visibleInsights.length - 1 && (
-                    <div className="border-t border-gray-50 mt-4" />
+                    <div className="flex justify-center py-2">
+                      <div className="w-px h-4 bg-gradient-to-b from-blue-200 to-transparent"></div>
+                    </div>
                   )}
                 </div>
               ))}
@@ -651,10 +867,19 @@ export default function ContentLibrary() {
 
             {/* Collapsed state indicator */}
             {!isExpanded && item.insights.length > 2 && (
-              <div className="mt-4 pt-4 border-t border-gray-100">
-                <p className="stoke-small text-center">
-                  +{item.insights.length - 2} more insights • Click "Show all" to expand
-                </p>
+              <div className="mt-6 pt-4 border-t border-gray-100">
+                <div className="text-center">
+                  <p className="stoke-small text-[#64748B] mb-2">
+                    +{item.insights.length - 2} more insights await
+                  </p>
+                  <div className="flex justify-center">
+                    <div className="flex space-x-1">
+                      <div className="w-1.5 h-1.5 bg-blue-300 rounded-full animate-pulse"></div>
+                      <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                      <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
           </div>
@@ -662,10 +887,19 @@ export default function ContentLibrary() {
 
         {/* Empty state for no insights */}
         {!hasInsights && (
-          <div className="border-t border-gray-100 pt-4">
-            <p className="stoke-caption text-center py-4">
-              No insights available for this content
-            </p>
+          <div className="mt-6 pt-6 border-t border-gray-100">
+            <div className="text-center py-6">
+              <div className="w-12 h-12 mx-auto mb-3 opacity-20">
+                <div className="w-full h-full relative">
+                  <div className="absolute inset-0 rounded-full border border-gray-300"></div>
+                  <div className="absolute inset-2 rounded-full border border-gray-400"></div>
+                  <div className="absolute inset-4 rounded-full bg-gray-500"></div>
+                </div>
+              </div>
+              <p className="stoke-caption text-[#94A3B8]">
+                Insights are cultivating...
+              </p>
+            </div>
           </div>
         )}
       </article>
