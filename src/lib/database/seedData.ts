@@ -34,7 +34,7 @@ function generateSampleQuestions(
     const confidence = confidenceLevels[Math.floor(Math.random() * confidenceLevels.length)];
 
     // Generate contextual questions based on topic area
-    const questionContent = generateQuestionContent(questionType, topicArea, contentTitle, i + 1);
+    const questionContent = generateQuestionContent(questionType, topicArea, contentTitle);
 
     questions.push({
       id: `q_${Date.now()}_${i}`,
@@ -56,13 +56,12 @@ function generateSampleQuestions(
 }
 
 /**
- * Generate question content based on type and topic
+ * Generate realistic question content based on type and topic
  */
 function generateQuestionContent(
   type: QuestionType,
   topicArea: string,
-  contentTitle: string,
-  questionNumber: number
+  contentTitle: string
 ): string {
   const templates = {
     conceptual: [
