@@ -9,7 +9,7 @@ import { AIInsight, AIProcessingStatus, AIContentBadge } from './AIIndicators';
 import { TopicFilterBar, TopicList, TopicGroupHeader, getAllTopics, groupContentByTopics } from './TopicComponents';
 import { ContentMetadata } from './ContentTypeIndicator';
 import StartReviewButton from './StartReviewButton';
-import { PageSkeleton, InlineProcessing } from './SkeletonComponents';
+import { PageSkeleton } from './SkeletonComponents';
 import StokeLogo from './StokeLogo';
 
 type Json = Database['public']['Tables']['content']['Row']['insights'][number];
