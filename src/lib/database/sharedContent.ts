@@ -577,7 +577,7 @@ export async function getActiveTopics() {
 /**
  * Get content for a specific topic
  */
-export async function getContentByTopic(topicId: string, userId?: string) {
+export async function getContentByTopic(topicId: string) {
   let query = supabase
     .from('content')
     .select(`
@@ -606,7 +606,7 @@ export async function getContentByTopic(topicId: string, userId?: string) {
  */
 export async function searchContent(
   searchTerm: string,
-  userId?: string,
+
   filters?: {
     sources?: ContentSource[];
     topicIds?: string[];
