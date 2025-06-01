@@ -1,5 +1,5 @@
 import React, { createContext, useContext, ReactNode } from 'react';
-import MemoryWaves, { MemoryWavesProgress } from './MemoryWaves';
+import MemoryWaves from './MemoryWaves';
 
 // Import the size type
 type MemoryWavesSize = 16 | 20 | 24 | 32 | 48 | 64 | 96 | 128 | 256 | 512;
