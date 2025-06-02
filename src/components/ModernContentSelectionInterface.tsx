@@ -124,7 +124,7 @@ export default function ModernContentSelectionInterface() {
   const { state } = useContentSelection();
 
   const handleContentSelect = useCallback((content: ContentWithTopics) => {
-    contentSelectionActions.toggleContent(content);
+    contentSelectionActions.toggleContent(content.id);
   }, []);
 
   return (
@@ -146,7 +146,7 @@ export default function ModernContentSelectionInterface() {
 
         {/* Content Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
-          {state.availableContent.map((content) => (
+          {state.filteredContent.map((content) => (
             <div
               key={content.id}
               onClick={() => handleContentSelect(content)}
@@ -155,7 +155,7 @@ export default function ModernContentSelectionInterface() {
               <div className={`
                 relative p-6 bg-white/70 backdrop-blur-sm rounded-2xl border-2 transition-all duration-300
                 hover:bg-white hover:shadow-xl hover:shadow-blue-100/50 hover:-translate-y-1
-                ${state.selectedContent.some(c => c.id === content.id) 
+                ${state.selectedContentIds.has(content.id) 
                   ? 'border-blue-500 bg-blue-50/80 shadow-lg shadow-blue-100/50' 
                   : 'border-white/20 hover:border-blue-200'
                 }
@@ -163,12 +163,12 @@ export default function ModernContentSelectionInterface() {
                 {/* Selection Indicator */}
                 <div className={`
                   absolute top-4 right-4 w-6 h-6 rounded-full border-2 transition-all duration-200
-                  ${state.selectedContent.some(c => c.id === content.id)
+                  ${state.selectedContentIds.has(content.id)
                     ? 'bg-blue-500 border-blue-500' 
                     : 'border-slate-300 group-hover:border-blue-400'
                   }
                 `}>
-                  {state.selectedContent.some(c => c.id === content.id) && (
+                  {state.selectedContentIds.has(content.id) && (
                     <svg className="w-4 h-4 text-white mx-auto mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
@@ -181,7 +181,7 @@ export default function ModernContentSelectionInterface() {
                     {content.title}
                   </h3>
                   <p className="text-slate-600 text-sm leading-relaxed line-clamp-3">
-                    {content.description}
+                    {content.quick_summary}
                   </p>
                 </div>
 
@@ -193,7 +193,7 @@ export default function ModernContentSelectionInterface() {
                         key={index}
                         className="px-2.5 py-1 bg-slate-100 text-slate-700 text-xs font-medium rounded-full"
                       >
-                        {topic}
+                        {topic.name}
                       </span>
                     ))}
                     {content.topics.length > 3 && (
