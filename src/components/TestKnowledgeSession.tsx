@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import MemoryWaves, { MemoryWavesProgress } from './MemoryWaves';
 import { sharedContentAPI, QuestionResponse } from '@/lib/database/sharedContent';
 import type { Question, FeedbackType } from '@/types/database.types';
@@ -39,7 +39,7 @@ export default function TestKnowledgeSession({
 }: TestKnowledgeSessionProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [responses, setResponses] = useState<QuestionResponse[]>([]);
-  const [startTime, setStartTime] = useState<number>(Date.now());
+  const startTime = useRef<number>(Date.now());
   const [questionStartTime, setQuestionStartTime] = useState<number>(Date.now());
   const [isAnimating, setIsAnimating] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
@@ -94,7 +94,7 @@ export default function TestKnowledgeSession({
       await sharedContentAPI.updateUserProgress(userId, sessionId, finalResponses);
 
       // Calculate session results
-      const totalTimeSeconds = Math.round((Date.now() - startTime) / 1000);
+      const totalTimeSeconds = Math.round((Date.now() - startTime.current) / 1000);
       const gotItCount = finalResponses.filter(r => r.feedback === 'got_it').length;
       const revisitCount = finalResponses.filter(r => r.feedback === 'revisit').length;
       const averageResponseTime = finalResponses.reduce((sum, r) => sum + r.response_time_seconds, 0) / finalResponses.length;
@@ -117,11 +117,11 @@ export default function TestKnowledgeSession({
         questionsAnswered: finalResponses.length,
         gotItCount: finalResponses.filter(r => r.feedback === 'got_it').length,
         revisitCount: finalResponses.filter(r => r.feedback === 'revisit').length,
-        totalTimeSeconds: Math.round((Date.now() - startTime) / 1000),
+        totalTimeSeconds: Math.round((Date.now() - startTime.current) / 1000),
         averageResponseTime: finalResponses.reduce((sum, r) => sum + r.response_time_seconds, 0) / finalResponses.length
       });
     }
-  }, [userId, sessionId, questions.length, startTime, onSessionComplete]);
+  }, [userId, sessionId, questions.length, onSessionComplete]);
 
   if (!currentQuestion) {
     return null;
