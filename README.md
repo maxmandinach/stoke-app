@@ -1,251 +1,252 @@
-# Stoke - Spaced Repetition Learning Platform
+# Stoke - Mindful Learning Platform
 
-Stoke is a revolutionary learning platform that helps users retain knowledge from podcasts, articles, and other educational content through scientifically-proven spaced repetition techniques.
+A thoughtful learning experience that prioritizes understanding over metrics, built with Next.js 14, Supabase, and Gemini AI.
 
-## 🔥 Latest: Gemini 2.5 Pro Content Processing Pipeline
+## 🌊 Memory Waves Design Philosophy
 
-Stoke now features a robust content pre-processing pipeline powered by **Gemini 2.5 Pro** that generates standardized summaries and question pools once per episode for all users. This eliminates per-session API costs while ensuring consistent, high-quality content.
+Stoke embodies "Memory Waves" - a design philosophy that creates calm, spacious interfaces respecting cognitive space. The platform encourages genuine learning through:
+
+- **Non-competitive metrics** focusing on understanding over performance
+- **Spaced repetition** using SM-2 algorithm for optimal memory retention
+- **Calm interfaces** with thoughtful color schemes and smooth transitions
+- **Progressive disclosure** preventing cognitive overload
+- **Learning-focused analytics** that provide insight without addiction patterns
+
+## ✨ Features
+
+### Core Learning Experience
+- **Content Selection Interface** - Browse and select from podcasts, videos, articles, and books
+- **Session Configuration** - Customize learning sessions with flexible duration and difficulty
+- **Unified Session Manager** - Seamless experience for reading summaries and testing knowledge
+- **Session Completion Flow** - Three-tab experience with performance overview, insights, and guidance
+
+### Analytics & Progress
+- **Progress Analytics** - Four comprehensive views (overview, topics, patterns, insights)
+- **Topic Mastery Tracking** - Strength levels with retention trend analysis
+- **Learning Insights** - Personalized recommendations based on patterns
+- **Spaced Repetition** - Scientific review scheduling for maximum retention
+
+### System Management
+- **Admin Dashboard** - System health monitoring and content processing stats
+- **Enhanced App Coordinator** - Sophisticated state management with error handling
+- **Content Processing Pipeline** - Automated content analysis using Gemini 2.5 Pro
+
+## 🛠 Technology Stack
+
+- **Frontend**: Next.js 14, React 18, TypeScript
+- **Styling**: Tailwind CSS with Memory Waves design system
+- **Backend**: Supabase (PostgreSQL, Auth, Storage)
+- **AI**: Google Gemini 2.5 Pro for content processing
+- **Testing**: Playwright (E2E), Jest (Unit), Accessibility testing
+- **Database**: PostgreSQL with spaced repetition algorithms
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+- Supabase account
+- Google AI API key
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd stoke-app
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Environment Setup**
+   
+   Create `.env.local`:
+   ```env
+   # Supabase Configuration
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+   # Google AI Configuration
+   GEMINI_API_KEY=your_gemini_api_key
+
+   # App Configuration
+   NEXT_PUBLIC_APP_ENV=development
+   ```
+
+4. **Database Setup**
+   ```bash
+   # Run database migrations
+   npm run db:migrate
+   
+   # Seed with sample data (optional)
+   npm run db:seed
+   ```
+
+5. **Start Development Server**
+   ```bash
+   npm run dev
+   ```
+
+   Visit [http://localhost:3000](http://localhost:3000)
+
+## 🧪 Testing
+
+### Unit Tests
+```bash
+npm run test           # Run all unit tests
+npm run test:watch     # Run tests in watch mode
+```
+
+### End-to-End Tests
+```bash
+# Install Playwright browsers
+npm run playwright:install
+
+# Run E2E tests
+npm run test:e2e       # Headless mode
+npm run test:e2e:ui    # Interactive UI mode
+npm run test:e2e:debug # Debug mode
+```
+
+### Test Coverage
+- **Complete user flows** from content selection to analytics
+- **Accessibility validation** with keyboard navigation and ARIA compliance
+- **Performance testing** including load times and smooth animations
+- **Mobile optimization** with touch target validation
+- **Error handling** and recovery scenarios
+
+## 📊 Database Schema
+
+### Core Tables
+- `content_library` - Processed content with AI-generated summaries
+- `learning_sessions` - User session tracking and analytics
+- `user_question_progress` - Spaced repetition progress using SM-2
+- `user_content_library` - Personal content collections and stats
+
+### Analytics Views
+- `user_learning_analytics` - Comprehensive learning metrics
+- `topic_learning_overview` - Topic-based retention analysis
+- `user_content_with_progress` - Content with progress tracking
 
 ### Key Features
+- **Spaced Repetition**: SM-2 algorithm implementation
+- **Topic Extraction**: AI-powered content categorization
+- **Progress Tracking**: Detailed analytics without gamification
+- **Performance Optimization**: Efficient queries and indexing
 
-- **🤖 AI-Powered Content Generation**: Uses Gemini 2.5 Pro to create quick summaries, full summaries, and self-assessment questions
-- **📊 Cost-Efficient Architecture**: Process content once for all users instead of per-session
-- **🔄 Robust Processing Pipeline**: Queue system with rate limiting, retry logic, and comprehensive error handling
-- **📈 Real-time Monitoring**: Admin dashboard for pipeline status and performance metrics
-- **🛠️ Command Line Tools**: Full CLI interface for content management and batch processing
+## 🎨 Component Architecture
 
-## Architecture Overview
-
-```
-Content Input → Gemini 2.5 Pro Processing → Database Storage → User Sessions
-     ↓                    ↓                      ↓              ↓
-1. Add Content      2. Generate Summaries    3. Store Results   4. Retrieve for
-   (Manual/API)        & Questions             (Shared)          Learning Sessions
-```
-
-## Quick Start
-
-### 1. Environment Setup
-
-Create a `.env.local` file:
-
-```bash
-# Required: Google AI API Key
-GOOGLE_API_KEY=your_google_ai_api_key_here
-
-# Required: Supabase Configuration
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-
-### 2. Install Dependencies
-
-```bash
-npm install
-```
-
-### 3. Start Processing Content
-
-```bash
-# Check system status
-npm run process:content -- --stats
-
-# Add and process new content
-npm run process:content -- --add-content \
-  --title "Sample Podcast Episode" \
-  --transcript "Your transcript here..." \
-  --duration 1.5 \
-  --source podcast
-
-# Process all pending content
-npm run process:content -- --all-pending
-```
-
-### 4. Launch Admin Dashboard
-
-```bash
-npm run admin:dashboard
-```
-
-Navigate to `http://localhost:3001/admin` for real-time monitoring.
-
-### 5. Start Main App
-
-```bash
-npm run dev
-```
-
-Navigate to `http://localhost:3000` for the main learning interface.
-
-## Generated Content Examples
-
-### Quick Summary (4 bullets/hour)
-```
-• AI healthcare applications show 40% improvement in diagnostic accuracy
-• Key challenge is data privacy and regulatory compliance requirements  
-• Integration costs average $2-5M but ROI appears within 18 months
-• Human-AI collaboration models outperform fully automated systems
-```
-
-### Full Summary (2 paragraphs/hour)
-Comprehensive paragraphs with deeper context, examples, and explanations that connect ideas and show relationships between concepts.
-
-### Question Pool (10-15 questions/hour)
-Self-assessment questions designed for binary "Got it"/"Revisit" responses with optimal difficulty distribution for spaced repetition learning.
-
-## System Components
-
-### 1. Content Processing Pipeline
-- **Gemini Integration** (`src/lib/gemini.ts`) - AI processing with JSON output
-- **Database Layer** (`src/lib/database/contentProcessing.ts`) - Content management
-- **CLI Tool** (`src/scripts/processContent.js`) - Command line interface
-- **Admin Dashboard** (`src/app/admin/page.tsx`) - Real-time monitoring
-
-### 2. Learning Interface (Built in Previous Steps)
-- **Content Selection** (Step 1C) - Enhanced multi-select with Memory Waves design
-- **Session Configuration** (Step 2A) - Two-step session setup with time estimation
-- **Database Architecture** (Step 1B) - SuperMemo SM-2 spaced repetition system
-
-### 3. Database Schema
-- **Shared Content Model** - Process once, serve many users
-- **Individual Progress Tracking** - Personal spaced repetition schedules
-- **Analytics & Optimization** - Performance metrics and learning insights
-
-## Available Commands
-
-### Content Processing
-```bash
-# Show help and all options
-npm run process:content -- --help
-
-# Process specific content by ID  
-npm run process:content -- --content-id abc123
-
-# Add new content
-npm run process:content -- --add-content \
-  --title "Episode Title" \
-  --transcript "Full transcript..." \
-  --duration 2.0 \
-  --source podcast
-
-# System management
-npm run process:content -- --stats
-npm run process:content -- --cleanup
-npm run process:content -- --all-pending
-```
-
-### Development
-```bash
-npm run dev              # Start main app (port 3000)
-npm run admin:dashboard  # Start admin dashboard (port 3001)
-npm run build           # Build for production
-npm run type-check      # TypeScript validation
-npm run test:db         # Database schema testing
-```
-
-## Project Structure
-
-```
-stoke-app/
-├── src/
-│   ├── lib/
-│   │   ├── gemini.ts                      # Gemini 2.5 Pro integration
-│   │   ├── database/
-│   │   │   ├── contentProcessing.ts       # Processing database layer
-│   │   │   └── sharedContent.ts          # Content management API
-│   │   └── supabase.ts                   # Database client
-│   ├── scripts/
-│   │   └── processContent.js             # CLI processing tool
-│   ├── app/
-│   │   ├── admin/
-│   │   │   └── page.tsx                  # Admin dashboard
-│   │   └── page.tsx                      # Main learning interface
-│   ├── components/
-│   │   ├── ContentSelectionInterface.tsx # Step 1C implementation
-│   │   ├── SessionConfigurationInterface.tsx # Step 2A implementation
-│   │   └── AppCoordinator.tsx            # Stage management
-│   └── types/
-│       └── database.types.ts             # Complete type definitions
-├── supabase/
-│   └── migrations/                       # Database schema
-├── docs/
-│   ├── CONTENT_PROCESSING_PIPELINE.md   # Comprehensive pipeline docs
-│   ├── ENVIRONMENT_SETUP.md             # Environment configuration
-│   ├── PHASE_1B_DATABASE_ARCHITECTURE.md # Database design
-│   ├── STEP_1C_ENHANCED_CONTENT_SELECTION.md # UI implementation
-│   └── STEP_2_SESSION_CONFIGURATION.md  # Session setup system
-└── package.json                         # Dependencies and scripts
-```
-
-## Technology Stack
-
-### Core Technologies
-- **Next.js 14** - React framework with app router
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first styling
-- **Supabase** - PostgreSQL database with real-time features
-
-### AI & Processing
-- **Gemini 2.5 Pro** - Content generation and processing
-- **Google AI SDK** - API integration with structured JSON output
-- **Custom Queue System** - Rate limiting and batch processing
-- **SuperMemo SM-2** - Spaced repetition algorithm
+### Main Components
+- **`EnhancedAppCoordinator`** - Central app state management
+- **`ContentSelectionInterface`** - Content discovery and selection
+- **`SessionConfigurationInterface`** - Session customization
+- **`UnifiedSessionManager`** - Active learning experience
+- **`SessionCompletionFlow`** - Post-session insights and guidance
+- **`ProgressAnalytics`** - Comprehensive progress visualization
+- **`AdminDashboard`** - System monitoring and management
 
 ### Design System
-- **Memory Waves** - Calming, focus-oriented design language
-- **Responsive Design** - Mobile-first with touch optimization
-- **Accessibility** - WCAG compliant with keyboard navigation
-- **Progressive Enhancement** - Works without JavaScript
+- **`MemoryWaves`** - Progress indicators with calming animations
+- **`CircularProgress`** - Elegant circular progress displays
+- **`StokeLogo`** - Scalable brand representation
 
-## Performance Features
+## 🔧 Configuration
 
-### Cost Efficiency
-- ✅ **Single Processing**: Content processed once for all users
-- ✅ **Smart Rate Limiting**: Optimized API usage with batching
-- ✅ **Efficient Caching**: Pre-processed content stored locally
-- ✅ **Batch Operations**: Multiple content items processed together
+### Content Processing
+Configure content processing in `src/lib/contentProcessor.ts`:
+- AI model selection and parameters
+- Topic extraction sensitivity
+- Question generation rules
+- Summary length and style
 
-### Scalability  
-- ✅ **Async Processing**: Non-blocking queue system
-- ✅ **Database Optimization**: Efficient queries and indexing
-- ✅ **Horizontal Scaling**: Stateless design supports multiple instances
-- ✅ **Real-time Monitoring**: Performance metrics and health checks
+### Analytics Settings
+Customize analytics in `src/lib/analytics.ts`:
+- Learning streak calculation
+- Mastery level thresholds
+- Retention trend analysis
+- Insight generation rules
 
-## Documentation
+### Spaced Repetition
+Adjust spaced repetition parameters:
+- Initial interval settings
+- Ease factor modifications
+- Review scheduling logic
+- Difficulty adjustments
 
-- **[Content Processing Pipeline](./CONTENT_PROCESSING_PIPELINE.md)** - Complete pipeline documentation
-- **[Environment Setup](./ENVIRONMENT_SETUP.md)** - Configuration guide
-- **[Database Architecture](./PHASE_1B_DATABASE_ARCHITECTURE.md)** - Schema and data model
-- **[UI Components](./STEP_1C_ENHANCED_CONTENT_SELECTION.md)** - Interface implementation
-- **[Session System](./STEP_2_SESSION_CONFIGURATION.md)** - Configuration flow
+## 📱 Mobile Support
 
-## Getting Help
+- **Responsive design** optimized for all screen sizes
+- **Touch-friendly interfaces** with appropriate target sizes
+- **Performance optimization** for mobile devices
+- **Progressive Web App** capabilities
 
-### Common Issues
-1. **Environment Variables**: Check `.env.local` file setup
-2. **API Quotas**: Monitor Gemini API usage and limits  
-3. **Database**: Verify Supabase connection and migrations
-4. **Processing**: Use admin dashboard for pipeline monitoring
+## ♿ Accessibility
 
-### Support Resources
-- [Gemini API Documentation](https://ai.google.dev/)
-- [Supabase Documentation](https://supabase.com/docs)
-- [Next.js Documentation](https://nextjs.org/docs)
-- Admin dashboard: `npm run admin:dashboard`
+- **WCAG 2.1 AA compliance** with comprehensive testing
+- **Keyboard navigation** throughout the entire interface
+- **Screen reader support** with proper ARIA labels
+- **Color contrast** meeting accessibility standards
+- **Focus management** with clear visual indicators
 
-## Development Status
+## 🚢 Deployment
 
-- ✅ **Database Architecture** (Phase 1B) - Complete shared content model
-- ✅ **Content Selection Interface** (Step 1C) - Enhanced multi-select UI
-- ✅ **Session Configuration** (Step 2A) - Two-step setup system  
-- ✅ **Content Processing Pipeline** - Gemini 2.5 Pro integration
-- 🔄 **Session Execution** (Step 3) - Currently in development
-- 🔄 **Mobile Optimization** - Progressive enhancement ongoing
+### Production Build
+```bash
+npm run build
+npm run start
+```
 
-## License
+### Environment Variables
+Set production environment variables:
+- Database connection strings
+- API keys and secrets
+- App configuration settings
+- Security and CORS settings
 
-This project is proprietary software for Stoke Learning Platform.
+### Performance Monitoring
+- Real-time error tracking
+- Performance metrics collection
+- User analytics (privacy-respecting)
+- System health monitoring
+
+## 🔐 Privacy & Security
+
+- **Privacy-first design** with minimal data collection
+- **User data control** with export and deletion options
+- **Secure authentication** via Supabase Auth
+- **API security** with proper rate limiting and validation
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
+
+### Development Guidelines
+- Follow Memory Waves design principles
+- Maintain accessibility standards
+- Write comprehensive tests
+- Document new features
+- Respect user privacy and cognitive space
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🙏 Acknowledgments
+
+- **Memory Waves Philosophy** - Inspired by calm technology principles
+- **Spaced Repetition Research** - Based on Ebbinghaus forgetting curve studies
+- **Accessibility Guidelines** - Following WCAG 2.1 standards
+- **Performance Best Practices** - Web Vitals and user experience research
 
 ---
 
-**Built with ❤️ for better learning through spaced repetition**
+*Built with mindful attention to learning, privacy, and user well-being.*

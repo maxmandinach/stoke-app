@@ -13,7 +13,13 @@
     "test:db": "node scripts/test-database-migration.js",
     "validate:schema": "node scripts/test-database-migration.js",
     "process:content": "node src/scripts/processContent.js",
-    "admin:dashboard": "next dev --port 3001"
+    "admin:dashboard": "next dev --port 3001",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug",
+    "playwright:install": "playwright install"
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
@@ -35,6 +41,17 @@
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "@playwright/test": "^1.40.0",
+    "@axe-core/playwright": "^4.8.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/jest-dom": "^6.1.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": ["<rootDir>/src/tests/setup.ts"],
+    "testPathIgnorePatterns": ["<rootDir>/src/tests/e2e/"]
   }
 }
