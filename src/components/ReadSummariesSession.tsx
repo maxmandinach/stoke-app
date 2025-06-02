@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { MemoryWavesProgress, MemoryWavesLoader } from './MemoryWaves';
+import { MemoryWavesProgress } from './MemoryWaves';
 import StokeLogo from './StokeLogo';
 
 interface SummaryContent {
@@ -39,8 +39,8 @@ interface ReadSummariesResults {
 }
 
 export default function ReadSummariesSession({
-  userId,
-  sessionId,
+  userId: _userId,
+  sessionId: _sessionId,
   summaries,
   onSessionComplete,
   onContinueToTest,
@@ -61,7 +61,7 @@ export default function ReadSummariesSession({
   const [readTimes, setReadTimes] = useState<number[]>([]);
 
   // Auto-save state
-  const [lastSaveTime, setLastSaveTime] = useState<number>(Date.now());
+  const [_lastSaveTime, setLastSaveTime] = useState<number>(Date.now());
 
   const currentSummary = summaries[currentIndex];
   const progress = summaries.length > 0 ? (currentIndex + 1) / summaries.length : 0;
