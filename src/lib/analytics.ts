@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import type { SessionType, ContentSource, FeedbackType } from '@/types/database.types';
+import type { SessionType, ContentSource } from '@/types/database.types';
 
 export interface SessionCompletionData {
   sessionId: string;
@@ -402,7 +402,7 @@ export async function generateNextSessionGuidance(userId: string): Promise<NextS
 /**
  * Generate content suggestions based on user patterns and recommended session type
  */
-async function generateContentSuggestions(userId: string, sessionType: SessionType) {
+async function generateContentSuggestions(userId: string, _sessionType: SessionType) {
   try {
     const { data: contentData, error } = await supabase
       .from('user_content_with_progress')
@@ -506,7 +506,7 @@ export async function exportUserAnalytics(userId: string): Promise<{
 /**
  * Calculate motivation message based on streak and progress
  */
-export function getMotivationMessage(streak: number, weeklyProgress: number, weeklyGoal: number): string {
+export function getMotivationMessage(streak: number, _weeklyProgress: number, _weeklyGoal: number): string {
   if (streak === 0) {
     return "Ready to start your learning journey? Every expert was once a beginner!";
   }

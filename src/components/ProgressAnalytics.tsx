@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { MemoryWavesProgress } from './MemoryWaves';
+import React, { useState } from 'react';
 import CircularProgress from './CircularProgress';
 import StokeLogo from './StokeLogo';
 import type { SessionType, ContentSource } from '@/types/database.types';
@@ -66,7 +65,7 @@ interface ProgressAnalyticsProps {
 }
 
 export default function ProgressAnalytics({
-  userId,
+  userId: _userId,
   topicProgress,
   sessionAnalytics,
   contentPreferences,

@@ -175,12 +175,6 @@ export default function EnhancedAppCoordinator() {
     }
   }, [userId]);
 
-  // Handle session configuration completion
-  const handleConfigurationComplete = useCallback((config: SessionConfiguration) => {
-    setSessionConfig(config);
-    handleStageTransition('session-active');
-  }, [handleStageTransition]);
-
   // Handle session completion
   const handleSessionComplete = useCallback(async (results: any) => {
     try {

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { MemoryWavesProgress } from './MemoryWaves';
 import CircularProgress from './CircularProgress';
 import StokeLogo from './StokeLogo';
-import type { SessionType, FeedbackType } from '@/types/database.types';
+import type { SessionType } from '@/types/database.types';
 
 interface SessionCompletionResults {
   sessionType: SessionType;
@@ -52,7 +52,7 @@ export default function SessionCompletionFlow({
   nextSessionGuidance,
   onReturnToLibrary,
   onStartNewSession,
-  userId
+  userId: _userId
 }: SessionCompletionFlowProps) {
   const [currentView, setCurrentView] = useState<'overview' | 'insights' | 'guidance'>('overview');
   const [showCelebration, setShowCelebration] = useState(true);

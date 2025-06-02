@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { MemoryWavesProgress } from './MemoryWaves';
 import CircularProgress from './CircularProgress';
 import StokeLogo from './StokeLogo';
 import type { ContentSource, SessionType, ProcessingStatus } from '@/types/database.types';
@@ -71,11 +70,10 @@ interface AdminDashboardProps {
 
 export default function AdminDashboard({ onExportData, onViewLogs }: AdminDashboardProps) {
   const [currentView, setCurrentView] = useState<'overview' | 'content' | 'users' | 'performance'>('overview');
-  const [isLoading, setIsLoading] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
   // Mock data - in production this would come from API calls
-  const [systemHealth, setSystemHealth] = useState<SystemHealthMetrics>({
+  const systemHealth: SystemHealthMetrics = {
     totalUsers: 1247,
     activeUsersToday: 89,
     activeUsersWeek: 456,
@@ -86,9 +84,9 @@ export default function AdminDashboard({ onExportData, onViewLogs }: AdminDashbo
     systemUptime: '99.8%',
     errorRate: 0.02,
     responseTime: 145
-  });
+  };
 
-  const [contentStats, setContentStats] = useState<ContentProcessingStats>({
+  const contentStats: ContentProcessingStats = {
     totalProcessed: 231,
     processingQueue: 3,
     failedProcessing: 2,
@@ -122,9 +120,9 @@ export default function AdminDashboard({ onExportData, onViewLogs }: AdminDashbo
         createdAt: '2024-01-15T11:00:00Z'
       }
     ]
-  });
+  };
 
-  const [userEngagement, setUserEngagement] = useState<UserEngagementMetrics>({
+  const userEngagement: UserEngagementMetrics = {
     dailyActiveUsers: [
       { date: '2024-01-10', users: 78 },
       { date: '2024-01-11', users: 82 },
@@ -152,9 +150,9 @@ export default function AdminDashboard({ onExportData, onViewLogs }: AdminDashbo
       { name: 'Climate Science', sessions: 342, avgAccuracy: 0.82 },
       { name: 'Space Exploration', sessions: 298, avgAccuracy: 0.75 }
     ]
-  });
+  };
 
-  const [performance, setPerformance] = useState<PerformanceMetrics>({
+  const performance: PerformanceMetrics = {
     apiResponseTimes: [
       { endpoint: '/api/content/process', avgTime: 145, p95Time: 280 },
       { endpoint: '/api/sessions/create', avgTime: 89, p95Time: 156 },
@@ -181,7 +179,7 @@ export default function AdminDashboard({ onExportData, onViewLogs }: AdminDashbo
         component: 'ai-service'
       }
     ]
-  });
+  };
 
   // Auto-refresh data every 30 seconds
   useEffect(() => {
@@ -193,7 +191,6 @@ export default function AdminDashboard({ onExportData, onViewLogs }: AdminDashbo
     return () => clearInterval(interval);
   }, []);
 
-  const formatUptime = (uptime: string) => uptime;
   const formatDuration = (seconds: number) => `${Math.round(seconds)}s`;
   const formatTime = (ms: number) => `${ms}ms`;
 
