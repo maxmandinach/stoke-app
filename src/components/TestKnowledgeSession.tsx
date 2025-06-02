@@ -271,27 +271,4 @@ export default function TestKnowledgeSession({
       )}
     </div>
   );
-}
-
-// CSS for animations (to be added to globals.css)
-const styles = `
-.touch-target-44 {
-  min-height: 44px;
-  min-width: 44px;
-}
-
-@keyframes scale-in {
-  0% {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.animate-scale-in {
-  animation: scale-in 0.3s ease-out;
-}
-`; 
+} 

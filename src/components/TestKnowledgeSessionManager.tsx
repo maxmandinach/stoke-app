@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import TestKnowledgeSession from './TestKnowledgeSession';
 import { MemoryWavesLoader } from './MemoryWaves';
-import { sharedContentAPI, SessionPlan } from '@/lib/database/sharedContent';
+import { sharedContentAPI } from '@/lib/database/sharedContent';
 import type { DifficultyLevel, SessionType } from '@/types/database.types';
 
 interface SessionQuestion {
