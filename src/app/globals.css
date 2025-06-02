@@ -1377,3 +1377,178 @@
   }
 }
 
+/* ========================================
+   TEST KNOWLEDGE SESSION ANIMATIONS
+   ======================================== */
+
+/* Touch target sizing for accessibility */
+.touch-target-44 {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Scale-in animation for feedback overlay */
+@keyframes scale-in {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out;
+}
+
+/* Question transition animations */
+@keyframes question-slide-out {
+  0% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-100px) scale(0.95);
+    opacity: 0;
+  }
+}
+
+@keyframes question-slide-in {
+  0% {
+    transform: translateX(100px) scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.question-exit {
+  animation: question-slide-out 0.4s ease-in-out;
+}
+
+.question-enter {
+  animation: question-slide-in 0.4s ease-in-out;
+}
+
+/* Response button interactions */
+.response-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.response-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.response-button:active::before {
+  width: 200px;
+  height: 200px;
+}
+
+/* Progressive disclosure for session completion */
+@keyframes stats-reveal {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.stats-animate {
+  animation: stats-reveal 0.6s ease-out both;
+}
+
+.stats-animate:nth-child(1) { animation-delay: 0.1s; }
+.stats-animate:nth-child(2) { animation-delay: 0.2s; }
+.stats-animate:nth-child(3) { animation-delay: 0.3s; }
+.stats-animate:nth-child(4) { animation-delay: 0.4s; }
+
+/* Progress indicator animations */
+@keyframes progress-fill {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+.progress-animate {
+  animation: progress-fill 1.2s ease-out 0.5s both;
+  transform-origin: left center;
+}
+
+/* Encouraging message entrance */
+@keyframes encouragement-enter {
+  0% {
+    transform: scale(0.8) translateY(20px);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05) translateY(-5px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.encouragement-animate {
+  animation: encouragement-enter 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Session loading states */
+@keyframes loading-dots {
+  0%, 20% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  80%, 100% {
+    opacity: 0;
+  }
+}
+
+.loading-dots span:nth-child(1) { animation: loading-dots 1.4s infinite 0.0s; }
+.loading-dots span:nth-child(2) { animation: loading-dots 1.4s infinite 0.2s; }
+.loading-dots span:nth-child(3) { animation: loading-dots 1.4s infinite 0.4s; }
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .animate-scale-in,
+  .question-exit,
+  .question-enter,
+  .stats-animate,
+  .progress-animate,
+  .encouragement-animate {
+    animation: none;
+  }
+  
+  .response-button {
+    transition: none;
+  }
+  
+  .response-button::before {
+    display: none;
+  }
+}
+
