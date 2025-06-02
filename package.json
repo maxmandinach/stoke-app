@@ -11,9 +11,12 @@
     "type-check": "tsc --noEmit",
     "migrate": "node src/scripts/migrateContent.js",
     "test:db": "node scripts/test-database-migration.js",
-    "validate:schema": "node scripts/test-database-migration.js"
+    "validate:schema": "node scripts/test-database-migration.js",
+    "process:content": "node src/scripts/processContent.js",
+    "admin:dashboard": "next dev --port 3001"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
     "@prisma/client": "^5.10.2",
     "@supabase/supabase-js": "^2.39.3",
     "dotenv": "^16.4.1",
