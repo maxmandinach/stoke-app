@@ -260,11 +260,9 @@ function ContentSummary({
 // Start session button
 function StartSessionButton({ 
   canStart, 
-  sessionStructure, 
   onStart 
 }: {
   canStart: boolean;
-  sessionStructure: any;
   onStart: () => void;
 }) {
   return (
@@ -375,7 +373,6 @@ export function SessionConfigurationInterface({ onReturnToSelection }: { onRetur
       <div className="pt-6">
         <StartSessionButton
           canStart={sessionState.canStartSession}
-          sessionStructure={sessionState.sessionStructure}
           onStart={handleStartSession}
         />
       </div>

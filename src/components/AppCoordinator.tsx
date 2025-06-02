@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useContentSelection } from '@/contexts/ContentSelectionContext';
 import { ContentSelectionInterface } from './ContentSelectionInterface';
 import { SessionConfigurationInterface } from './SessionConfigurationInterface';
@@ -15,6 +15,15 @@ export function AppCoordinator() {
   // Check if user can proceed to session configuration
   const canProceedToConfiguration = contentState.selectionCount > 0;
 
+  const handleStageTransition = useCallback((newStage: AppStage) => {
+    setIsTransitioning(true);
+    
+    setTimeout(() => {
+      setCurrentStage(newStage);
+      setIsTransitioning(false);
+    }, 300);
+  }, []);
+
   // Auto-advance to session configuration when content is selected
   useEffect(() => {
     if (canProceedToConfiguration && currentStage === 'content-selection') {
@@ -25,16 +34,9 @@ export function AppCoordinator() {
 
       return () => clearTimeout(timer);
     }
-  }, [canProceedToConfiguration, currentStage]);
-
-  const handleStageTransition = (newStage: AppStage) => {
-    setIsTransitioning(true);
-    
-    setTimeout(() => {
-      setCurrentStage(newStage);
-      setIsTransitioning(false);
-    }, 300);
-  };
+    // Return undefined for the else case to satisfy TypeScript
+    return undefined;
+  }, [canProceedToConfiguration, currentStage, handleStageTransition]);
 
   const handleReturnToSelection = () => {
     handleStageTransition('content-selection');
