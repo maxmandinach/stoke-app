@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Button } from './lovable-design-system';
-import { Logo } from './lovable-logo';
+import Logo from './lovable-logo';
 
 interface HeaderProps {
   title?: string;
