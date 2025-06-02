@@ -2,7 +2,9 @@
 // Clean, professional components for productivity app aesthetic
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+
+// Simple utility to merge class names (replaces missing cn function)
+const cn = (...classes: (string | undefined)[]) => classes.filter(Boolean).join(' ');
 
 // Design System Components
 
