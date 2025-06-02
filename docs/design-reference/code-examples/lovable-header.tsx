@@ -2,8 +2,8 @@
 // Clean, professional header with logo, navigation, and consistent styling
 
 import React from 'react';
-import { Button } from './ui/design-system';
-import Logo from './Logo';
+import { Button } from './lovable-design-system';
+import { Logo } from './lovable-logo';
 
 interface HeaderProps {
   title?: string;
