@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useContentSelection, contentSelectionActions, ContentWithTopics } from '@/contexts/ContentSelectionContext';
 
 // Modern Content Type Indicator with rich colors and gradients
@@ -101,4 +101,115 @@ function FloatingContinueButton() {
         "
       >
         <div className="flex items-center gap-2">
-          <span className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-
+          <span className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center text-sm">
+            {state.selectionCount}
+          </span>
+          <span>Continue with Selected</span>
+        </div>
+        <svg 
+          className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
+// Main Modern Content Selection Interface
+export default function ModernContentSelectionInterface() {
+  const { state } = useContentSelection();
+
+  const handleContentSelect = useCallback((content: ContentWithTopics) => {
+    contentSelectionActions.toggleContent(content);
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/50 backdrop-blur-sm rounded-full border border-white/20 shadow-lg mb-6">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-sm font-medium text-slate-600">Select Content for Learning</span>
+          </div>
+          
+          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-4">
+            Choose Your Learning Materials
+          </h1>
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+            Select the content you'd like to study. We'll create personalized learning sessions based on your choices.
+          </p>
+        </div>
+
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+          {state.availableContent.map((content) => (
+            <div
+              key={content.id}
+              onClick={() => handleContentSelect(content)}
+              className="group cursor-pointer"
+            >
+              <div className={`
+                relative p-6 bg-white/70 backdrop-blur-sm rounded-2xl border-2 transition-all duration-300
+                hover:bg-white hover:shadow-xl hover:shadow-blue-100/50 hover:-translate-y-1
+                ${state.selectedContent.some(c => c.id === content.id) 
+                  ? 'border-blue-500 bg-blue-50/80 shadow-lg shadow-blue-100/50' 
+                  : 'border-white/20 hover:border-blue-200'
+                }
+              `}>
+                {/* Selection Indicator */}
+                <div className={`
+                  absolute top-4 right-4 w-6 h-6 rounded-full border-2 transition-all duration-200
+                  ${state.selectedContent.some(c => c.id === content.id)
+                    ? 'bg-blue-500 border-blue-500' 
+                    : 'border-slate-300 group-hover:border-blue-400'
+                  }
+                `}>
+                  {state.selectedContent.some(c => c.id === content.id) && (
+                    <svg className="w-4 h-4 text-white mx-auto mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </div>
+
+                <div className="mb-4">
+                  <ModernContentTypeIndicator source={content.source} className="mb-3" />
+                  <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-900 transition-colors">
+                    {content.title}
+                  </h3>
+                  <p className="text-slate-600 text-sm leading-relaxed line-clamp-3">
+                    {content.description}
+                  </p>
+                </div>
+
+                {/* Topics */}
+                {content.topics && content.topics.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {content.topics.slice(0, 3).map((topic, index) => (
+                      <span 
+                        key={index}
+                        className="px-2.5 py-1 bg-slate-100 text-slate-700 text-xs font-medium rounded-full"
+                      >
+                        {topic}
+                      </span>
+                    ))}
+                    {content.topics.length > 3 && (
+                      <span className="px-2.5 py-1 bg-slate-100 text-slate-500 text-xs font-medium rounded-full">
+                        +{content.topics.length - 3} more
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <FloatingContinueButton />
+      </div>
+    </div>
+  );
+}
