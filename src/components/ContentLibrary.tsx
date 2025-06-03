@@ -4,6 +4,8 @@ import React, { useEffect } from 'react';
 import { useContentSelection, contentSelectionActions } from '@/contexts/ContentSelectionContext';
 import { SessionConfigurationProvider } from '@/contexts/SessionConfigurationContext';
 import { AppCoordinator } from './AppCoordinator';
+import { useFeatureFlags } from '@/hooks/useFeatureFlags';
+import { DesignErrorBoundary } from './dev/ErrorBoundary';
 
 // Mock data for demonstration (in production, this would come from Supabase)
 const mockContent = [
@@ -249,6 +251,7 @@ const mockTopics = [
 
 export default function ContentLibrary() {
   const { dispatch } = useContentSelection();
+  const { useNewDesign } = useFeatureFlags();
 
   // Load mock data on component mount
   useEffect(() => {
@@ -263,7 +266,32 @@ export default function ContentLibrary() {
 
   return (
     <SessionConfigurationProvider>
-      <AppCoordinator />
+      {useNewDesign ? (
+        // Future: Modern design component will go here
+        // Wrapped in error boundary for safe testing
+        <DesignErrorBoundary 
+          fallback={<AppCoordinator />}
+          componentName="ModernContentSelection"
+        >
+          <div className="p-4 text-center bg-blue-50 border border-blue-200 rounded-lg mx-4 my-4">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold text-blue-900 mb-2">
+                🚀 Modern Design Coming Soon
+              </h2>
+              <p className="text-blue-700 text-sm">
+                The new modern content selection interface is under development.
+                For now, we'll show the existing interface below.
+              </p>
+            </div>
+            <div className="border-t border-blue-200 pt-4">
+              <AppCoordinator />
+            </div>
+          </div>
+        </DesignErrorBoundary>
+      ) : (
+        // Existing design (default)
+        <AppCoordinator />
+      )}
     </SessionConfigurationProvider>
   );
 }
