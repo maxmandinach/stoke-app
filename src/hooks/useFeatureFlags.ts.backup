@@ -8,7 +8,7 @@
 interface FeatureFlags {
   /**
    * Controls whether to use new design components or existing ones.
-   * Default: true (new modern design)
+   * Default: false (existing components)
    * Environment: NEXT_PUBLIC_USE_NEW_DESIGN
    */
   useNewDesign: boolean;
@@ -21,10 +21,10 @@ interface FeatureFlags {
  */
 export const useFeatureFlags = (): FeatureFlags => {
   // Check environment variable first
-  const envUseNewDesign = process.env.NEXT_PUBLIC_USE_NEW_DESIGN !== 'false';
+  const envUseNewDesign = process.env.NEXT_PUBLIC_USE_NEW_DESIGN === 'true';
   
   // In development, allow localStorage override
-  let localStorageOverride = true;
+  let localStorageOverride = false;
   if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
     const stored = localStorage.getItem('stoke_dev_use_new_design');
     if (stored !== null) {
@@ -56,7 +56,7 @@ export const toggleFeatureFlag = (flag: keyof FeatureFlags, value?: boolean): vo
 
   switch (flag) {
     case 'useNewDesign':
-      const newValue = value !== undefined ? value : !JSON.parse(localStorage.getItem('stoke_dev_use_new_design') || 'true');
+      const newValue = value !== undefined ? value : !JSON.parse(localStorage.getItem('stoke_dev_use_new_design') || 'false');
       localStorage.setItem('stoke_dev_use_new_design', String(newValue));
       // Trigger a page refresh to apply changes
       window.location.reload();
