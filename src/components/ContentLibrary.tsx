@@ -6,6 +6,8 @@ import { SessionConfigurationProvider } from '@/contexts/SessionConfigurationCon
 import { AppCoordinator } from './AppCoordinator';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import { DesignErrorBoundary } from './dev/ErrorBoundary';
+import ModernContentSelectionInterface from './ModernContentSelectionInterface';
+import { ErrorBoundary } from './ui/ErrorBoundary';
 
 // Mock data for demonstration (in production, this would come from Supabase)
 const mockContent = [
@@ -264,32 +266,21 @@ export default function ContentLibrary() {
     }, 500);
   }, [dispatch]);
 
+  // Callback handler for content selection
+  const handleContentSelection = (selectedIds: string[]) => {
+    // This should trigger the same flow as the existing AppCoordinator
+    // Navigate to session configuration with selected content
+    console.log('Content selected:', selectedIds);
+    // TODO: Implement navigation to session configuration
+  };
+
   return (
     <SessionConfigurationProvider>
       {useNewDesign ? (
-        // Future: Modern design component will go here
-        // Wrapped in error boundary for safe testing
-        <DesignErrorBoundary 
-          fallback={<AppCoordinator />}
-          componentName="ModernContentSelection"
-        >
-          <div className="p-4 text-center bg-blue-50 border border-blue-200 rounded-lg mx-4 my-4">
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold text-blue-900 mb-2">
-                🚀 Modern Design Coming Soon
-              </h2>
-              <p className="text-blue-700 text-sm">
-                The new modern content selection interface is under development.
-                For now, we'll show the existing interface below.
-              </p>
-            </div>
-            <div className="border-t border-blue-200 pt-4">
-              <AppCoordinator />
-            </div>
-          </div>
-        </DesignErrorBoundary>
+        <ErrorBoundary fallback={<AppCoordinator />}>
+          <ModernContentSelectionInterface onContinue={handleContentSelection} />
+        </ErrorBoundary>
       ) : (
-        // Existing design (default)
         <AppCoordinator />
       )}
     </SessionConfigurationProvider>
