@@ -1,215 +1,282 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useContentSelection, contentSelectionActions, ContentWithTopics } from '@/contexts/ContentSelectionContext';
+import { Button, Card, Badge, ProgressBar, ContentTypeIndicator } from '@/components/ui/StokeDesignSystem';
 
-// Modern Content Type Indicator with rich colors and gradients
-function ModernContentTypeIndicator({ source, className = '' }: { source: string; className?: string }) {
-  const getSourceConfig = (source: string) => {
-    switch (source) {
-      case 'podcast':
-        return {
-          label: 'Podcast',
-          icon: '🎧',
-          gradient: 'from-purple-500 to-pink-500',
-          bgGradient: 'from-purple-50 to-pink-50',
-          textColor: 'text-purple-700',
-          borderColor: 'border-purple-200'
-        };
-      case 'video':
-        return {
-          label: 'Video',
-          icon: '🎬',
-          gradient: 'from-red-500 to-orange-500',
-          bgGradient: 'from-red-50 to-orange-50',
-          textColor: 'text-red-700',
-          borderColor: 'border-red-200'
-        };
-      case 'article':
-        return {
-          label: 'Article',
-          icon: '📄',
-          gradient: 'from-emerald-500 to-teal-500',
-          bgGradient: 'from-emerald-50 to-teal-50',
-          textColor: 'text-emerald-700',
-          borderColor: 'border-emerald-200'
-        };
-      case 'book':
-        return {
-          label: 'Book',
-          icon: '📚',
-          gradient: 'from-violet-500 to-purple-500',
-          bgGradient: 'from-violet-50 to-purple-50',
-          textColor: 'text-violet-700',
-          borderColor: 'border-violet-200'
-        };
-      case 'interview':
-        return {
-          label: 'Interview',
-          icon: '🎙️',
-          gradient: 'from-blue-500 to-cyan-500',
-          bgGradient: 'from-blue-50 to-cyan-50',
-          textColor: 'text-blue-700',
-          borderColor: 'border-blue-200'
-        };
-      default:
-        return {
-          label: 'Content',
-          icon: '📋',
-          gradient: 'from-gray-500 to-slate-500',
-          bgGradient: 'from-gray-50 to-slate-50',
-          textColor: 'text-gray-700',
-          borderColor: 'border-gray-200'
-        };
-    }
-  };
+// Props interface as required by the specifications
+interface ModernContentSelectionInterfaceProps {
+  onContinue: (selectedIds: string[]) => void;
+}
 
-  const config = getSourceConfig(source);
+// Search Bar Component
+function SearchBar() {
+  const { state, dispatch } = useContentSelection();
+  const [searchInput, setSearchInput] = useState(state.filters.searchQuery);
+
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchInput(value);
+    dispatch(contentSelectionActions.setFilter({ searchQuery: value }));
+  }, [dispatch]);
 
   return (
-    <div className={`
-      inline-flex items-center gap-2 px-3 py-1.5 rounded-full 
-      text-xs font-semibold tracking-wide bg-gradient-to-r ${config.bgGradient} 
-      ${config.textColor} ${config.borderColor} border backdrop-blur-sm
-      shadow-sm hover:shadow-md transition-all duration-200 ${className}
-    `}>
-      <span className="text-sm">{config.icon}</span>
-      <span>{config.label}</span>
+    <div className="relative mb-4">
+      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+      <input 
+        type="text"
+        placeholder="Search episodes or topics..."
+        value={searchInput}
+        onChange={(e) => handleSearchChange(e.target.value)}
+        className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
+      />
     </div>
   );
 }
 
-// Floating Action Button for Continue
-function FloatingContinueButton() {
-  const { state } = useContentSelection();
-  
-  if (state.selectionCount === 0) return null;
-  
+// Topic Filter Chips Component
+function TopicFilterChips() {
+  const { state, dispatch } = useContentSelection();
+
+  const toggleTopic = useCallback((topicId: string) => {
+    const currentTopics = state.filters.selectedTopics;
+    const newTopics = currentTopics.includes(topicId)
+      ? currentTopics.filter(id => id !== topicId)
+      : [...currentTopics, topicId];
+    
+    dispatch(contentSelectionActions.setFilter({ selectedTopics: newTopics }));
+  }, [state.filters.selectedTopics, dispatch]);
+
+  if (state.allTopics.length === 0) return null;
+
   return (
-    <div className="fixed bottom-6 right-6 z-50">
-      <button
-        onClick={() => {}}
-        className="
-          group relative flex items-center gap-3 px-6 py-4 
-          bg-gradient-to-r from-indigo-600 to-purple-600 
-          text-white font-semibold rounded-2xl shadow-2xl
-          hover:from-indigo-500 hover:to-purple-500
-          transform hover:scale-105 transition-all duration-300
-          before:absolute before:inset-0 before:rounded-2xl
-          before:bg-gradient-to-r before:from-indigo-400 before:to-purple-400
-          before:opacity-0 before:hover:opacity-20 before:transition-opacity
-        "
-      >
-        <div className="flex items-center gap-2">
-          <span className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center text-sm">
-            {state.selectionCount}
-          </span>
-          <span>Continue with Selected</span>
+    <div className="flex flex-wrap gap-2">
+      {state.allTopics.map((topic) => {
+        const isSelected = state.filters.selectedTopics.includes(topic.id);
+        
+        return (
+          <button
+            key={topic.id}
+            onClick={() => toggleTopic(topic.id)}
+            className={`px-3 py-1.5 text-sm font-medium rounded-full border transition-all duration-200 min-h-[44px] ${
+              isSelected
+                ? 'bg-blue-600 text-white border-blue-600'
+                : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+            }`}
+          >
+            {topic.icon && <span className="mr-1">{topic.icon}</span>}
+            {topic.name}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// Helper functions for progress calculations
+function getTotalQuestions(selectedContent: ContentWithTopics[]): number {
+  return selectedContent.reduce((total, content) => total + (content.total_questions || 0), 0);
+}
+
+function getEstimatedTime(selectedContent: ContentWithTopics[]): number {
+  return selectedContent.reduce((total, content) => total + (content.duration_hours || 0), 0);
+}
+
+// Content Card Component
+function ContentCard({ content }: { content: ContentWithTopics }) {
+  const { state, dispatch } = useContentSelection();
+  const isSelected = state.selectedContentIds.has(content.id);
+
+  const toggleSelection = useCallback(() => {
+    dispatch(contentSelectionActions.toggleContent(content.id));
+  }, [content.id, dispatch]);
+
+  // Get topic variant colors
+  const getTopicVariant = (index: number): 'blue' | 'green' | 'purple' | 'orange' => {
+    const variants = ['blue', 'green', 'purple', 'orange'] as const;
+    return variants[index % variants.length];
+  };
+
+  return (
+    <Card
+      onClick={toggleSelection}
+      variant={isSelected ? 'selected' : 'interactive'}
+      className="p-6"
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex-1 min-w-0">
+          {/* Content Type + Title */}
+          <div className="flex items-center space-x-2 mb-2">
+            <ContentTypeIndicator type={content.source as any} />
+            <h3 className="text-lg font-semibold text-gray-900 truncate">
+              {content.title}
+            </h3>
+          </div>
+          
+          {/* Source */}
+          <p className="text-gray-600 mb-3">{content.source}</p>
+          
+          {/* Metadata */}
+          <div className="flex flex-wrap items-center gap-3 mb-3">
+            <span className="text-sm text-gray-500">
+              {Math.round((content.duration_hours || 0) * 60)}min • {content.total_questions || 0} questions
+            </span>
+            {content.topics && content.topics.slice(0, 3).map((topic, index) => (
+              <Badge 
+                key={topic.id} 
+                variant={getTopicVariant(index)} 
+                size="sm"
+              >
+                {topic.icon && <span className="mr-1">{topic.icon}</span>}
+                {topic.name}
+              </Badge>
+            ))}
+            {content.topics && content.topics.length > 3 && (
+              <Badge variant="default" size="sm">
+                +{content.topics.length - 3} more
+              </Badge>
+            )}
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="flex items-center space-x-3">
+            <div className="flex-1">
+              <div className="flex items-center justify-between text-sm mb-1">
+                <span className="text-gray-600">Progress</span>
+                <span className="font-medium text-gray-900">
+                  {content.mastery_percentage || 0}%
+                </span>
+              </div>
+              <ProgressBar progress={content.mastery_percentage || 0} size="sm" />
+            </div>
+          </div>
         </div>
-        <svg 
-          className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" 
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-        </svg>
-      </button>
+        
+        {/* Selection Indicator */}
+        <div className="ml-4 flex-shrink-0">
+          <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+            isSelected
+              ? 'bg-blue-600 border-blue-600'
+              : 'border-gray-300'
+          }`}>
+            {isSelected && (
+              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+            )}
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+// Main Content Grid Component
+function ContentGrid() {
+  const { state, dispatch } = useContentSelection();
+
+  if (state.isLoading) {
+    return (
+      <div className="flex justify-center py-12">
+        <div className="text-gray-500">Loading your content library...</div>
+      </div>
+    );
+  }
+
+  if (state.error) {
+    return (
+      <div className="text-center py-12">
+        <div className="text-red-600 mb-2">Error loading content</div>
+        <div className="text-gray-500 text-sm">{state.error}</div>
+      </div>
+    );
+  }
+
+  if (state.filteredContent.length === 0) {
+    const hasFilters = state.filters.selectedTopics.length > 0 || 
+                      state.filters.searchQuery || 
+                      state.filters.showSelectedOnly;
+    
+    return (
+      <div className="text-center py-12">
+        <div className="text-gray-500 mb-4">
+          {hasFilters ? 'No episodes match your filters' : 'No episodes in your library yet'}
+        </div>
+        {hasFilters && (
+          <Button
+            variant="ghost"
+            onClick={() => {
+              dispatch(contentSelectionActions.clearFilters());
+            }}
+          >
+            Clear filters
+          </Button>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid gap-4 mb-8">
+      {state.filteredContent.map(content => (
+        <ContentCard key={content.id} content={content} />
+      ))}
     </div>
   );
 }
 
 // Main Modern Content Selection Interface
-export default function ModernContentSelectionInterface() {
+export default function ModernContentSelectionInterface({ onContinue }: ModernContentSelectionInterfaceProps) {
   const { state } = useContentSelection();
 
-  const handleContentSelect = useCallback((content: ContentWithTopics) => {
-    contentSelectionActions.toggleContent(content.id);
-  }, []);
+  const selectedContent = state.filteredContent.filter(content => 
+    state.selectedContentIds.has(content.id)
+  );
+
+  const handleContinue = useCallback(() => {
+    const selectedIds = Array.from(state.selectedContentIds);
+    onContinue(selectedIds);
+  }, [state.selectedContentIds, onContinue]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/50 backdrop-blur-sm rounded-full border border-white/20 shadow-lg mb-6">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-sm font-medium text-slate-600">Select Content for Learning</span>
-          </div>
-          
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-4">
-            Choose Your Learning Materials
-          </h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Select the content you'd like to study. We'll create personalized learning sessions based on your choices.
-          </p>
-        </div>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* Search and Filters Section */}
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">Choose your learning content</h2>
+        
+        {/* Search Bar with Icon */}
+        <SearchBar />
 
-        {/* Content Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
-          {state.filteredContent.map((content) => (
-            <div
-              key={content.id}
-              onClick={() => handleContentSelect(content)}
-              className="group cursor-pointer"
-            >
-              <div className={`
-                relative p-6 bg-white/70 backdrop-blur-sm rounded-2xl border-2 transition-all duration-300
-                hover:bg-white hover:shadow-xl hover:shadow-blue-100/50 hover:-translate-y-1
-                ${state.selectedContentIds.has(content.id) 
-                  ? 'border-blue-500 bg-blue-50/80 shadow-lg shadow-blue-100/50' 
-                  : 'border-white/20 hover:border-blue-200'
-                }
-              `}>
-                {/* Selection Indicator */}
-                <div className={`
-                  absolute top-4 right-4 w-6 h-6 rounded-full border-2 transition-all duration-200
-                  ${state.selectedContentIds.has(content.id)
-                    ? 'bg-blue-500 border-blue-500' 
-                    : 'border-slate-300 group-hover:border-blue-400'
-                  }
-                `}>
-                  {state.selectedContentIds.has(content.id) && (
-                    <svg className="w-4 h-4 text-white mx-auto mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  )}
-                </div>
-
-                <div className="mb-4">
-                  <ModernContentTypeIndicator source={content.source} className="mb-3" />
-                  <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-900 transition-colors">
-                    {content.title}
-                  </h3>
-                  <p className="text-slate-600 text-sm leading-relaxed line-clamp-3">
-                    {content.quick_summary}
-                  </p>
-                </div>
-
-                {/* Topics */}
-                {content.topics && content.topics.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {content.topics.slice(0, 3).map((topic, index) => (
-                      <span 
-                        key={index}
-                        className="px-2.5 py-1 bg-slate-100 text-slate-700 text-xs font-medium rounded-full"
-                      >
-                        {topic.name}
-                      </span>
-                    ))}
-                    {content.topics.length > 3 && (
-                      <span className="px-2.5 py-1 bg-slate-100 text-slate-500 text-xs font-medium rounded-full">
-                        +{content.topics.length - 3} more
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <FloatingContinueButton />
+        {/* Topic Filter Chips */}
+        <TopicFilterChips />
       </div>
+
+      {/* Content Grid */}
+      <ContentGrid />
+
+      {/* Sticky Bottom Selection Summary */}
+      {selectedContent.length > 0 && (
+        <div className="sticky bottom-0 bg-white border-t border-gray-200 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-gray-900">
+                  {selectedContent.length} item{selectedContent.length !== 1 ? 's' : ''} selected
+                </p>
+                <p className="text-sm text-gray-600">
+                  {getTotalQuestions(selectedContent)} questions • ~{getEstimatedTime(selectedContent).toFixed(1)}h estimated
+                </p>
+              </div>
+              <Button variant="primary" size="lg" onClick={handleContinue}>
+                Continue
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
