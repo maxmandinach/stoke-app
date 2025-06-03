@@ -5,7 +5,6 @@ import { useContentSelection, contentSelectionActions } from '@/contexts/Content
 import { SessionConfigurationProvider } from '@/contexts/SessionConfigurationContext';
 import { AppCoordinator } from './AppCoordinator';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
-import { DesignErrorBoundary } from './dev/ErrorBoundary';
 import ModernContentSelectionInterface from './ModernContentSelectionInterface';
 import { ErrorBoundary } from './ui/ErrorBoundary';
 
