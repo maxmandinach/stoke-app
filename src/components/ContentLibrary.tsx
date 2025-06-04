@@ -3,9 +3,6 @@
 import React, { useEffect } from 'react';
 import { useContentSelection, contentSelectionActions } from '@/contexts/ContentSelectionContext';
 import { SessionConfigurationProvider } from '@/contexts/SessionConfigurationContext';
-import { useFeatureFlags } from '@/hooks/useFeatureFlags';
-import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
-import { AppCoordinator } from '@/components/AppCoordinator';
 import ModernContentSelection from '@/components/ModernContentSelection';
 
 // Mock data for demonstration (in production, this would come from Supabase)
@@ -252,7 +249,6 @@ const mockTopics = [
 
 export default function ContentLibrary() {
   const { dispatch } = useContentSelection();
-  const { useNewDesign } = useFeatureFlags();
 
   // Load mock data on component mount
   useEffect(() => {
@@ -267,7 +263,6 @@ export default function ContentLibrary() {
 
   // Callback handler for content selection
   const handleContentSelection = (selectedIds: string[]) => {
-    // This should trigger the same flow as the existing AppCoordinator
     // Navigate to session configuration with selected content
     console.log('Content selected:', selectedIds);
     // TODO: Implement navigation to session configuration
@@ -275,15 +270,7 @@ export default function ContentLibrary() {
 
   return (
     <SessionConfigurationProvider>
-      {useNewDesign ? (
-        <ErrorBoundary fallback={<AppCoordinator />}>
-          <ModernContentSelection onContinue={handleContentSelection} />
-        </ErrorBoundary>
-      ) : (
-        <AppCoordinator />
-      )}
+      <ModernContentSelection onContinue={handleContentSelection} />
     </SessionConfigurationProvider>
   );
-}
-
-// ... existing code ... 
+} 
