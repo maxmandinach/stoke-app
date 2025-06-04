@@ -2,13 +2,11 @@
 
 import React from 'react';
 import { 
-  Clock, 
   BookOpen, 
   Brain, 
   Target, 
   ArrowLeft,
   Play,
-  Users,
   CheckCircle2
 } from 'lucide-react';
 import { 
