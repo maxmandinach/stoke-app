@@ -9,7 +9,6 @@ import { cn } from '@/lib/utils';
 import { 
   Search, 
   Clock, 
-  PlayCircle, 
   FileText, 
   BookOpen, 
   Mic, 
