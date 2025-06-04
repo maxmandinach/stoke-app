@@ -462,7 +462,7 @@ function ProfessionalContentCard({ content }: { content: ContentWithTopics }) {
         {/* Topics */}
         {content.topics && content.topics.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
-            {content.topics.slice(0, 3).map((topic, index) => (
+            {content.topics.slice(0, 3).map((topic) => (
               <div
                 key={topic.id}
                 className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-50 text-gray-700 rounded-lg text-xs font-medium border border-gray-200"
