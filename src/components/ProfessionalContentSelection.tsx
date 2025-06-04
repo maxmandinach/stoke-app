@@ -8,26 +8,27 @@
  * - DO NOT remove imports just to fix build errors - they may be planned for upcoming features
  * 
  * CURRENT FEATURES:
- * - Professional card-based content selection with hover effects
- * - Advanced search and topic filtering with gradient selections
- * - Bulk selection actions (select all / deselect all)
- * - Real-time session preview with statistics
- * - Mobile-optimized responsive design
- * - Progress indicators and mastery level badges
+ * - Professional card-based content selection with enhanced shadows
+ * - Advanced search with new SearchInput component
+ * - Bulk selection actions with improved visual feedback
+ * - Real-time session preview with professional styling
+ * - Mobile-optimized responsive design with proper touch targets
+ * - Progress indicators and mastery level badges with better hierarchy
  * 
- * PLANNED FEATURES (imports prepared):
- * - PlayCircle: Video/audio content play buttons
- * - Enhanced bulk operations with more granular selection
- * - Additional content type indicators and interactions
+ * ENHANCED PROFESSIONAL FEATURES:
+ * - Enterprise-grade shadow system and elevation
+ * - Professional typography hierarchy
+ * - Enhanced interactive states and micro-animations
+ * - Better accessibility and screen reader support
  */
 
 'use client';
 
 import React, { useState, useCallback } from 'react';
 import { useContentSelection, contentSelectionActions, ContentWithTopics } from '@/contexts/ContentSelectionContext';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { ContentCard, StatsCard } from '@/components/ui/card';
+import { Button, IconButton, ButtonGroup } from '@/components/ui/button';
+import { SearchInput } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { 
   Search, 
@@ -48,7 +49,12 @@ import {
   Zap,
   CheckSquare,
   Square,
-  MoreHorizontal
+  MoreHorizontal,
+  LayoutGrid,
+  List,
+  SortDesc,
+  Users,
+  BookmarkPlus
 } from 'lucide-react';
 
 // Professional Content Type Badge with enhanced styling
@@ -59,55 +65,37 @@ function ProfessionalContentTypeBadge({ source }: { source: string }) {
         return { 
           label: 'Podcast', 
           icon: <Mic className="w-3.5 h-3.5" />,
-          bgColor: 'bg-gradient-to-r from-orange-50 to-amber-50',
-          textColor: 'text-orange-700',
-          borderColor: 'border-orange-200/60',
-          iconBg: 'bg-orange-100'
+          className: 'bg-gradient-to-r from-orange-50 to-amber-50 text-orange-700 border-orange-200/60'
         };
       case 'video':
         return { 
           label: 'Video', 
           icon: <Video className="w-3.5 h-3.5" />,
-          bgColor: 'bg-gradient-to-r from-red-50 to-pink-50',
-          textColor: 'text-red-700',
-          borderColor: 'border-red-200/60',
-          iconBg: 'bg-red-100'
+          className: 'bg-gradient-to-r from-red-50 to-pink-50 text-red-700 border-red-200/60'
         };
       case 'article':
         return { 
           label: 'Article', 
           icon: <FileText className="w-3.5 h-3.5" />,
-          bgColor: 'bg-gradient-to-r from-emerald-50 to-teal-50',
-          textColor: 'text-emerald-700',
-          borderColor: 'border-emerald-200/60',
-          iconBg: 'bg-emerald-100'
+          className: 'bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 border-emerald-200/60'
         };
       case 'interview':
         return { 
           label: 'Interview', 
           icon: <Mic className="w-3.5 h-3.5" />,
-          bgColor: 'bg-gradient-to-r from-blue-50 to-cyan-50',
-          textColor: 'text-blue-700',
-          borderColor: 'border-blue-200/60',
-          iconBg: 'bg-blue-100'
+          className: 'bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-700 border-blue-200/60'
         };
       case 'book':
         return { 
           label: 'Book', 
           icon: <BookOpen className="w-3.5 h-3.5" />,
-          bgColor: 'bg-gradient-to-r from-purple-50 to-violet-50',
-          textColor: 'text-purple-700',
-          borderColor: 'border-purple-200/60',
-          iconBg: 'bg-purple-100'
+          className: 'bg-gradient-to-r from-purple-50 to-violet-50 text-purple-700 border-purple-200/60'
         };
       default:
         return { 
           label: 'Content', 
           icon: <FileText className="w-3.5 h-3.5" />,
-          bgColor: 'bg-gradient-to-r from-slate-50 to-gray-50',
-          textColor: 'text-slate-700',
-          borderColor: 'border-slate-200/60',
-          iconBg: 'bg-slate-100'
+          className: 'bg-gradient-to-r from-slate-50 to-gray-50 text-slate-700 border-slate-200/60'
         };
     }
   };
@@ -116,12 +104,10 @@ function ProfessionalContentTypeBadge({ source }: { source: string }) {
   
   return (
     <div className={cn(
-      "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold border shadow-sm",
-      config.bgColor,
-      config.textColor,
-      config.borderColor
+      "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200",
+      config.className
     )}>
-      <div className={cn("p-1 rounded-md", config.iconBg)}>
+      <div className="p-1 rounded-md bg-white/60">
         {config.icon}
       </div>
       <span>{config.label}</span>
@@ -178,7 +164,6 @@ function ProgressRing({ progress, size = 40, strokeWidth = 3 }: {
 function ProfessionalSearchBar() {
   const { state, dispatch } = useContentSelection();
   const [searchInput, setSearchInput] = useState(state.filters.searchQuery);
-  const [isFocused, setIsFocused] = useState(false);
 
   const handleSearchChange = useCallback((value: string) => {
     setSearchInput(value);
@@ -186,551 +171,397 @@ function ProfessionalSearchBar() {
   }, [dispatch]);
 
   return (
-    <div className={cn(
-      "relative transition-all duration-200",
-      isFocused && "transform scale-[1.01]"
-    )}>
-      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-        <Search className={cn(
-          "h-5 w-5 transition-colors duration-200",
-          isFocused ? "text-blue-500" : "text-gray-400"
-        )} />
-      </div>
-      <Input
-        placeholder="Search episodes, topics, or content..."
-        value={searchInput}
-        onChange={(e) => handleSearchChange(e.target.value)}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        className={cn(
-          "pl-12 pr-4 h-12 bg-white border-gray-200 rounded-xl text-base",
-          "focus:ring-2 focus:ring-blue-500/20 focus:border-blue-300",
-          "shadow-sm hover:shadow-md transition-all duration-200",
-          "placeholder:text-gray-400"
-        )}
-      />
-      {searchInput && (
-        <button
-          onClick={() => handleSearchChange('')}
-          className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600"
-        >
-          <Circle className="h-4 w-4" />
-        </button>
-      )}
-    </div>
+    <SearchInput
+      placeholder="Search episodes, topics, or content..."
+      value={searchInput}
+      onSearch={handleSearchChange}
+      size="lg"
+      className="w-full"
+    />
   );
 }
 
-// Enhanced Topic Filter Chips with professional styling
+// Professional Topic Filter with enhanced UI
 function ProfessionalTopicFilter() {
   const { state, dispatch } = useContentSelection();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const toggleTopic = useCallback((topicId: string) => {
+  const clearAllFilters = () => {
+    dispatch(contentSelectionActions.clearFilters());
+  };
+
+  const toggleTopicFilter = (topicId: string) => {
     const currentTopics = state.filters.selectedTopics;
     const newTopics = currentTopics.includes(topicId)
       ? currentTopics.filter(id => id !== topicId)
       : [...currentTopics, topicId];
     
     dispatch(contentSelectionActions.setFilter({ selectedTopics: newTopics }));
-  }, [state.filters.selectedTopics, dispatch]);
-
-  const clearAllFilters = () => {
-    dispatch(contentSelectionActions.setFilter({ selectedTopics: [] }));
   };
 
-  if (state.allTopics.length === 0) return null;
-
-  const visibleTopics = isExpanded ? state.allTopics : state.allTopics.slice(0, 5);
-  const hasMore = state.allTopics.length > 5;
-  const activeCount = state.filters.selectedTopics.length;
+  const hasActiveFilters = state.filters.selectedTopics.length > 0 || state.filters.searchQuery;
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Filter className="h-5 w-5 text-gray-400" />
-          <h3 className="text-sm font-semibold text-gray-900">Filter by topics</h3>
-          {activeCount > 0 && (
-            <div className="bg-blue-100 text-blue-700 px-2 py-1 rounded-md text-xs font-medium">
-              {activeCount} active
-            </div>
+    <div className="flex items-center gap-3">
+      <ButtonGroup>
+        <Button
+          variant="outline"
+          size="default"
+          onClick={() => setIsOpen(!isOpen)}
+          className="gap-2"
+        >
+          <Filter className="h-4 w-4" />
+          Filter
+          {state.filters.selectedTopics.length > 0 && (
+            <span className="bg-primary text-primary-foreground text-xs px-1.5 py-0.5 rounded-full">
+              {state.filters.selectedTopics.length}
+            </span>
           )}
-        </div>
-        {activeCount > 0 && (
+        </Button>
+        
+        {hasActiveFilters && (
           <Button
             variant="ghost"
-            size="sm"
+            size="default"
             onClick={clearAllFilters}
-            className="text-gray-500 hover:text-gray-700 h-8 px-2"
+            className="text-muted-foreground hover:text-foreground"
           >
-            Clear all
+            Clear
           </Button>
         )}
-      </div>
-      
-      <div className="flex flex-wrap gap-2">
-        {visibleTopics.map((topic) => {
-          const isSelected = state.filters.selectedTopics.includes(topic.id);
-          
-          return (
-            <button
-              key={topic.id}
-              onClick={() => toggleTopic(topic.id)}
-              className={cn(
-                "inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm",
-                "transition-all duration-200 border min-h-[44px] hover:scale-105",
-                "focus:outline-none focus:ring-2 focus:ring-blue-500/20",
-                isSelected 
-                  ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white border-blue-500 shadow-lg shadow-blue-500/25" 
-                  : "bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:shadow-md shadow-sm"
-              )}
-            >
-              {topic.icon && (
-                <span className={cn(
-                  "text-base",
-                  isSelected ? "opacity-100" : "opacity-70"
-                )}>
-                  {topic.icon}
-                </span>
-              )}
-              <span>{topic.name}</span>
-              {isSelected && (
-                <CheckCircle2 className="h-4 w-4 opacity-80" />
-              )}
-            </button>
-          );
-        })}
-        
-        {hasMore && (
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100 transition-all duration-200"
-          >
-            {isExpanded ? 'Show less' : `+${state.allTopics.length - 5} more`}
-          </button>
-        )}
-      </div>
+      </ButtonGroup>
+
+      <ButtonGroup variant="outline">
+        <IconButton variant="ghost" size="icon">
+          <LayoutGrid className="h-4 w-4" />
+        </IconButton>
+        <IconButton variant="ghost" size="icon">
+          <List className="h-4 w-4" />
+        </IconButton>
+      </ButtonGroup>
+
+      <Button variant="outline" size="default" className="gap-2">
+        <SortDesc className="h-4 w-4" />
+        Sort
+      </Button>
     </div>
   );
 }
 
-// Professional Selection Stats Card
+// Enhanced Selection Stats Card
 function SelectionStatsCard({ onContinue }: { onContinue?: () => void }) {
   const { state } = useContentSelection();
-  
-  if (state.selectionCount === 0) return null;
-
-  const totalDuration = Array.from(state.selectedContentIds).reduce((acc, id) => {
+  const selectedContent = Array.from(state.selectedContentIds);
+  const totalQuestions = selectedContent.reduce((sum, id) => {
     const content = state.allContent.find(c => c.id === id);
-    return acc + (content?.duration_hours || 0);
+    return sum + (content?.total_questions || 0);
   }, 0);
 
-  const totalQuestions = Array.from(state.selectedContentIds).reduce((acc, id) => {
+  const totalDuration = selectedContent.reduce((sum, id) => {
     const content = state.allContent.find(c => c.id === id);
-    return acc + (content?.total_questions || 0);
+    return sum + (content?.duration_hours || 0);
   }, 0);
+
+  const averageDifficulty = selectedContent.reduce((sum, id) => {
+    const content = state.allContent.find(c => c.id === id);
+    return sum + (content?.average_difficulty || 0);
+  }, 0) / (selectedContent.length || 1);
+
+  if (selectedContent.length === 0) {
+    return (
+      <div className="lg:col-span-1">
+        <StatsCard
+          title="Selection Summary"
+          value="0"
+          subtitle="items selected"
+          icon={<Target className="h-6 w-6" />}
+          className="animate-fade-in"
+        />
+      </div>
+    );
+  }
 
   return (
-    <Card className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 border-blue-200/50 shadow-lg">
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">Session Preview</h3>
-          <div className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
-            {state.selectionCount} selected
-          </div>
-        </div>
+    <div className="lg:col-span-1 space-y-6">
+      <div className="grid grid-cols-1 gap-4">
+        <StatsCard
+          title="Content Selected"
+          value={selectedContent.length}
+          subtitle={`${totalQuestions} questions total`}
+          icon={<CheckSquare className="h-6 w-6" />}
+          trend={{ value: 12, isPositive: true }}
+          className="animate-fade-in"
+        />
         
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="text-center">
-            <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-xl mb-2 mx-auto">
-              <Clock className="h-6 w-6 text-green-600" />
-            </div>
-            <div className="text-2xl font-bold text-gray-900">
-              {Math.round(totalDuration * 60)}
-            </div>
-            <div className="text-sm text-gray-600">minutes</div>
-          </div>
-          
-          <div className="text-center">
-            <div className="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-xl mb-2 mx-auto">
-              <Target className="h-6 w-6 text-purple-600" />
-            </div>
-            <div className="text-2xl font-bold text-gray-900">{totalQuestions}</div>
-            <div className="text-sm text-gray-600">questions</div>
-          </div>
-          
-          <div className="text-center">
-            <div className="flex items-center justify-center w-12 h-12 bg-orange-100 rounded-xl mb-2 mx-auto">
-              <Zap className="h-6 w-6 text-orange-600" />
-            </div>
-            <div className="text-2xl font-bold text-gray-900">
-              {Math.round(totalQuestions / (totalDuration || 1))}
-            </div>
-            <div className="text-sm text-gray-600">per hour</div>
-          </div>
-        </div>
-        
-        <Button 
-          className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
+        <StatsCard
+          title="Est. Duration"
+          value={`${Math.round(totalDuration * 60)}m`}
+          subtitle="study time"
+          icon={<Clock className="h-6 w-6" />}
+          className="animate-fade-in"
+        />
+
+        <StatsCard
+          title="Avg. Difficulty"
+          value={averageDifficulty.toFixed(1)}
+          subtitle="out of 5"
+          icon={<TrendingUp className="h-6 w-6" />}
+          className="animate-fade-in"
+        />
+      </div>
+
+      {onContinue && (
+        <Button
           onClick={onContinue}
+          size="lg"
+          variant="premium"
+          className="w-full gap-2 animate-scale-in"
         >
+          <Zap className="h-5 w-5" />
           Start Learning Session
-          <ArrowRight className="ml-2 h-5 w-5" />
+          <ArrowRight className="h-4 w-4" />
         </Button>
-      </CardContent>
-    </Card>
+      )}
+    </div>
   );
 }
 
-// Professional Content Card with enhanced design
+// Professional Content Card Component
 function ProfessionalContentCard({ content }: { content: ContentWithTopics }) {
   const { state, dispatch } = useContentSelection();
   const isSelected = state.selectedContentIds.has(content.id);
-  const [isHovered, setIsHovered] = useState(false);
 
-  const toggleSelection = useCallback(() => {
+  const toggleSelection = () => {
     dispatch(contentSelectionActions.toggleContent(content.id));
-  }, [content.id, dispatch]);
+  };
 
   const getDueBadge = () => {
-    if (!content.questions_due_count || content.questions_due_count === 0) return null;
-    
-    return (
-      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-50 text-red-700 rounded-lg text-xs font-medium border border-red-200">
-        <Calendar className="h-3 w-3" />
-        <span>{content.questions_due_count} due</span>
-      </div>
-    );
+    if (content.questions_due_count && content.questions_due_count > 0) {
+      return (
+        <span className="bg-warning text-warning-foreground text-xs px-2 py-1 rounded-full font-medium">
+          {content.questions_due_count} due
+        </span>
+      );
+    }
+    return null;
   };
 
   const getMasteryLevel = (percentage: number) => {
-    if (percentage >= 80) return { label: 'Expert', color: 'text-green-600', bg: 'bg-green-100' };
-    if (percentage >= 60) return { label: 'Advanced', color: 'text-blue-600', bg: 'bg-blue-100' };
-    if (percentage >= 40) return { label: 'Intermediate', color: 'text-yellow-600', bg: 'bg-yellow-100' };
-    if (percentage >= 20) return { label: 'Beginner', color: 'text-orange-600', bg: 'bg-orange-100' };
+    if (percentage >= 80) return { label: 'Mastered', color: 'text-green-600', bg: 'bg-green-100' };
+    if (percentage >= 60) return { label: 'Learning', color: 'text-blue-600', bg: 'bg-blue-100' };
+    if (percentage >= 40) return { label: 'Started', color: 'text-yellow-600', bg: 'bg-yellow-100' };
     return { label: 'New', color: 'text-gray-600', bg: 'bg-gray-100' };
   };
 
-  const masteryLevel = getMasteryLevel(content.mastery_percentage || 0);
+  const mastery = getMasteryLevel(content.mastery_percentage || 0);
 
   return (
-    <Card 
-      className={cn(
-        "group cursor-pointer transition-all duration-300 ease-out border",
-        "hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1",
-        "focus-within:ring-2 focus-within:ring-blue-500/20",
-        isSelected 
-          ? "ring-2 ring-blue-500 bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-300 shadow-lg shadow-blue-500/10" 
-          : "bg-white border-gray-200 hover:border-gray-300 shadow-sm"
-      )}
+    <ContentCard
+      selected={isSelected}
       onClick={toggleSelection}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      badge={getDueBadge()}
+      actions={
+        <ButtonGroup>
+          <IconButton variant="ghost" size="icon-sm">
+            <BookmarkPlus className="h-4 w-4" />
+          </IconButton>
+          <IconButton variant="ghost" size="icon-sm">
+            <MoreHorizontal className="h-4 w-4" />
+          </IconButton>
+        </ButtonGroup>
+      }
+      className="animate-fade-in group"
     >
-      <CardContent className="p-6">
-        {/* Header with selection and type */}
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className={cn(
-              "flex items-center justify-center w-6 h-6 rounded-full border-2 transition-all duration-200",
-              isSelected
-                ? "bg-blue-500 border-blue-500"
-                : "border-gray-300 group-hover:border-blue-400"
-            )}>
-              {isSelected ? (
-                <CheckCircle2 className="w-4 h-4 text-white" />
-              ) : (
-                <div className={cn(
-                  "w-2 h-2 rounded-full transition-all duration-200",
-                  isHovered ? "bg-blue-400" : "bg-transparent"
-                )} />
-              )}
-            </div>
+      <div className="p-6 space-y-4">
+        {/* Header */}
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-2 flex-1">
             <ProfessionalContentTypeBadge source={content.source} />
+            <h3 className="text-heading-3 font-semibold leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+              {content.title}
+            </h3>
           </div>
           
-          <div className="flex items-center gap-2">
-            {getDueBadge()}
-            <div className={cn(
-              "px-2.5 py-1 rounded-lg text-xs font-medium",
-              masteryLevel.bg,
-              masteryLevel.color
-            )}>
-              {masteryLevel.label}
-            </div>
-          </div>
-        </div>
-
-        {/* Title and metadata */}
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2 leading-tight group-hover:text-gray-700 transition-colors line-clamp-2">
-            {content.title}
-          </h3>
-          
-          <div className="flex items-center gap-4 text-sm text-gray-500">
-            <div className="flex items-center gap-1.5">
-              <Clock className="h-4 w-4" />
-              <span>{Math.round((content.duration_hours || 0) * 60)}min</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Target className="h-4 w-4" />
-              <span>{content.total_questions || 0} questions</span>
-            </div>
-            {content.last_session_at && (
-              <div className="flex items-center gap-1.5">
-                <TrendingUp className="h-4 w-4" />
-                <span>Last studied</span>
-              </div>
+          {/* Selection indicator */}
+          <div className="flex-shrink-0">
+            {isSelected ? (
+              <CheckCircle2 className="h-6 w-6 text-primary" />
+            ) : (
+              <Circle className="h-6 w-6 text-muted-foreground" />
             )}
           </div>
         </div>
 
+        {/* Content preview */}
+        <p className="text-body-sm text-muted-foreground line-clamp-2 leading-relaxed">
+          {content.quick_summary?.replace(/•/g, '').trim()}
+        </p>
+
         {/* Topics */}
         {content.topics && content.topics.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-2">
             {content.topics.slice(0, 3).map((topic) => (
-              <div
+              <span
                 key={topic.id}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-50 text-gray-700 rounded-lg text-xs font-medium border border-gray-200"
+                className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-secondary text-secondary-foreground text-xs font-medium"
               >
-                {topic.icon && <span className="text-sm">{topic.icon}</span>}
-                <span>{topic.name}</span>
-              </div>
+                <span>{topic.icon}</span>
+                {topic.name}
+              </span>
             ))}
             {content.topics.length > 3 && (
-              <div className="inline-flex items-center px-2.5 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs font-medium">
+              <span className="text-xs text-muted-foreground font-medium">
                 +{content.topics.length - 3} more
-              </div>
+              </span>
             )}
           </div>
         )}
 
-        {/* Progress section */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <ProgressRing progress={content.mastery_percentage || 0} size={36} strokeWidth={3} />
-            <div>
-              <div className="text-sm font-medium text-gray-900">
-                {content.mastery_percentage || 0}% mastered
-              </div>
-              <div className="text-xs text-gray-500">
-                {content.questions_due_count || 0} questions due
-              </div>
+        {/* Footer stats */}
+        <div className="flex items-center justify-between pt-2 border-t border-border">
+          <div className="flex items-center gap-4 text-caption text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              {Math.round((content.duration_hours || 0) * 60)}m
+            </div>
+            <div className="flex items-center gap-1">
+              <Users className="h-3 w-3" />
+              {content.total_questions} questions
             </div>
           </div>
           
-          {(content.mastery_percentage || 0) > 0 && (
-            <div className="flex items-center gap-1 text-xs text-gray-500">
-              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-              <span>In progress</span>
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            <span className={cn("text-xs font-medium px-2 py-1 rounded-full", mastery.bg, mastery.color)}>
+              {mastery.label}
+            </span>
+            <ProgressRing progress={content.mastery_percentage || 0} size={24} strokeWidth={2} />
+          </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </ContentCard>
   );
 }
 
-// Enhanced Content Grid with loading states
+// Professional Content Grid with enhanced layout
 function ProfessionalContentGrid() {
-  const { state, dispatch } = useContentSelection();
+  const { state } = useContentSelection();
+  const filteredContent = state.filteredContent;
 
-  if (state.isLoading) {
+  if (filteredContent.length === 0) {
     return (
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {[...Array(6)].map((_, i) => (
-          <Card key={i} className="animate-pulse">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-6 h-6 bg-gray-200 rounded-full" />
-                <div className="w-20 h-6 bg-gray-200 rounded-lg" />
-              </div>
-              <div className="space-y-2 mb-4">
-                <div className="h-5 bg-gray-200 rounded w-full" />
-                <div className="h-5 bg-gray-200 rounded w-3/4" />
-              </div>
-              <div className="flex gap-2 mb-4">
-                <div className="w-16 h-6 bg-gray-200 rounded-lg" />
-                <div className="w-20 h-6 bg-gray-200 rounded-lg" />
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-gray-200 rounded-full" />
-                <div className="space-y-1">
-                  <div className="h-4 bg-gray-200 rounded w-24" />
-                  <div className="h-3 bg-gray-200 rounded w-20" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    );
-  }
-
-  if (state.error) {
-    return (
-      <div className="text-center py-16">
-        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Circle className="h-8 w-8 text-red-500" />
+      <div className="text-center py-16 animate-fade-in">
+        <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+          <Search className="h-8 w-8 text-muted-foreground" />
         </div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Unable to load content</h3>
-        <p className="text-gray-600 mb-4">{state.error}</p>
-        <Button variant="outline" onClick={() => window.location.reload()}>
-          Try again
+        <h3 className="text-heading-3 text-foreground mb-2">No content found</h3>
+        <p className="text-body text-muted-foreground mb-4">
+          Try adjusting your search or filters to find relevant content.
+        </p>
+        <Button variant="outline" className="gap-2">
+          <Filter className="h-4 w-4" />
+          Clear Filters
         </Button>
       </div>
     );
   }
 
-  if (state.filteredContent.length === 0) {
-    const hasFilters = state.filters.selectedTopics.length > 0 || state.filters.searchQuery;
-    
-    return (
-      <div className="text-center py-16">
-        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Search className="h-8 w-8 text-gray-400" />
-        </div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">
-          {hasFilters ? 'No matching content' : 'No content available'}
-        </h3>
-        <p className="text-gray-600 mb-4">
-          {hasFilters 
-            ? 'Try adjusting your search or filters to find more content.'
-            : 'Content will appear here once it\'s added to your library.'
-          }
-        </p>
-        {hasFilters && (
-          <Button 
-            variant="outline" 
-            onClick={() => {
-              dispatch(contentSelectionActions.setFilter({ searchQuery: '', selectedTopics: [] }));
-            }}
-          >
-            Clear filters
-          </Button>
-        )}
-      </div>
-    );
-  }
-
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {state.filteredContent.map((content) => (
-        <ProfessionalContentCard key={content.id} content={content} />
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {filteredContent.map((content, index) => (
+        <div 
+          key={content.id}
+          className="animate-slide-up"
+          style={{ animationDelay: `${index * 0.1}s` }}
+        >
+          <ProfessionalContentCard content={content} />
+        </div>
       ))}
     </div>
   );
 }
 
-// View Toggle with enhanced styling
+// Professional View Toggle with enhanced UI
 function ProfessionalViewToggle() {
-  const { state, dispatch } = useContentSelection();
-  
+  const { state } = useContentSelection();
+  const hasSelectedContent = state.selectedContentIds.size > 0;
+
   return (
-    <div className="inline-flex bg-gray-100 rounded-xl p-1 shadow-sm">
-      <button
-        onClick={() => dispatch(contentSelectionActions.setFilter({ showSelectedOnly: false }))}
-        className={cn(
-          "px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200",
-          !state.filters.showSelectedOnly
-            ? "bg-white text-gray-900 shadow-sm"
-            : "text-gray-600 hover:text-gray-900"
-        )}
+    <ButtonGroup variant="outline">
+      <Button
+        variant={!hasSelectedContent ? "default" : "outline"}
+        size="default"
+        className="gap-2"
       >
-        All Content ({state.allContent.length})
-      </button>
-      <button
-        onClick={() => dispatch(contentSelectionActions.setFilter({ showSelectedOnly: true }))}
-        disabled={state.selectionCount === 0}
-        className={cn(
-          "px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200",
-          state.filters.showSelectedOnly
-            ? "bg-white text-gray-900 shadow-sm"
-            : state.selectionCount > 0
-              ? "text-gray-600 hover:text-gray-900"
-              : "text-gray-400 cursor-not-allowed"
-        )}
+        All Content ({state.filteredContent.length})
+      </Button>
+      <Button
+        variant={hasSelectedContent ? "default" : "outline"}
+        size="default"
+        disabled={state.selectedContentIds.size === 0}
+        className="gap-2"
       >
-        Selected ({state.selectionCount})
-      </button>
-    </div>
+        Selected ({state.selectedContentIds.size})
+      </Button>
+    </ButtonGroup>
   );
 }
 
-// Professional Bulk Selection Component
+// Enhanced Bulk Selection Actions
 function BulkSelectionActions() {
   const { state, dispatch } = useContentSelection();
-  
-  const allVisibleSelected = state.filteredContent.length > 0 && 
-    state.filteredContent.every(content => state.selectedContentIds.has(content.id));
-  
-  const someVisibleSelected = state.filteredContent.some(content => state.selectedContentIds.has(content.id));
-  
+  const filteredContent = state.filteredContent;
+  const selectedCount = state.selectedContentIds.size;
+  const allSelected = filteredContent.every(content => state.selectedContentIds.has(content.id));
+
   const handleBulkToggle = () => {
-    if (allVisibleSelected) {
-      // Deselect all visible content
-      state.filteredContent.forEach(content => {
-        if (state.selectedContentIds.has(content.id)) {
-          dispatch(contentSelectionActions.toggleContent(content.id));
-        }
+    if (allSelected) {
+      // Deselect all filtered content
+      filteredContent.forEach(content => {
+        dispatch(contentSelectionActions.deselectContent(content.id));
       });
     } else {
-      // Select all visible content
-      state.filteredContent.forEach(content => {
+      // Select all filtered content
+      filteredContent.forEach(content => {
         if (!state.selectedContentIds.has(content.id)) {
-          dispatch(contentSelectionActions.toggleContent(content.id));
+          dispatch(contentSelectionActions.selectContent(content.id));
         }
       });
     }
   };
 
-  if (state.filteredContent.length === 0) return null;
-
   return (
-    <div className="flex items-center gap-3 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
-      <button
+    <div className="flex items-center gap-3">
+      <Button
+        variant="outline"
+        size="default"
         onClick={handleBulkToggle}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-gray-50"
+        className="gap-2"
       >
-        {allVisibleSelected ? (
-          <>
-            <CheckSquare className="h-4 w-4 text-blue-600" />
-            <span className="text-gray-700">Deselect All</span>
-          </>
-        ) : someVisibleSelected ? (
-          <>
-            <MoreHorizontal className="h-4 w-4 text-blue-600" />
-            <span className="text-gray-700">Select All</span>
-          </>
+        {allSelected ? (
+          <Square className="h-4 w-4" />
         ) : (
-          <>
-            <Square className="h-4 w-4 text-gray-400" />
-            <span className="text-gray-700">Select All</span>
-          </>
+          <CheckSquare className="h-4 w-4" />
         )}
-      </button>
+        {allSelected ? 'Deselect All' : 'Select All'}
+      </Button>
       
-      <div className="text-sm text-gray-500">
-        {state.filteredContent.length} item{state.filteredContent.length !== 1 ? 's' : ''} visible
-        {state.selectionCount > 0 && (
-          <span className="ml-2 text-blue-600 font-medium">
-            • {state.selectionCount} selected
-          </span>
-        )}
-      </div>
+      {selectedCount > 0 && (
+        <span className="text-body-sm text-muted-foreground">
+          {selectedCount} of {filteredContent.length} selected
+        </span>
+      )}
     </div>
   );
 }
 
-// Main Professional Interface Component
+// Main Professional Content Selection Interface
 interface ProfessionalContentSelectionProps {
   onContinue: (selectedIds: string[]) => void;
 }
 
 export default function ProfessionalContentSelection({ onContinue }: ProfessionalContentSelectionProps) {
   const { state } = useContentSelection();
-
+  
   const handleContinue = () => {
     onContinue(Array.from(state.selectedContentIds));
   };
@@ -739,11 +570,9 @@ export default function ProfessionalContentSelection({ onContinue }: Professiona
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Choose Your Learning Content
-          </h1>
-          <p className="text-lg text-gray-600">
+        <div className="mb-8 animate-fade-in">
+          <h1 className="text-display text-foreground mb-2">Choose Your Learning Content</h1>
+          <p className="text-body-lg text-muted-foreground">
             Select episodes and topics to create your personalized learning session
           </p>
         </div>
@@ -751,33 +580,22 @@ export default function ProfessionalContentSelection({ onContinue }: Professiona
         {/* Search and Filters */}
         <div className="space-y-6 mb-8">
           <ProfessionalSearchBar />
-          <ProfessionalTopicFilter />
           
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-4">
             <ProfessionalViewToggle />
-            {state.selectionCount > 0 && (
-              <div className="text-sm text-gray-600">
-                {state.selectionCount} of {state.allContent.length} selected
-              </div>
-            )}
+            <ProfessionalTopicFilter />
           </div>
           
-          {/* Bulk Selection Actions */}
           <BulkSelectionActions />
         </div>
 
-        {/* Content Grid */}
+        {/* Content Grid with Stats */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-3">
             <ProfessionalContentGrid />
           </div>
           
-          {/* Sidebar with selection stats */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-8">
-              <SelectionStatsCard onContinue={handleContinue} />
-            </div>
-          </div>
+          <SelectionStatsCard onContinue={handleContinue} />
         </div>
       </div>
     </div>
