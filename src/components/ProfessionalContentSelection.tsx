@@ -289,7 +289,7 @@ function ProfessionalTopicFilter() {
 }
 
 // Professional Selection Stats Card
-function SelectionStatsCard() {
+function SelectionStatsCard({ onContinue }: { onContinue?: () => void }) {
   const { state } = useContentSelection();
   
   if (state.selectionCount === 0) return null;
@@ -346,7 +346,7 @@ function SelectionStatsCard() {
         
         <Button 
           className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
-          onClick={() => {}}
+          onClick={onContinue}
         >
           Start Learning Session
           <ArrowRight className="ml-2 h-5 w-5" />
@@ -680,7 +680,7 @@ export default function ProfessionalContentSelection({ onContinue }: Professiona
           {/* Sidebar with selection stats */}
           <div className="lg:col-span-1">
             <div className="sticky top-8">
-              <SelectionStatsCard />
+              <SelectionStatsCard onContinue={handleContinue} />
             </div>
           </div>
         </div>
