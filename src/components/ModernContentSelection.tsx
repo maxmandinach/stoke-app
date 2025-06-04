@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
-import { Search, Filter } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 // Content Type Badge Component
 function ContentTypeBadge({ source }: { source: string }) {
