@@ -3,10 +3,10 @@
 import React, { useEffect } from 'react';
 import { useContentSelection, contentSelectionActions } from '@/contexts/ContentSelectionContext';
 import { SessionConfigurationProvider } from '@/contexts/SessionConfigurationContext';
-import { AppCoordinator } from './AppCoordinator';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
-import ModernContentSelectionInterface from './ModernContentSelectionInterface';
-import { ErrorBoundary } from './ui/ErrorBoundary';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
+import { AppCoordinator } from '@/components/AppCoordinator';
+import ModernContentSelection from '@/components/ModernContentSelection';
 
 // Mock data for demonstration (in production, this would come from Supabase)
 const mockContent = [
@@ -277,7 +277,7 @@ export default function ContentLibrary() {
     <SessionConfigurationProvider>
       {useNewDesign ? (
         <ErrorBoundary fallback={<AppCoordinator />}>
-          <ModernContentSelectionInterface onContinue={handleContentSelection} />
+          <ModernContentSelection onContinue={handleContentSelection} />
         </ErrorBoundary>
       ) : (
         <AppCoordinator />
