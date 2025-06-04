@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { useContentSelection, contentSelectionActions } from '@/contexts/ContentSelectionContext';
 import { SessionConfigurationProvider } from '@/contexts/SessionConfigurationContext';
-import ModernContentSelection from '@/components/ModernContentSelection';
+import ProfessionalContentSelection from '@/components/ProfessionalContentSelection';
 
 // Mock data for demonstration (in production, this would come from Supabase)
 const mockContent = [
@@ -270,7 +270,7 @@ export default function ContentLibrary() {
 
   return (
     <SessionConfigurationProvider>
-      <ModernContentSelection onContinue={handleContentSelection} />
+      <ProfessionalContentSelection onContinue={handleContentSelection} />
     </SessionConfigurationProvider>
   );
 } 
