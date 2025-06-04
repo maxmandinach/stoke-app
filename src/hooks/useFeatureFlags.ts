@@ -25,15 +25,18 @@ export const useFeatureFlags = (): FeatureFlags => {
   
   // In development, allow localStorage override
   let localStorageOverride = true;
+  let hasLocalStorageOverride = false;
+  
   if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
     const stored = localStorage.getItem('stoke_dev_use_new_design');
     if (stored !== null) {
       localStorageOverride = stored === 'true';
+      hasLocalStorageOverride = true;
     }
   }
   
-  const useNewDesign = process.env.NODE_ENV === 'development' 
-    ? (localStorage.getItem('stoke_dev_use_new_design') !== null ? localStorageOverride : envUseNewDesign)
+  const useNewDesign = process.env.NODE_ENV === 'development' && hasLocalStorageOverride
+    ? localStorageOverride 
     : envUseNewDesign;
 
   return {
