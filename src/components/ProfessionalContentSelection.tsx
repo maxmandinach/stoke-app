@@ -1,3 +1,26 @@
+/**
+ * Professional Content Selection Interface
+ * 
+ * DEVELOPMENT STRATEGY:
+ * - TypeScript is configured to allow unused imports/variables (see tsconfig.json)
+ * - This prevents build failures when preparing code for incremental development
+ * - Imports may be "unused" temporarily while features are being developed
+ * - DO NOT remove imports just to fix build errors - they may be planned for upcoming features
+ * 
+ * CURRENT FEATURES:
+ * - Professional card-based content selection with hover effects
+ * - Advanced search and topic filtering with gradient selections
+ * - Bulk selection actions (select all / deselect all)
+ * - Real-time session preview with statistics
+ * - Mobile-optimized responsive design
+ * - Progress indicators and mastery level badges
+ * 
+ * PLANNED FEATURES (imports prepared):
+ * - PlayCircle: Video/audio content play buttons
+ * - Enhanced bulk operations with more granular selection
+ * - Additional content type indicators and interactions
+ */
+
 'use client';
 
 import React, { useState, useCallback } from 'react';
@@ -9,6 +32,7 @@ import { cn } from '@/lib/utils';
 import { 
   Search, 
   Clock, 
+  PlayCircle,
   FileText, 
   BookOpen, 
   Mic, 
@@ -21,7 +45,10 @@ import {
   TrendingUp,
   Calendar,
   Target,
-  Zap
+  Zap,
+  CheckSquare,
+  Square,
+  MoreHorizontal
 } from 'lucide-react';
 
 // Professional Content Type Badge with enhanced styling
@@ -631,6 +658,71 @@ function ProfessionalViewToggle() {
   );
 }
 
+// Professional Bulk Selection Component
+function BulkSelectionActions() {
+  const { state, dispatch } = useContentSelection();
+  
+  const allVisibleSelected = state.filteredContent.length > 0 && 
+    state.filteredContent.every(content => state.selectedContentIds.has(content.id));
+  
+  const someVisibleSelected = state.filteredContent.some(content => state.selectedContentIds.has(content.id));
+  
+  const handleBulkToggle = () => {
+    if (allVisibleSelected) {
+      // Deselect all visible content
+      state.filteredContent.forEach(content => {
+        if (state.selectedContentIds.has(content.id)) {
+          dispatch(contentSelectionActions.toggleContent(content.id));
+        }
+      });
+    } else {
+      // Select all visible content
+      state.filteredContent.forEach(content => {
+        if (!state.selectedContentIds.has(content.id)) {
+          dispatch(contentSelectionActions.toggleContent(content.id));
+        }
+      });
+    }
+  };
+
+  if (state.filteredContent.length === 0) return null;
+
+  return (
+    <div className="flex items-center gap-3 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+      <button
+        onClick={handleBulkToggle}
+        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-gray-50"
+      >
+        {allVisibleSelected ? (
+          <>
+            <CheckSquare className="h-4 w-4 text-blue-600" />
+            <span className="text-gray-700">Deselect All</span>
+          </>
+        ) : someVisibleSelected ? (
+          <>
+            <MoreHorizontal className="h-4 w-4 text-blue-600" />
+            <span className="text-gray-700">Select All</span>
+          </>
+        ) : (
+          <>
+            <Square className="h-4 w-4 text-gray-400" />
+            <span className="text-gray-700">Select All</span>
+          </>
+        )}
+      </button>
+      
+      <div className="text-sm text-gray-500">
+        {state.filteredContent.length} item{state.filteredContent.length !== 1 ? 's' : ''} visible
+        {state.selectionCount > 0 && (
+          <span className="ml-2 text-blue-600 font-medium">
+            • {state.selectionCount} selected
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // Main Professional Interface Component
 interface ProfessionalContentSelectionProps {
   onContinue: (selectedIds: string[]) => void;
@@ -669,6 +761,9 @@ export default function ProfessionalContentSelection({ onContinue }: Professiona
               </div>
             )}
           </div>
+          
+          {/* Bulk Selection Actions */}
+          <BulkSelectionActions />
         </div>
 
         {/* Content Grid */}
