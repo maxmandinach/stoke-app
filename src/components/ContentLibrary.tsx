@@ -1,17 +1,13 @@
 'use client';
 
-import React, { useEffect, useState, useCallback, memo } from 'react';
-import { useContentSelection, contentSelectionActions, ContentWithTopics } from '@/contexts/ContentSelectionContext';
+import React, { useEffect, useState } from 'react';
+import { useContentSelection, contentSelectionActions } from '@/contexts/ContentSelectionContext';
 import { SessionConfigurationProvider } from '@/contexts/SessionConfigurationContext';
 import StokeHeader from '@/components/modern/StokeHeader';
-import HorizontalFilterBar from '@/components/modern/HorizontalFilterBar';
+import ContentSectionHeader from '@/components/modern/ContentSectionHeader';
+import FilterToolbar from '@/components/modern/FilterToolbar';
 import SelectionSummary from '@/components/modern/SelectionSummary';
 import BottomNavigation from '@/components/modern/BottomNavigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
-import { Clock, PlayCircle, FileText, BookOpen, Mic, Check } from 'lucide-react';
 
 // Mock data for demonstration (in production, this would come from Supabase)
 const mockContent = [
@@ -184,462 +180,44 @@ const mockContent = [
   }
 ];
 
-const mockTopics = [
-  {
-    id: 't1',
-    name: 'Science',
-    slug: 'science',
-    description: 'Scientific discoveries and research',
-    color: '#7C3AED',
-    icon: '🔬',
-    sort_order: 10,
-    content_count: 12,
-    total_questions: 156,
-    active_learners_count: 45,
-    parent_topic_id: null,
-    depth_level: 0,
-    is_active: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 't2',
-    name: 'Personal Development',
-    slug: 'personal-development',
-    description: 'Self-improvement and life skills',
-    color: '#F59E0B',
-    icon: '🌱',
-    sort_order: 20,
-    content_count: 18,
-    total_questions: 234,
-    active_learners_count: 78,
-    parent_topic_id: null,
-    depth_level: 0,
-    is_active: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 't3',
-    name: 'Technology',
-    slug: 'technology',
-    description: 'Technology trends and innovation',
-    color: '#3B82F6',
-    icon: '💻',
-    sort_order: 30,
-    content_count: 25,
-    total_questions: 312,
-    active_learners_count: 92,
-    parent_topic_id: null,
-    depth_level: 0,
-    is_active: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 't4',
-    name: 'Education',
-    slug: 'education',
-    description: 'Learning and educational insights',
-    color: '#06B6D4',
-    icon: '📚',
-    sort_order: 40,
-    content_count: 15,
-    total_questions: 198,
-    active_learners_count: 56,
-    parent_topic_id: null,
-    depth_level: 0,
-    is_active: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  }
-];
-
-// Loading Skeleton Components
-const ContentCardSkeleton = memo(() => (
-  <div className="content-card-skeleton animate-fade-in" role="status" aria-label="Loading content">
-    <div className="flex items-start justify-between mb-3">
+// Premium Loading Skeleton Component
+const PremiumContentSkeleton = () => (
+  <div className="bg-white rounded-2xl border border-gray-200 p-6 animate-pulse">
+    <div className="flex items-start justify-between mb-4">
       <div className="flex items-center gap-3">
-        <div className="loading-skeleton w-16 h-6"></div>
-        <div className="loading-skeleton w-12 h-4"></div>
+        <div className="w-12 h-12 bg-gray-200 rounded-xl"></div>
+        <div>
+          <div className="w-20 h-4 bg-gray-200 rounded mb-2"></div>
+          <div className="w-16 h-3 bg-gray-200 rounded"></div>
+        </div>
       </div>
-      <div className="loading-skeleton-avatar w-6 h-6"></div>
+      <div className="w-6 h-6 bg-gray-200 rounded-full"></div>
     </div>
-    
-    <div className="space-y-2 mb-4">
-      <div className="loading-skeleton-title w-full"></div>
-      <div className="loading-skeleton-title w-3/4"></div>
+    <div className="space-y-3 mb-4">
+      <div className="w-full h-5 bg-gray-200 rounded"></div>
+      <div className="w-3/4 h-5 bg-gray-200 rounded"></div>
     </div>
-    
     <div className="flex gap-2 mb-4">
-      <div className="loading-skeleton w-16 h-5 rounded-full"></div>
-      <div className="loading-skeleton w-20 h-5 rounded-full"></div>
+      <div className="w-16 h-6 bg-gray-200 rounded-full"></div>
+      <div className="w-20 h-6 bg-gray-200 rounded-full"></div>
     </div>
-    
-    <div className="space-y-2">
-      <div className="flex justify-between">
-        <div className="loading-skeleton w-16 h-4"></div>
-        <div className="loading-skeleton w-8 h-4"></div>
-      </div>
-      <div className="loading-skeleton w-full h-2 rounded-full"></div>
-    </div>
-    
-    <span className="sr-only">Loading content card...</span>
+    <div className="w-full h-2 bg-gray-200 rounded-full"></div>
   </div>
-));
+);
 
-ContentCardSkeleton.displayName = 'ContentCardSkeleton';
-
-// Enhanced Content Type Badge Component
-const ContentTypeBadge = memo(({ source }: { source: string }) => {
-  const getTypeConfig = (source: string) => {
-    switch (source) {
-      case 'podcast':
-        return { 
-          label: 'Podcast', 
-          icon: <Mic className="w-3 h-3" aria-hidden="true" />,
-          bgColor: 'bg-orange-100',
-          textColor: 'text-orange-700',
-          borderColor: 'border-orange-200'
-        };
-      case 'video':
-        return { 
-          label: 'Video', 
-          icon: <PlayCircle className="w-3 h-3" aria-hidden="true" />,
-          bgColor: 'bg-red-100',
-          textColor: 'text-red-700',
-          borderColor: 'border-red-200'
-        };
-      case 'article':
-        return { 
-          label: 'Article', 
-          icon: <FileText className="w-3 h-3" aria-hidden="true" />,
-          bgColor: 'bg-green-100',
-          textColor: 'text-green-700',
-          borderColor: 'border-green-200'
-        };
-      case 'interview':
-        return { 
-          label: 'Interview', 
-          icon: <Mic className="w-3 h-3" aria-hidden="true" />,
-          bgColor: 'bg-blue-100',
-          textColor: 'text-blue-700',
-          borderColor: 'border-blue-200'
-        };
-      default:
-        return { 
-          label: 'Content', 
-          icon: <BookOpen className="w-3 h-3" aria-hidden="true" />,
-          bgColor: 'bg-gray-100',
-          textColor: 'text-gray-700',
-          borderColor: 'border-gray-200'
-        };
-    }
-  };
-
-  const config = getTypeConfig(source);
-
-  return (
-    <span 
-      className={cn(
-        "inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium border transition-colors duration-200",
-        config.bgColor,
-        config.textColor,
-        config.borderColor
-      )}
-      role="img"
-      aria-label={`Content type: ${config.label}`}
-    >
-      {config.icon}
-      {config.label}
-    </span>
-  );
-});
-
-ContentTypeBadge.displayName = 'ContentTypeBadge';
-
-// Enhanced Content Card Component
-const ContentCard = memo(({ content }: { content: ContentWithTopics }) => {
-  const { state, dispatch } = useContentSelection();
-  const isSelected = state.selectedContentIds.has(content.id);
-
-  const toggleSelection = useCallback((e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    dispatch(contentSelectionActions.toggleContent(content.id));
-  }, [content.id, dispatch]);
-
-  const handleCardClick = useCallback(() => {
-    toggleSelection();
-  }, [toggleSelection]);
-
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      toggleSelection();
-    }
-  }, [toggleSelection]);
-
-  const progressPercentage = content.mastery_percentage || 0;
-  const durationMinutes = Math.round((content.duration_hours || 0) * 60);
-
-  return (
-    <Card 
-      className={cn(
-        // Base card styles with enhanced animations
-        "content-card group animate-fade-in",
-        "bg-white rounded-lg shadow-sm hover:shadow-lg",
-        "transition-all duration-300 ease-out cursor-pointer",
-        "focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2",
-        // Selection states with enhanced visual feedback
-        isSelected 
-          ? "content-card selected ring-2 ring-blue-500 bg-blue-50/40 shadow-lg border-blue-300" 
-          : "border border-gray-200 hover:border-gray-300 hover:shadow-md hover:-translate-y-1",
-        // Responsive touch targets
-        "min-h-[140px] md:min-h-[160px]"
-      )}
-      onClick={handleCardClick}
-      onKeyDown={handleKeyDown}
-      tabIndex={0}
-      role="button"
-      aria-pressed={isSelected}
-      aria-label={`${isSelected ? 'Deselect' : 'Select'} ${content.title} - ${durationMinutes} minute ${content.source}`}
-    >
-      {/* Selection Checkbox - Enhanced with better accessibility */}
-      <div className="absolute top-3 right-3 z-10">
-        <button
-          onClick={toggleSelection}
-          onKeyDown={(e) => e.stopPropagation()}
-          className={cn(
-            "touch-target-sm rounded-full border-2 transition-all duration-200 ease-out",
-            "hover:scale-110 focus-visible:scale-110 active:scale-95",
-            "focus-ring-inset",
-            isSelected
-              ? "bg-blue-600 border-blue-600 text-white shadow-sm hover:bg-blue-700"
-              : "border-gray-300 bg-white hover:border-gray-400 hover:shadow-sm hover:bg-gray-50"
-          )}
-          aria-label={`${isSelected ? 'Deselect' : 'Select'} ${content.title}`}
-          aria-pressed={isSelected}
-        >
-          {isSelected && <Check className="w-4 h-4" aria-hidden="true" />}
-        </button>
-      </div>
-
-      <CardHeader className="pb-3">
-        <div className="pr-8 space-y-3">
-          {/* Content Type Badge and Duration */}
-          <div className="flex items-center gap-3">
-            <ContentTypeBadge source={content.source} />
-            <div 
-              className="flex items-center gap-1 text-caption"
-              role="text"
-              aria-label={`Duration: ${durationMinutes} minutes`}
-            >
-              <Clock className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>{durationMinutes}min</span>
-            </div>
-          </div>
-          
-          {/* Title - Enhanced typography */}
-          <CardTitle className={cn(
-            "text-heading-3 leading-tight line-clamp-2",
-            "transition-colors duration-200 group-hover:text-gray-800",
-            isSelected ? "text-blue-900" : "text-gray-900"
-          )}>
-            {content.title}
-          </CardTitle>
-        </div>
-      </CardHeader>
-      
-      <CardContent className="pt-0 space-y-4">
-        {/* Topics - Enhanced with better accessibility */}
-        {content.topics && content.topics.length > 0 && (
-          <div className="flex flex-wrap gap-1.5" role="list" aria-label="Content topics">
-            {content.topics.slice(0, 3).map((topic) => (
-              <Badge 
-                key={topic.id} 
-                variant="secondary" 
-                className={cn(
-                  "text-xs font-medium transition-all duration-200 hover:scale-105",
-                  isSelected 
-                    ? "bg-blue-100 text-blue-800 border-blue-200" 
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200"
-                )}
-                role="listitem"
-                aria-label={`Topic: ${topic.name}`}
-              >
-                {topic.icon && <span className="mr-1" aria-hidden="true">{topic.icon}</span>}
-                {topic.name}
-              </Badge>
-            ))}
-            {content.topics.length > 3 && (
-              <Badge 
-                variant="secondary" 
-                className="text-xs bg-gray-100 text-gray-600 border-gray-200"
-                role="listitem"
-                aria-label={`${content.topics.length - 3} additional topics`}
-              >
-                +{content.topics.length - 3} more
-              </Badge>
-            )}
-          </div>
-        )}
-        
-        {/* Progress Bar - Enhanced with better accessibility */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-body-sm font-medium text-gray-600">Progress</span>
-            <span className={cn(
-              "text-body-sm font-semibold",
-              isSelected ? "text-blue-700" : "text-gray-900"
-            )}>
-              {progressPercentage}%
-            </span>
-          </div>
-          <div 
-            className="w-full bg-gray-200 rounded-full h-2 overflow-hidden"
-            role="progressbar"
-            aria-valuenow={progressPercentage}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-label={`Learning progress: ${progressPercentage}%`}
-          >
-            <div 
-              className={cn(
-                "h-full rounded-full transition-all duration-700 ease-out",
-                isSelected 
-                  ? "bg-gradient-to-r from-blue-500 to-blue-600" 
-                  : "bg-gradient-to-r from-gray-400 to-gray-500",
-                "transform origin-left group-hover:scale-x-105"
-              )}
-              style={{ width: `${progressPercentage}%` }}
-            />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-});
-
-ContentCard.displayName = 'ContentCard';
-
-// Enhanced Content Grid Component
-const ContentGrid = memo(() => {
-  const { state, dispatch } = useContentSelection();
-
-  if (state.isLoading) {
-    return (
-      <div className="space-y-6" role="status" aria-live="polite" aria-label="Loading content library">
-        {/* Loading header */}
-        <div className="text-center py-8">
-          <div className="inline-flex items-center gap-3 text-body text-gray-600">
-            <div className="animate-spin h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full" aria-hidden="true"></div>
-            <span className="font-medium">Loading your content library...</span>
-          </div>
-        </div>
-        
-        {/* Loading skeleton grid */}
-        <div className={cn(
-          "grid gap-4 md:gap-6",
-          "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
-          "auto-rows-fr"
-        )}>
-          {Array.from({ length: 6 }, (_, i) => (
-            <ContentCardSkeleton key={i} />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (state.error) {
-    return (
-      <div className="text-center py-16" role="alert" aria-live="assertive">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto animate-fade-in">
-          <div className="text-heading-3 text-red-800 mb-3">Unable to load content</div>
-          <div className="text-body text-red-700 mb-4">{state.error}</div>
-          <Button 
-            variant="outline" 
-            className="btn-secondary focus-ring"
-            onClick={() => window.location.reload()}
-          >
-            Try again
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  if (state.filteredContent.length === 0) {
-    const hasFilters = state.filters.selectedTopics.length > 0 || 
-                      state.filters.searchQuery || 
-                      state.filters.showSelectedOnly;
-    
-    return (
-      <div className="text-center py-16" role="status" aria-live="polite">
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 max-w-md mx-auto animate-fade-in">
-          <div className="text-heading-3 text-gray-800 mb-3">
-            {hasFilters ? 'No content matches your filters' : 'Your library is empty'}
-          </div>
-          <div className="text-body text-gray-600 mb-4">
-            {hasFilters 
-              ? 'Try adjusting your search or filter criteria' 
-              : 'Add some content to get started with your learning journey'
-            }
-          </div>
-          {hasFilters && (
-            <Button
-              variant="outline"
-              onClick={() => {
-                dispatch(contentSelectionActions.clearFilters());
-              }}
-              className="btn-secondary focus-ring"
-            >
-              Clear all filters
-            </Button>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div 
-      className={cn(
-        "grid gap-4 md:gap-6",
-        "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
-        "auto-rows-fr"
-      )}
-      role="grid"
-      aria-label={`Content library with ${state.filteredContent.length} items`}
-    >
-      {state.filteredContent.map((content, index) => (
-        <div key={content.id} role="gridcell" style={{ animationDelay: `${index * 50}ms` }}>
-          <ContentCard content={content} />
-        </div>
-      ))}
-    </div>
-  );
-});
-
-ContentGrid.displayName = 'ContentGrid';
-
-// Enhanced Main Component
 export default function ContentLibrary() {
   const { state, dispatch } = useContentSelection();
   const [searchValue, setSearchValue] = useState('');
-  const [activeView, setActiveView] = useState<'all' | 'selected'>('all');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [sortBy, setSortBy] = useState('recent');
+  const [selectedContent, setSelectedContent] = useState<string[]>([]);
 
   // Load mock data on component mount
   useEffect(() => {
     dispatch(contentSelectionActions.setLoading(true));
     
-    // Simulate loading delay with realistic timing
+    // Simulate loading delay
     const loadingTimer = setTimeout(() => {
       dispatch(contentSelectionActions.setContent(mockContent));
-      dispatch(contentSelectionActions.setTopics(mockTopics));
-    }, 800);
+    }, 1200); // Slightly longer to show premium loading
 
     return () => clearTimeout(loadingTimer);
   }, [dispatch]);
@@ -649,93 +227,228 @@ export default function ContentLibrary() {
     dispatch(contentSelectionActions.setFilter({ searchQuery: searchValue }));
   }, [searchValue, dispatch]);
 
-  // Get selected content for counts and actions
-  const selectedContent = state.filteredContent.filter(content => 
-    state.selectedContentIds.has(content.id)
-  );
+  const handleSelectAll = () => {
+    const allIds = state.filteredContent?.map(content => content.id) || [];
+    setSelectedContent(allIds);
+  };
 
-  // Enhanced handler functions
-  const handleSelectAll = useCallback(() => {
-    const allIds = state.filteredContent.map(content => content.id);
-    allIds.forEach(id => {
-      if (!state.selectedContentIds.has(id)) {
-        dispatch(contentSelectionActions.toggleContent(id));
-      }
-    });
-  }, [state.filteredContent, state.selectedContentIds, dispatch]);
+  const handleContinue = () => {
+    console.log('Continuing with selected content:', selectedContent);
+  };
 
-  const handleViewChange = useCallback((view: 'all' | 'selected') => {
-    setActiveView(view);
-    dispatch(contentSelectionActions.setFilter({ showSelectedOnly: view === 'selected' }));
-  }, [dispatch]);
+  const handleTabChange = (tab: string) => {
+    console.log('Navigating to:', tab);
+  };
 
-  const handleClearSelection = useCallback(() => {
-    state.selectedContentIds.forEach(id => {
-      dispatch(contentSelectionActions.toggleContent(id));
-    });
-  }, [state.selectedContentIds, dispatch]);
+  const handleClearSelection = () => {
+    setSelectedContent([]);
+  };
 
-  const handleTabChange = useCallback((tab: 'library' | 'discover' | 'add') => {
-    console.log('Tab changed to:', tab);
-    // TODO: Implement navigation logic with proper routing
-  }, []);
-
-  const handleFilterClick = useCallback(() => {
-    console.log('Filter clicked');
-    // TODO: Implement filter modal/sidebar with advanced filtering
-  }, []);
-
-  const handleContentSelection = useCallback((selectedIds: string[]) => {
-    console.log('Content selected:', selectedIds);
-    // TODO: Implement navigation to session configuration with proper routing
-  }, []);
-
-  const handleContinue = useCallback(() => {
-    const selectedIds = Array.from(state.selectedContentIds);
-    handleContentSelection(selectedIds);
-  }, [state.selectedContentIds, handleContentSelection]);
+  const getSourceConfig = (source: string) => {
+    switch (source) {
+      case 'podcast':
+        return { 
+          icon: '🎧', 
+          label: 'Podcast', 
+          color: 'bg-orange-100 text-orange-700 border-orange-200',
+          accentColor: 'bg-orange-500'
+        };
+      case 'video':
+        return { 
+          icon: '📹', 
+          label: 'Video', 
+          color: 'bg-red-100 text-red-700 border-red-200',
+          accentColor: 'bg-red-500'
+        };
+      case 'interview':
+        return { 
+          icon: '💬', 
+          label: 'Interview', 
+          color: 'bg-blue-100 text-blue-700 border-blue-200',
+          accentColor: 'bg-blue-500'
+        };
+      default:
+        return { 
+          icon: '📄', 
+          label: 'Article', 
+          color: 'bg-gray-100 text-gray-700 border-gray-200',
+          accentColor: 'bg-gray-500'
+        };
+    }
+  };
 
   return (
     <SessionConfigurationProvider>
       <div className="min-h-screen bg-gray-50">
-        {/* Modern Header with enhanced typography */}
-        <StokeHeader title="Choose Your Learning Content" />
+        {/* Professional Header */}
+        <StokeHeader />
         
-        {/* Horizontal Filter Bar with enhanced accessibility */}
-        <HorizontalFilterBar 
+        {/* Content Section Introduction */}
+        <ContentSectionHeader />
+        
+        {/* Modern Filter Toolbar */}
+        <FilterToolbar 
           searchValue={searchValue}
           onSearchChange={setSearchValue}
-          contentCount={state.allContent.length}
+          contentCount={state.allContent?.length || 0}
           selectedCount={selectedContent.length}
           onSelectAll={handleSelectAll}
-          activeView={activeView}
-          onViewChange={handleViewChange}
-          viewMode={viewMode}
-          onViewModeChange={setViewMode}
-          sortBy={sortBy}
-          onSortChange={setSortBy}
-          onFilterClick={handleFilterClick}
         />
         
-        {/* Main Content Area with proper spacing and accessibility */}
-        <main 
-          className="pt-[120px] pb-20 lg:pb-8 px-4 sm:px-6 lg:px-8"
-          role="main"
-          aria-label="Content library"
-        >
-          <div className="max-w-7xl mx-auto">
-            <ContentGrid />
+        {/* Main Content Area with Proper Spacing */}
+        <main className="pt-8 pb-28 md:pb-12" style={{ marginTop: '80px' }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {state.isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <PremiumContentSkeleton key={i} />
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {state.filteredContent?.map((content) => {
+                  const isSelected = selectedContent.includes(content.id);
+                  const sourceConfig = getSourceConfig(content.source);
+                  
+                  return (
+                    <div 
+                      key={content.id}
+                      className={`group relative bg-white rounded-2xl border-2 transition-all duration-300 cursor-pointer overflow-hidden ${
+                        isSelected 
+                          ? 'border-blue-500 shadow-xl shadow-blue-500/20 bg-gradient-to-br from-blue-50 to-white scale-[1.02]' 
+                          : 'border-gray-200 hover:border-gray-300 hover:shadow-2xl hover:shadow-gray-500/10 hover:scale-[1.01]'
+                      }`}
+                      onClick={() => {
+                        if (isSelected) {
+                          setSelectedContent(prev => prev.filter(id => id !== content.id));
+                        } else {
+                          setSelectedContent(prev => [...prev, content.id]);
+                        }
+                      }}
+                    >
+                      {/* Premium Selection Indicator */}
+                      <div className="absolute top-5 right-5 z-10">
+                        <div className={`w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+                          isSelected 
+                            ? 'bg-blue-600 border-blue-600 text-white shadow-lg scale-110' 
+                            : 'border-gray-300 bg-white/80 backdrop-blur-sm hover:border-gray-400 hover:scale-105'
+                        }`}>
+                          {isSelected && (
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Premium Content Header */}
+                      <div className="p-6 pb-4">
+                        <div className="flex items-center gap-4 mb-4">
+                          <div className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-sm font-semibold ${sourceConfig.color}`}>
+                            <span className="text-lg">{sourceConfig.icon}</span>
+                            {sourceConfig.label}
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-500 bg-gray-50 px-3 py-1.5 rounded-lg">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <circle cx="12" cy="12" r="10"></circle>
+                              <polyline points="12,6 12,12 16,14"></polyline>
+                            </svg>
+                            <span className="font-medium">{Math.round(content.duration_hours * 60)}min</span>
+                          </div>
+                        </div>
+                        
+                        {/* Enhanced Title */}
+                        <h3 className={`text-xl font-bold mb-3 leading-tight transition-all duration-300 ${
+                          isSelected ? 'text-blue-900' : 'text-gray-900 group-hover:text-gray-800'
+                        }`}>
+                          {content.title}
+                        </h3>
+                      </div>
+
+                      {/* Premium Topics Section */}
+                      {content.topics && content.topics.length > 0 && (
+                        <div className="px-6 pb-4">
+                          <div className="flex flex-wrap gap-2">
+                            {content.topics.slice(0, 2).map((topic) => (
+                              <span 
+                                key={topic.id} 
+                                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 ${
+                                  isSelected 
+                                    ? 'bg-blue-100 text-blue-800 border-blue-200' 
+                                    : 'bg-gray-100 text-gray-700 border-gray-200 group-hover:bg-gray-200'
+                                }`}
+                                style={{ 
+                                  backgroundColor: topic.color ? `${topic.color}15` : undefined, 
+                                  borderColor: topic.color ? `${topic.color}30` : undefined, 
+                                  color: topic.color || undefined 
+                                }}
+                              >
+                                <span className="text-sm">{topic.icon}</span>
+                                {topic.name}
+                              </span>
+                            ))}
+                            {content.topics.length > 2 && (
+                              <span className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200">
+                                +{content.topics.length - 2}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Premium Progress Section */}
+                      <div className="px-6 pb-6">
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-semibold text-gray-600">Learning Progress</span>
+                            <span className={`text-sm font-bold ${
+                              isSelected ? 'text-blue-700' : 'text-gray-900'
+                            }`}>
+                              {content.mastery_percentage}%
+                            </span>
+                          </div>
+                          <div className="relative w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                            <div 
+                              className={`h-full rounded-full transition-all duration-700 ease-out ${
+                                isSelected 
+                                  ? 'bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700' 
+                                  : 'bg-gradient-to-r from-gray-400 via-gray-500 to-gray-600'
+                              }`}
+                              style={{ width: `${content.mastery_percentage}%` }}
+                            />
+                            <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transition-opacity duration-300 ${
+                              isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-50'
+                            }`}></div>
+                          </div>
+                          
+                          {/* Additional Metrics */}
+                          <div className="flex items-center justify-between text-xs text-gray-500 pt-1">
+                            <span>{content.total_questions} questions</span>
+                            <span>{content.questions_due_count} due</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Premium Gradient Overlay */}
+                      <div className={`absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-white/10 pointer-events-none transition-opacity duration-300 ${
+                        isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-50'
+                      }`}></div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </main>
         
-        {/* Floating Selection Summary with enhanced animations */}
+        {/* Selection Summary */}
         <SelectionSummary 
           selectedCount={selectedContent.length}
           onContinue={handleContinue}
           onClear={handleClearSelection}
         />
         
-        {/* Bottom Navigation with proper accessibility */}
+        {/* Bottom Navigation */}
         <BottomNavigation 
           activeTab="library"
           onTabChange={handleTabChange}
