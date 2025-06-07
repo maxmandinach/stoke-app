@@ -1,4 +1,7 @@
-import * as React from "react"
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 import { 
   Search, 
   Filter, 
@@ -6,17 +9,7 @@ import {
   List, 
   ChevronDown,
   Check
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { cn } from "@/lib/utils"
+} from 'lucide-react';
 
 interface HorizontalFilterBarProps {
   searchValue: string;
@@ -24,14 +17,13 @@ interface HorizontalFilterBarProps {
   contentCount: number;
   selectedCount: number;
   onSelectAll: () => void;
-  activeView: "all" | "selected";
-  onViewChange: (view: "all" | "selected") => void;
-  viewMode: "grid" | "list";
-  onViewModeChange: (mode: "grid" | "list") => void;
+  activeView: 'all' | 'selected';
+  onViewChange: (view: 'all' | 'selected') => void;
+  viewMode: 'grid' | 'list';
+  onViewModeChange: (mode: 'grid' | 'list') => void;
   sortBy: string;
   onSortChange: (sort: string) => void;
-  onFilterClick?: () => void;
-  className?: string;
+  onFilterClick: () => void;
 }
 
 export default function HorizontalFilterBar({
@@ -46,168 +38,181 @@ export default function HorizontalFilterBar({
   onViewModeChange,
   sortBy,
   onSortChange,
-  onFilterClick,
-  className
+  onFilterClick
 }: HorizontalFilterBarProps) {
   return (
     <div 
       className={cn(
-        // Base styles
-        "sticky bg-white border-b border-gray-200/80 backdrop-blur-md z-40",
-        // Positioning - below header
-        "top-14 md:top-16",
-        // Height and padding
-        "h-14 px-4 md:px-6",
-        className
+        // Fixed positioning below header
+        "fixed left-0 right-0 z-40",
+        "top-14 sm:top-16",
+        // Enhanced backdrop and styling
+        "bg-white/95 backdrop-blur-lg border-b border-gray-200/80",
+        "shadow-sm"
       )}
+      role="toolbar"
+      aria-label="Content filtering and view options"
     >
-      <div className="flex items-center justify-between h-full max-w-full">
-        {/* Left Section - Search and Content Toggles */}
-        <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-3 sm:gap-4 h-14">
           {/* Search Input */}
-          <div className="relative flex-1 max-w-[320px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <div className="relative flex-1 max-w-xs">
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+              <Search className="w-4 h-4 text-gray-400" aria-hidden="true" />
+            </div>
             <Input
-              type="search"
-              placeholder="Search episodes, topics..."
+              type="text"
+              placeholder="Search content..."
               value={searchValue}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="pl-10 h-9 bg-white border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className={cn(
+                "pl-10 h-9 text-body-sm",
+                "input-enhanced",
+                "focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              )}
+              aria-label="Search content by title or topic"
             />
           </div>
 
-          {/* Content Toggle Buttons */}
-          <div className="hidden sm:flex items-center bg-gray-100 rounded-lg p-1">
-            <Button
-              variant={activeView === "all" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => onViewChange("all")}
+          {/* Content View Toggle */}
+          <div className="flex items-center bg-gray-100 rounded-lg p-1">
+            <button
+              onClick={() => onViewChange('all')}
               className={cn(
-                "h-7 px-3 text-xs font-medium rounded-md",
-                activeView === "all" 
-                  ? "bg-white shadow-sm text-gray-900" 
-                  : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
+                "px-3 py-1.5 rounded-md text-body-sm font-medium transition-all duration-200",
+                "focus-ring-inset",
+                activeView === 'all'
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
               )}
+              aria-pressed={activeView === 'all'}
+              aria-label={`Show all content (${contentCount} items)`}
             >
-              All Content ({contentCount})
-            </Button>
-            <Button
-              variant={activeView === "selected" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => onViewChange("selected")}
+              All <span className="ml-1 font-semibold">({contentCount})</span>
+            </button>
+            <button
+              onClick={() => onViewChange('selected')}
               className={cn(
-                "h-7 px-3 text-xs font-medium rounded-md",
-                activeView === "selected" 
-                  ? "bg-white shadow-sm text-gray-900" 
-                  : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
+                "px-3 py-1.5 rounded-md text-body-sm font-medium transition-all duration-200",
+                "focus-ring-inset",
+                activeView === 'selected'
+                  ? "bg-blue-600 text-white shadow-sm"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
               )}
+              aria-pressed={activeView === 'selected'}
+              aria-label={`Show selected content (${selectedCount} items)`}
             >
-              Selected ({selectedCount})
-            </Button>
+              Selected <span className="ml-1 font-semibold">({selectedCount})</span>
+            </button>
           </div>
-        </div>
 
-        {/* Right Section - Controls */}
-        <div className="flex items-center gap-2 md:gap-3">
+          {/* Divider - Hidden on mobile */}
+          <div className="hidden sm:block w-px h-6 bg-gray-300" aria-hidden="true" />
+
           {/* Filter Button */}
           <Button
             variant="outline"
             size="sm"
             onClick={onFilterClick}
-            className="h-9 px-3 border-gray-200 hover:border-gray-300 hidden sm:flex"
+            className={cn(
+              "hidden sm:flex items-center gap-2 h-9",
+              "btn-secondary border-gray-300 hover:border-gray-400"
+            )}
+            aria-label="Open advanced filters"
+            aria-haspopup="dialog"
           >
-            <Filter className="h-4 w-4" />
-            <span className="hidden md:inline ml-1">Filter</span>
+            <Filter className="w-4 h-4" aria-hidden="true" />
+            <span className="text-body-sm">Filter</span>
           </Button>
 
           {/* View Mode Toggle */}
-          <div className="flex items-center bg-gray-100 rounded-lg p-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onViewModeChange("grid")}
+          <div className="hidden md:flex items-center bg-gray-100 rounded-lg p-1">
+            <button
+              onClick={() => onViewModeChange('grid')}
               className={cn(
-                "h-7 w-7 p-0 rounded-md",
-                viewMode === "grid" 
-                  ? "bg-white shadow-sm text-gray-900" 
-                  : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
+                "p-1.5 rounded transition-all duration-200",
+                "focus-ring-inset",
+                viewMode === 'grid'
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
               )}
+              aria-pressed={viewMode === 'grid'}
+              aria-label="Grid view"
             >
-              <Grid3X3 className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onViewModeChange("list")}
+              <Grid3X3 className="w-4 h-4" aria-hidden="true" />
+            </button>
+            <button
+              onClick={() => onViewModeChange('list')}
               className={cn(
-                "h-7 w-7 p-0 rounded-md",
-                viewMode === "list" 
-                  ? "bg-white shadow-sm text-gray-900" 
-                  : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
+                "p-1.5 rounded transition-all duration-200",
+                "focus-ring-inset",
+                viewMode === 'list'
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
               )}
+              aria-pressed={viewMode === 'list'}
+              aria-label="List view"
             >
-              <List className="h-4 w-4" />
-            </Button>
+              <List className="w-4 h-4" aria-hidden="true" />
+            </button>
           </div>
 
           {/* Sort Dropdown */}
-          <Select value={sortBy} onValueChange={onSortChange}>
-            <SelectTrigger className="h-9 w-auto min-w-[100px] border-gray-200 bg-white hover:border-gray-300">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-700 hidden md:inline">Sort</span>
-                <SelectValue />
-              </div>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="recent">Most Recent</SelectItem>
-              <SelectItem value="alphabetical">Alphabetical</SelectItem>
-              <SelectItem value="duration">Duration</SelectItem>
-              <SelectItem value="popularity">Popularity</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="relative hidden lg:block">
+            <select
+              value={sortBy}
+              onChange={(e) => onSortChange(e.target.value)}
+              className={cn(
+                "appearance-none bg-white border border-gray-300 rounded-lg",
+                "px-3 py-1.5 pr-8 h-9 text-body-sm",
+                "hover:border-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500",
+                "transition-all duration-200"
+              )}
+              aria-label="Sort content by"
+            >
+              <option value="recent">Recent</option>
+              <option value="title">Title</option>
+              <option value="progress">Progress</option>
+              <option value="duration">Duration</option>
+            </select>
+            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none">
+              <ChevronDown className="w-4 h-4 text-gray-400" aria-hidden="true" />
+            </div>
+          </div>
 
           {/* Select All Button */}
           <Button
             variant="outline"
             size="sm"
             onClick={onSelectAll}
-            className="h-9 px-3 border-gray-200 hover:border-gray-300 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+            className={cn(
+              "hidden xl:flex items-center gap-2 h-9",
+              "btn-secondary border-gray-300 hover:border-gray-400",
+              "disabled:opacity-50 disabled:cursor-not-allowed"
+            )}
+            disabled={contentCount === 0}
+            aria-label={`Select all ${contentCount} items`}
           >
-            <Check className="h-4 w-4 md:mr-1" />
-            <span className="hidden md:inline">Select All</span>
+            <Check className="w-4 h-4" aria-hidden="true" />
+            <span className="text-body-sm">Select All</span>
+          </Button>
+
+          {/* Mobile Filter Button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onFilterClick}
+            className={cn(
+              "sm:hidden p-2 h-9 w-9",
+              "btn-secondary border-gray-300 hover:border-gray-400"
+            )}
+            aria-label="Open filters"
+            aria-haspopup="dialog"
+          >
+            <Filter className="w-4 h-4" aria-hidden="true" />
           </Button>
         </div>
       </div>
-
-      {/* Mobile Content Toggles (when hidden on desktop) */}
-      <div className="sm:hidden flex items-center justify-center gap-1 py-2 border-t border-gray-100">
-        <Button
-          variant={activeView === "all" ? "default" : "ghost"}
-          size="sm"
-          onClick={() => onViewChange("all")}
-          className={cn(
-            "h-8 px-4 text-xs font-medium",
-            activeView === "all" 
-              ? "bg-blue-100 text-blue-900 border-blue-200" 
-              : "text-gray-600"
-          )}
-        >
-          All ({contentCount})
-        </Button>
-        <Button
-          variant={activeView === "selected" ? "default" : "ghost"}
-          size="sm"
-          onClick={() => onViewChange("selected")}
-          className={cn(
-            "h-8 px-4 text-xs font-medium",
-            activeView === "selected" 
-              ? "bg-blue-100 text-blue-900 border-blue-200" 
-              : "text-gray-600"
-          )}
-        >
-          Selected ({selectedCount})
-        </Button>
-      </div>
     </div>
-  )
+  );
 } 

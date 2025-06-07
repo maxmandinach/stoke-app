@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, memo } from 'react';
 import { useContentSelection, contentSelectionActions, ContentWithTopics } from '@/contexts/ContentSelectionContext';
 import { SessionConfigurationProvider } from '@/contexts/SessionConfigurationContext';
 import StokeHeader from '@/components/modern/StokeHeader';
@@ -255,14 +255,49 @@ const mockTopics = [
   }
 ];
 
-// Content Type Badge Component
-function ContentTypeBadge({ source }: { source: string }) {
+// Loading Skeleton Components
+const ContentCardSkeleton = memo(() => (
+  <div className="content-card-skeleton animate-fade-in" role="status" aria-label="Loading content">
+    <div className="flex items-start justify-between mb-3">
+      <div className="flex items-center gap-3">
+        <div className="loading-skeleton w-16 h-6"></div>
+        <div className="loading-skeleton w-12 h-4"></div>
+      </div>
+      <div className="loading-skeleton-avatar w-6 h-6"></div>
+    </div>
+    
+    <div className="space-y-2 mb-4">
+      <div className="loading-skeleton-title w-full"></div>
+      <div className="loading-skeleton-title w-3/4"></div>
+    </div>
+    
+    <div className="flex gap-2 mb-4">
+      <div className="loading-skeleton w-16 h-5 rounded-full"></div>
+      <div className="loading-skeleton w-20 h-5 rounded-full"></div>
+    </div>
+    
+    <div className="space-y-2">
+      <div className="flex justify-between">
+        <div className="loading-skeleton w-16 h-4"></div>
+        <div className="loading-skeleton w-8 h-4"></div>
+      </div>
+      <div className="loading-skeleton w-full h-2 rounded-full"></div>
+    </div>
+    
+    <span className="sr-only">Loading content card...</span>
+  </div>
+));
+
+ContentCardSkeleton.displayName = 'ContentCardSkeleton';
+
+// Enhanced Content Type Badge Component
+const ContentTypeBadge = memo(({ source }: { source: string }) => {
   const getTypeConfig = (source: string) => {
     switch (source) {
       case 'podcast':
         return { 
           label: 'Podcast', 
-          icon: <Mic className="w-3 h-3" />,
+          icon: <Mic className="w-3 h-3" aria-hidden="true" />,
           bgColor: 'bg-orange-100',
           textColor: 'text-orange-700',
           borderColor: 'border-orange-200'
@@ -270,7 +305,7 @@ function ContentTypeBadge({ source }: { source: string }) {
       case 'video':
         return { 
           label: 'Video', 
-          icon: <PlayCircle className="w-3 h-3" />,
+          icon: <PlayCircle className="w-3 h-3" aria-hidden="true" />,
           bgColor: 'bg-red-100',
           textColor: 'text-red-700',
           borderColor: 'border-red-200'
@@ -278,7 +313,7 @@ function ContentTypeBadge({ source }: { source: string }) {
       case 'article':
         return { 
           label: 'Article', 
-          icon: <FileText className="w-3 h-3" />,
+          icon: <FileText className="w-3 h-3" aria-hidden="true" />,
           bgColor: 'bg-green-100',
           textColor: 'text-green-700',
           borderColor: 'border-green-200'
@@ -286,7 +321,7 @@ function ContentTypeBadge({ source }: { source: string }) {
       case 'interview':
         return { 
           label: 'Interview', 
-          icon: <Mic className="w-3 h-3" />,
+          icon: <Mic className="w-3 h-3" aria-hidden="true" />,
           bgColor: 'bg-blue-100',
           textColor: 'text-blue-700',
           borderColor: 'border-blue-200'
@@ -294,7 +329,7 @@ function ContentTypeBadge({ source }: { source: string }) {
       default:
         return { 
           label: 'Content', 
-          icon: <BookOpen className="w-3 h-3" />,
+          icon: <BookOpen className="w-3 h-3" aria-hidden="true" />,
           bgColor: 'bg-gray-100',
           textColor: 'text-gray-700',
           borderColor: 'border-gray-200'
@@ -307,20 +342,24 @@ function ContentTypeBadge({ source }: { source: string }) {
   return (
     <span 
       className={cn(
-        "inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium border",
+        "inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium border transition-colors duration-200",
         config.bgColor,
         config.textColor,
         config.borderColor
       )}
+      role="img"
+      aria-label={`Content type: ${config.label}`}
     >
       {config.icon}
       {config.label}
     </span>
   );
-}
+});
 
-// Content Card Component
-function ContentCard({ content }: { content: ContentWithTopics }) {
+ContentTypeBadge.displayName = 'ContentTypeBadge';
+
+// Enhanced Content Card Component
+const ContentCard = memo(({ content }: { content: ContentWithTopics }) => {
   const { state, dispatch } = useContentSelection();
   const isSelected = state.selectedContentIds.has(content.id);
 
@@ -333,54 +372,78 @@ function ContentCard({ content }: { content: ContentWithTopics }) {
     toggleSelection();
   }, [toggleSelection]);
 
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleSelection();
+    }
+  }, [toggleSelection]);
+
+  const progressPercentage = content.mastery_percentage || 0;
+  const durationMinutes = Math.round((content.duration_hours || 0) * 60);
+
   return (
     <Card 
       className={cn(
-        // Base card styles
-        "relative cursor-pointer transition-all duration-300 group",
-        "bg-white rounded-lg shadow-sm hover:shadow-md",
-        // Selection states
+        // Base card styles with enhanced animations
+        "content-card group animate-fade-in",
+        "bg-white rounded-lg shadow-sm hover:shadow-lg",
+        "transition-all duration-300 ease-out cursor-pointer",
+        "focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2",
+        // Selection states with enhanced visual feedback
         isSelected 
-          ? "ring-2 ring-blue-500 bg-blue-50/30 shadow-md transform scale-[1.02]" 
-          : "border border-gray-200 hover:border-gray-300",
+          ? "content-card selected ring-2 ring-blue-500 bg-blue-50/40 shadow-lg border-blue-300" 
+          : "border border-gray-200 hover:border-gray-300 hover:shadow-md hover:-translate-y-1",
         // Responsive touch targets
         "min-h-[140px] md:min-h-[160px]"
       )}
       onClick={handleCardClick}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      role="button"
+      aria-pressed={isSelected}
+      aria-label={`${isSelected ? 'Deselect' : 'Select'} ${content.title} - ${durationMinutes} minute ${content.source}`}
     >
-      {/* Selection Checkbox - Top Right Corner */}
+      {/* Selection Checkbox - Enhanced with better accessibility */}
       <div className="absolute top-3 right-3 z-10">
         <button
           onClick={toggleSelection}
+          onKeyDown={(e) => e.stopPropagation()}
           className={cn(
-            "w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200",
-            "hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+            "touch-target-sm rounded-full border-2 transition-all duration-200 ease-out",
+            "hover:scale-110 focus-visible:scale-110 active:scale-95",
+            "focus-ring-inset",
             isSelected
-              ? "bg-blue-600 border-blue-600 text-white shadow-sm"
-              : "border-gray-300 bg-white hover:border-gray-400 hover:shadow-sm"
+              ? "bg-blue-600 border-blue-600 text-white shadow-sm hover:bg-blue-700"
+              : "border-gray-300 bg-white hover:border-gray-400 hover:shadow-sm hover:bg-gray-50"
           )}
-          aria-label={isSelected ? "Deselect content" : "Select content"}
+          aria-label={`${isSelected ? 'Deselect' : 'Select'} ${content.title}`}
+          aria-pressed={isSelected}
         >
-          {isSelected && <Check className="w-4 h-4" />}
+          {isSelected && <Check className="w-4 h-4" aria-hidden="true" />}
         </button>
       </div>
 
       <CardHeader className="pb-3">
-        <div className="pr-8"> {/* Add padding to avoid checkbox overlap */}
+        <div className="pr-8 space-y-3">
           {/* Content Type Badge and Duration */}
-          <div className="flex items-center gap-3 mb-3">
+          <div className="flex items-center gap-3">
             <ContentTypeBadge source={content.source} />
-            <div className="flex items-center gap-1 text-sm text-gray-500">
-              <Clock className="w-3.5 h-3.5" />
-              <span>{Math.round((content.duration_hours || 0) * 60)}min</span>
+            <div 
+              className="flex items-center gap-1 text-caption"
+              role="text"
+              aria-label={`Duration: ${durationMinutes} minutes`}
+            >
+              <Clock className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>{durationMinutes}min</span>
             </div>
           </div>
           
-          {/* Title */}
+          {/* Title - Enhanced typography */}
           <CardTitle className={cn(
-            "text-base md:text-lg font-semibold leading-tight line-clamp-2",
-            "transition-colors duration-200",
-            isSelected ? "text-blue-900" : "text-gray-900 group-hover:text-gray-700"
+            "text-heading-3 leading-tight line-clamp-2",
+            "transition-colors duration-200 group-hover:text-gray-800",
+            isSelected ? "text-blue-900" : "text-gray-900"
           )}>
             {content.title}
           </CardTitle>
@@ -388,77 +451,119 @@ function ContentCard({ content }: { content: ContentWithTopics }) {
       </CardHeader>
       
       <CardContent className="pt-0 space-y-4">
-        {/* Topics */}
+        {/* Topics - Enhanced with better accessibility */}
         {content.topics && content.topics.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1.5" role="list" aria-label="Content topics">
             {content.topics.slice(0, 3).map((topic) => (
               <Badge 
                 key={topic.id} 
                 variant="secondary" 
                 className={cn(
-                  "text-xs transition-colors duration-200",
+                  "text-xs font-medium transition-all duration-200 hover:scale-105",
                   isSelected 
-                    ? "bg-blue-100 text-blue-700" 
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    ? "bg-blue-100 text-blue-800 border-blue-200" 
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200"
                 )}
+                role="listitem"
+                aria-label={`Topic: ${topic.name}`}
               >
-                {topic.icon && <span className="mr-1">{topic.icon}</span>}
+                {topic.icon && <span className="mr-1" aria-hidden="true">{topic.icon}</span>}
                 {topic.name}
               </Badge>
             ))}
             {content.topics.length > 3 && (
-              <Badge variant="secondary" className="text-xs bg-gray-100 text-gray-600">
+              <Badge 
+                variant="secondary" 
+                className="text-xs bg-gray-100 text-gray-600 border-gray-200"
+                role="listitem"
+                aria-label={`${content.topics.length - 3} additional topics`}
+              >
                 +{content.topics.length - 3} more
               </Badge>
             )}
           </div>
         )}
         
-        {/* Progress Bar */}
+        {/* Progress Bar - Enhanced with better accessibility */}
         <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600 font-medium">Progress</span>
+          <div className="flex items-center justify-between">
+            <span className="text-body-sm font-medium text-gray-600">Progress</span>
             <span className={cn(
-              "font-semibold",
+              "text-body-sm font-semibold",
               isSelected ? "text-blue-700" : "text-gray-900"
             )}>
-              {content.mastery_percentage || 0}%
+              {progressPercentage}%
             </span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div 
+            className="w-full bg-gray-200 rounded-full h-2 overflow-hidden"
+            role="progressbar"
+            aria-valuenow={progressPercentage}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label={`Learning progress: ${progressPercentage}%`}
+          >
             <div 
               className={cn(
-                "h-2 rounded-full transition-all duration-500",
-                isSelected ? "bg-blue-600" : "bg-gray-400"
+                "h-full rounded-full transition-all duration-700 ease-out",
+                isSelected 
+                  ? "bg-gradient-to-r from-blue-500 to-blue-600" 
+                  : "bg-gradient-to-r from-gray-400 to-gray-500",
+                "transform origin-left group-hover:scale-x-105"
               )}
-              style={{ width: `${content.mastery_percentage || 0}%` }}
+              style={{ width: `${progressPercentage}%` }}
             />
           </div>
         </div>
       </CardContent>
     </Card>
   );
-}
+});
 
-// Content Grid Component
-function ContentGrid() {
+ContentCard.displayName = 'ContentCard';
+
+// Enhanced Content Grid Component
+const ContentGrid = memo(() => {
   const { state, dispatch } = useContentSelection();
 
   if (state.isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center py-16">
-        <div className="animate-spin h-8 w-8 border-2 border-blue-600 border-t-transparent rounded-full mb-4"></div>
-        <p className="text-gray-500 font-medium">Loading your content library...</p>
+      <div className="space-y-6" role="status" aria-live="polite" aria-label="Loading content library">
+        {/* Loading header */}
+        <div className="text-center py-8">
+          <div className="inline-flex items-center gap-3 text-body text-gray-600">
+            <div className="animate-spin h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full" aria-hidden="true"></div>
+            <span className="font-medium">Loading your content library...</span>
+          </div>
+        </div>
+        
+        {/* Loading skeleton grid */}
+        <div className={cn(
+          "grid gap-4 md:gap-6",
+          "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
+          "auto-rows-fr"
+        )}>
+          {Array.from({ length: 6 }, (_, i) => (
+            <ContentCardSkeleton key={i} />
+          ))}
+        </div>
       </div>
     );
   }
 
   if (state.error) {
     return (
-      <div className="text-center py-16">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
-          <div className="text-red-700 font-medium mb-2">Error loading content</div>
-          <div className="text-red-600 text-sm">{state.error}</div>
+      <div className="text-center py-16" role="alert" aria-live="assertive">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto animate-fade-in">
+          <div className="text-heading-3 text-red-800 mb-3">Unable to load content</div>
+          <div className="text-body text-red-700 mb-4">{state.error}</div>
+          <Button 
+            variant="outline" 
+            className="btn-secondary focus-ring"
+            onClick={() => window.location.reload()}
+          >
+            Try again
+          </Button>
         </div>
       </div>
     );
@@ -470,10 +575,16 @@ function ContentGrid() {
                       state.filters.showSelectedOnly;
     
     return (
-      <div className="text-center py-16">
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 max-w-md mx-auto">
-          <div className="text-gray-700 font-medium mb-3">
-            {hasFilters ? 'No episodes match your filters' : 'No episodes in your library yet'}
+      <div className="text-center py-16" role="status" aria-live="polite">
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 max-w-md mx-auto animate-fade-in">
+          <div className="text-heading-3 text-gray-800 mb-3">
+            {hasFilters ? 'No content matches your filters' : 'Your library is empty'}
+          </div>
+          <div className="text-body text-gray-600 mb-4">
+            {hasFilters 
+              ? 'Try adjusting your search or filter criteria' 
+              : 'Add some content to get started with your learning journey'
+            }
           </div>
           {hasFilters && (
             <Button
@@ -481,9 +592,9 @@ function ContentGrid() {
               onClick={() => {
                 dispatch(contentSelectionActions.clearFilters());
               }}
-              className="mt-2"
+              className="btn-secondary focus-ring"
             >
-              Clear filters
+              Clear all filters
             </Button>
           )}
         </div>
@@ -492,20 +603,27 @@ function ContentGrid() {
   }
 
   return (
-    <div className={cn(
-      "grid gap-4 md:gap-6",
-      // Responsive grid columns
-      "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
-      // Ensure proper spacing
-      "auto-rows-fr"
-    )}>
-      {state.filteredContent.map(content => (
-        <ContentCard key={content.id} content={content} />
+    <div 
+      className={cn(
+        "grid gap-4 md:gap-6",
+        "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
+        "auto-rows-fr"
+      )}
+      role="grid"
+      aria-label={`Content library with ${state.filteredContent.length} items`}
+    >
+      {state.filteredContent.map((content, index) => (
+        <div key={content.id} role="gridcell" style={{ animationDelay: `${index * 50}ms` }}>
+          <ContentCard content={content} />
+        </div>
       ))}
     </div>
   );
-}
+});
 
+ContentGrid.displayName = 'ContentGrid';
+
+// Enhanced Main Component
 export default function ContentLibrary() {
   const { state, dispatch } = useContentSelection();
   const [searchValue, setSearchValue] = useState('');
@@ -517,11 +635,13 @@ export default function ContentLibrary() {
   useEffect(() => {
     dispatch(contentSelectionActions.setLoading(true));
     
-    // Simulate loading delay
-    setTimeout(() => {
+    // Simulate loading delay with realistic timing
+    const loadingTimer = setTimeout(() => {
       dispatch(contentSelectionActions.setContent(mockContent));
       dispatch(contentSelectionActions.setTopics(mockTopics));
-    }, 500);
+    }, 800);
+
+    return () => clearTimeout(loadingTimer);
   }, [dispatch]);
 
   // Update search filter when searchValue changes
@@ -534,7 +654,7 @@ export default function ContentLibrary() {
     state.selectedContentIds.has(content.id)
   );
 
-  // Handler functions for the new components
+  // Enhanced handler functions
   const handleSelectAll = useCallback(() => {
     const allIds = state.filteredContent.map(content => content.id);
     allIds.forEach(id => {
@@ -557,19 +677,17 @@ export default function ContentLibrary() {
 
   const handleTabChange = useCallback((tab: 'library' | 'discover' | 'add') => {
     console.log('Tab changed to:', tab);
-    // TODO: Implement navigation logic
+    // TODO: Implement navigation logic with proper routing
   }, []);
 
   const handleFilterClick = useCallback(() => {
     console.log('Filter clicked');
-    // TODO: Implement filter modal/sidebar
+    // TODO: Implement filter modal/sidebar with advanced filtering
   }, []);
 
-  // Callback handler for content selection continuation
   const handleContentSelection = useCallback((selectedIds: string[]) => {
-    // Navigate to session configuration with selected content
     console.log('Content selected:', selectedIds);
-    // TODO: Implement navigation to session configuration
+    // TODO: Implement navigation to session configuration with proper routing
   }, []);
 
   const handleContinue = useCallback(() => {
@@ -580,10 +698,10 @@ export default function ContentLibrary() {
   return (
     <SessionConfigurationProvider>
       <div className="min-h-screen bg-gray-50">
-        {/* Modern Header */}
+        {/* Modern Header with enhanced typography */}
         <StokeHeader title="Choose Your Learning Content" />
         
-        {/* Horizontal Filter Bar */}
+        {/* Horizontal Filter Bar with enhanced accessibility */}
         <HorizontalFilterBar 
           searchValue={searchValue}
           onSearchChange={setSearchValue}
@@ -599,21 +717,25 @@ export default function ContentLibrary() {
           onFilterClick={handleFilterClick}
         />
         
-        {/* Main Content Area with proper spacing */}
-        <main className="pt-[120px] pb-20 lg:pb-8 px-4 sm:px-6 lg:px-8">
+        {/* Main Content Area with proper spacing and accessibility */}
+        <main 
+          className="pt-[120px] pb-20 lg:pb-8 px-4 sm:px-6 lg:px-8"
+          role="main"
+          aria-label="Content library"
+        >
           <div className="max-w-7xl mx-auto">
             <ContentGrid />
           </div>
         </main>
         
-        {/* Floating Selection Summary */}
+        {/* Floating Selection Summary with enhanced animations */}
         <SelectionSummary 
           selectedCount={selectedContent.length}
           onContinue={handleContinue}
           onClear={handleClearSelection}
         />
         
-        {/* Bottom Navigation (Mobile Only) */}
+        {/* Bottom Navigation with proper accessibility */}
         <BottomNavigation 
           activeTab="library"
           onTabChange={handleTabChange}

@@ -1,7 +1,7 @@
-import * as React from "react"
-import { X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { X, ArrowRight } from 'lucide-react';
 
 interface SelectionSummaryProps {
   selectedCount: number;
@@ -16,85 +16,84 @@ export default function SelectionSummary({
   onClear,
   className
 }: SelectionSummaryProps) {
-  const isVisible = selectedCount > 0
+  // Don't render if no items selected
+  if (selectedCount === 0) {
+    return null;
+  }
 
   return (
-    <div 
+    <div
       className={cn(
-        // Base positioning
-        "fixed left-4 right-4 z-50",
-        // Responsive bottom positioning
-        "bottom-20 lg:bottom-6", // 80px on mobile (above bottom nav), 24px on desktop
-        // Center horizontally with max width
-        "mx-auto max-w-md",
-        // Animation classes
-        "transition-all duration-300 ease-in-out",
-        // Visibility and transform based on selection
-        isVisible 
-          ? "translate-y-0 opacity-100 pointer-events-auto" 
-          : "translate-y-full opacity-0 pointer-events-none",
+        // Fixed positioning
+        "fixed left-4 right-4 z-30",
+        "bottom-24 lg:bottom-6",
+        // Enhanced design and animations
+        "bg-gradient-to-r from-blue-600 to-blue-700",
+        "backdrop-blur-lg border border-blue-500/20",
+        "rounded-xl shadow-lg hover:shadow-xl",
+        "transition-all duration-300 ease-out",
+        "animate-slide-up",
+        // Responsive max width
+        "max-w-md mx-auto lg:max-w-lg",
         className
       )}
+      role="status"
+      aria-live="polite"
+      aria-label={`${selectedCount} items selected`}
     >
-      <div className={cn(
-        // Background and styling
-        "bg-blue-600 text-white rounded-2xl shadow-2xl",
-        // Layout
-        "flex items-center justify-between px-4 py-3",
-        // Backdrop blur for modern effect
-        "backdrop-blur-sm",
-        // Border for extra definition
-        "border border-blue-500/20"
-      )}>
-        {/* Left side - Selection count */}
+      <div className="flex items-center justify-between p-4">
+        {/* Left: Selection count and clear button */}
         <div className="flex items-center gap-3">
-          {/* Clear button (if provided) */}
+          <div className="text-white">
+            <span className="text-body font-semibold">
+              {selectedCount} item{selectedCount !== 1 ? 's' : ''} selected
+            </span>
+          </div>
+          
           {onClear && (
             <button
               onClick={onClear}
               className={cn(
-                "flex items-center justify-center w-8 h-8 rounded-full",
-                "bg-white/20 hover:bg-white/30 active:bg-white/40",
-                "transition-colors duration-200",
-                "text-white hover:text-white"
+                "p-1 rounded-full transition-all duration-200",
+                "text-blue-100 hover:text-white hover:bg-white/20",
+                "focus-ring-inset",
+                "touch-target-sm"
               )}
               aria-label="Clear selection"
             >
-              <X className="h-4 w-4" />
+              <X className="w-4 h-4" aria-hidden="true" />
             </button>
           )}
-          
-          {/* Selection count text */}
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold">
-              {selectedCount} item{selectedCount !== 1 ? 's' : ''} selected
-            </span>
-            <span className="text-xs text-blue-100 opacity-90">
-              Ready to continue
-            </span>
-          </div>
         </div>
 
-        {/* Right side - Continue button */}
+        {/* Right: Continue button */}
         <Button
           onClick={onContinue}
           className={cn(
-            // Override default button styles
-            "bg-white text-blue-600 hover:bg-blue-50 active:bg-blue-100",
-            "font-semibold text-sm px-6 py-2.5 h-auto",
-            "rounded-xl shadow-sm hover:shadow-md",
-            "transition-all duration-200",
-            "border-0 hover:scale-105 active:scale-95"
+            // Enhanced button styling
+            "bg-white text-blue-700 hover:bg-blue-50",
+            "border-0 shadow-sm hover:shadow-md",
+            "font-semibold px-4 py-2 h-auto",
+            "transition-all duration-200 ease-out",
+            "hover:scale-105 active:scale-95",
+            "focus-ring",
+            "flex items-center gap-2"
           )}
+          aria-label={`Continue with ${selectedCount} selected items`}
         >
-          Continue
+          <span className="text-body-sm">Continue</span>
+          <ArrowRight className="w-4 h-4" aria-hidden="true" />
         </Button>
       </div>
-
-      {/* Optional floating indicator dot */}
-      <div className="absolute -top-1 left-1/2 transform -translate-x-1/2">
-        <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
+      
+      {/* Optional progress indicator */}
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20 rounded-b-xl overflow-hidden">
+        <div 
+          className="h-full bg-white/40 transition-all duration-500 ease-out"
+          style={{ width: `${Math.min((selectedCount / 10) * 100, 100)}%` }}
+          aria-hidden="true"
+        />
       </div>
     </div>
-  )
+  );
 } 
